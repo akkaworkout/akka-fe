@@ -1,0 +1,128 @@
+.summaryCard {
+  width: 291px;
+  height: 412px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  padding: 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  /* ✅ 추가 */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.summaryCard__title{
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.summaryCard__divider{
+  height: 1px;
+  background:(#2C2C2C);
+  margin: 14px -18px 16px;
+}
+
+.summaryCard__select{
+  height: 56px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+
+  /* ✅ 추가: 버튼이 줄어들지 않게 */
+  flex-shrink: 0;
+}
+
+.summaryCard__dot{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #f4c7ff;
+}
+
+.summaryCard__selectText{
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.summaryCard__chevron{
+  margin-left: auto;
+  width: 10px;
+  height: 10px;
+  border-right: 3px solid rgba(0,0,0,0.7);
+  border-bottom: 3px solid rgba(0,0,0,0.7);
+  transform: rotate(45deg);
+}
+
+/* 링 */
+.summaryCard__ringWrap{
+  flex: 1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  /* ✅ 추가: flex 영역이 제대로 줄어들도록 */
+  min-height: 0;
+}
+
+.summaryCard__ring{
+  --p: 75;
+  --thick: 18px;
+
+  /* ✅ 240 → 220으로 줄여서 412 안에서 안정화 */
+  width: 220px;
+  height: 220px;
+
+  border-radius: 999px;
+  background:
+    conic-gradient(#7f99ff calc(var(--p) * 1%), #eef2ff 0);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+
+  filter: drop-shadow(0 8px 8px rgba(0,0,0,0.10));
+}
+
+.summaryCard__ringCenter{
+  width: calc(100% - var(--thick) * 2);
+  height: calc(100% - var(--thick) * 2);
+  border-radius: 999px;
+  background: #fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.summaryCard__percent{
+  font-size: 20px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.summaryCard__sub{
+  font-size: 14px;
+  color: rgba(0,0,0,0.55);
+  font-weight: 400;
+}
+
+.summaryCard__foot{
+  font-size: 12px;
+  color: #ff3b30;
+  text-align:center;
+  font-weight: 400;
+  margin-top: 6px;
+
+  /* ✅ 추가: 푸터도 줄어들지 않게 */
+  flex-shrink: 0;
+}
