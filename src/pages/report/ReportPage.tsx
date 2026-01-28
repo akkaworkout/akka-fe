@@ -4,10 +4,11 @@ import SideNav from '../../components/sideNav/SideNav'
 import SummaryCard from '../../components/report/SummaryCard'
 import InsightCard from '../../components/report/InsightCard'
 import ChartCard from '../../components/report/ChartCard'
-import ListCard from '../../components/report/ListCard'
-
 import ExerciseBarChart from '../../components/report/charts/ExerciseBarChart'
-
+import ExpenseBarChart from '../../components/report/charts/ExpenseBarChart'
+import TotalExpenseCard from '../../components/report/card/TotalExpenseCard/TotalExpenseCard'
+import TotalExerciseCard from '../../components/report/card/TotalExerciseCard/TotalExerciseCard'
+import TotalNoShowCard from '../../components/report/card/TotalNoShowCard/TotalNoShowCard'
 import styles from './Report.module.css'
 
 export default function ReportPage() {
@@ -37,18 +38,20 @@ export default function ReportPage() {
 
             {/* 차트: 지출 기록 */}
             <ChartCard type="expense" title="지출 기록">
-              <div />
+              <ExpenseBarChart />
             </ChartCard>
 
-            {/* 하단 리스트 */}
+            {/* 하단 3개 카드 */}
             <div className={styles.listSection1}>
-              <ListCard type="totalNoShow" />
+              <TotalNoShowCard />
             </div>
+
             <div className={styles.listSection2}>
-              <ListCard type="totalExercise" />
+              <TotalExerciseCard />
             </div>
+
             <div className={styles.listSection3}>
-              <ListCard type="totalExpense" />
+              <TotalExpenseCard />
             </div>
           </div>
         </div>

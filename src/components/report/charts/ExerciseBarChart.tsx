@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -13,11 +13,10 @@ import { Bar } from 'react-chartjs-2'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend)
 
-// ✅ 피그마 데이터 (월~일)
-const values = [2, 30, 3, 2, 1, 4, 2]
+// ✅ 하드코딩 데이터
+const values = [2, 4, 2, 2, 1, 10, 2]
 const labels = ['월', '화', '수', '목', '금', '토', '일']
 
-// ✅ “예쁘게 자동 축”
 function getNiceScaleMax(max: number) {
     if (max <= 0) return 1
     if (max <= 5) return 5
@@ -36,57 +35,47 @@ function getStepSize(maxAxis: number) {
     return 10
 }
 
-type DayBubbleOptions = {
+type BubbleOptions = {
     selectedIndex: number
     selectedLabel: string
-    bubbleColor?: string
-    textColor?: string
+    bubbleColor: string
+    textColor: string
 }
 
-/**
- * ✅ 선택된 막대 위 “요일 말풍선” 플러그인
- * - options.plugins.dayBubblePlugin 에서 옵션 읽음(타입은 any로 접근)
- */
-const dayBubblePlugin: Plugin<'bar'> = {
-    id: 'dayBubblePlugin',
+const bubblePlugin: Plugin<'bar'> = {
+    id: 'exerciseBubblePlugin',
     afterDatasetsDraw(chart) {
-        const opt = (chart.options.plugins as any)?.dayBubblePlugin as DayBubbleOptions | undefined
+        const opt = (chart.options.plugins as any)?.exerciseBubblePlugin as BubbleOptions | undefined
         if (!opt) return
 
-        const selectedIndex = Number(opt.selectedIndex)
-        const selectedLabel = String(opt.selectedLabel ?? '')
-        if (selectedIndex < 0 || !selectedLabel) return
-
         const meta = chart.getDatasetMeta(0)
-        const el = meta.data?.[selectedIndex]
+        const el = meta.data?.[opt.selectedIndex]
         if (!el) return
+
         const { ctx } = chart
         const { x, y } = el.getProps(['x', 'y'], true)
-
-        const bubbleColor = opt.bubbleColor ?? '#3B46D7'
-        const textColor = opt.textColor ?? '#FFFFFF'
-
-        ctx.save()
-        ctx.font = '700 12px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'
 
         const paddingX = 14
         const bubbleH = 30
         const radius = 10
-        const textW = ctx.measureText(selectedLabel).width
+
+        ctx.save()
+        ctx.font = '700 12px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial'
+
+        const textW = ctx.measureText(opt.selectedLabel).width
         const bubbleW = Math.ceil(textW + paddingX * 2)
 
-        // 위치: 막대 위
+        // ✅ 너무 위로 올라가서 잘리는 문제 방지: -10 → -2
         const bubbleX = x - bubbleW / 2
         const bubbleY = y - bubbleH - 10
 
-        // 꼬리
         const tailW = 18
         const tailH = 10
         const tailX = x
         const tailY = bubbleY + bubbleH
 
         // bubble
-        ctx.fillStyle = bubbleColor
+        ctx.fillStyle = opt.bubbleColor
         roundRect(ctx, bubbleX, bubbleY, bubbleW, bubbleH, radius)
         ctx.fill()
 
@@ -99,10 +88,10 @@ const dayBubblePlugin: Plugin<'bar'> = {
         ctx.fill()
 
         // text
-        ctx.fillStyle = textColor
+        ctx.fillStyle = opt.textColor
         ctx.textBaseline = 'middle'
         ctx.textAlign = 'center'
-        ctx.fillText(selectedLabel, x, bubbleY + bubbleH / 2)
+        ctx.fillText(opt.selectedLabel, x, bubbleY + bubbleH / 2)
 
         ctx.restore()
     },
@@ -116,22 +105,28 @@ function roundRect(
     h: number,
     r: number
 ) {
-    const radius = Math.min(r, w / 2, h / 2)
+    const rr = Math.min(r, w / 2, h / 2)
     ctx.beginPath()
-    ctx.moveTo(x + radius, y)
-    ctx.arcTo(x + w, y, x + w, y + h, radius)
-    ctx.arcTo(x + w, y + h, x, y + h, radius)
-    ctx.arcTo(x, y + h, x, y, radius)
-    ctx.arcTo(x, y, x + w, y, radius)
+    ctx.moveTo(x + rr, y)
+    ctx.arcTo(x + w, y, x + w, y + h, rr)
+    ctx.arcTo(x + w, y + h, x, y + h, rr)
+    ctx.arcTo(x, y + h, x, y, rr)
+    ctx.arcTo(x, y, x + w, y, rr)
     ctx.closePath()
 }
 
 export default function ExerciseBarChart() {
-    // ✅ 기본 선택: 토요일(5)
-    const [selectedIndex, setSelectedIndex] = useState(5)
+    const maxIndex = useMemo(
+        () => values.indexOf(Math.max(...values)),
+        [values.join(',')] // 하드코딩이면 그냥 [values]도 OK, 하지만 배열 리터럴이면 join이 안전
+    )
 
-    const maxValue = Math.max(...values)
-    const maxAxis = getNiceScaleMax(maxValue)
+    const [selectedIndex, setSelectedIndex] = useState(maxIndex) // 토요일
+    useEffect(() => {
+        setSelectedIndex(maxIndex)
+    }, [maxIndex])
+
+    const maxAxis = getNiceScaleMax(Math.max(...values))
     const stepSize = getStepSize(maxAxis)
 
     const data = useMemo(() => {
@@ -143,7 +138,14 @@ export default function ExerciseBarChart() {
             datasets: [
                 {
                     data: values,
-                    borderRadius: 8,
+                    borderRadius: {
+                        topLeft: 6,
+                        topRight: 6,
+                        bottomLeft: 0,
+                        bottomRight: 0,
+                    },
+                    borderSkipped: false,
+
                     backgroundColor: labels.map((_, i) => (i === selectedIndex ? active : normal)),
                     barThickness: 22,
                     categoryPercentage: 0.7,
@@ -156,9 +158,10 @@ export default function ExerciseBarChart() {
     const options: ChartOptions<'bar'> = {
         responsive: true,
         maintainAspectRatio: false,
-        layout: { padding: { top: 26, left: 6, right: 10, bottom: 0 } },
 
-        // ✅ plugins 안에 커스텀 키(dayBubblePlugin)를 넣기 위해 plugins 전체를 any 캐스팅
+        // ✅ “아래 기준 정렬”을 위해 top만 확보하고 나머지 통일
+        layout: { padding: { top: 40, right: 10, left: 6, bottom: 0 } },
+
         plugins: ({
             legend: { display: false },
             tooltip: {
@@ -169,7 +172,7 @@ export default function ExerciseBarChart() {
                     label: (item: any) => ` ${item.parsed.y}회`,
                 },
             },
-            dayBubblePlugin: {
+            exerciseBubblePlugin: {
                 selectedIndex,
                 selectedLabel: `${labels[selectedIndex]}요일`,
                 bubbleColor: '#3B46D7',
@@ -182,8 +185,9 @@ export default function ExerciseBarChart() {
                 grid: { display: false },
                 border: { display: false },
                 ticks: {
-                    font: { size: 12, weight: 600 }, // ✅ 숫자
+                    font: { size: 12, weight: 400 },
                     color: '#6B7280',
+                    padding: 10,
                 },
             },
             y: {
@@ -192,11 +196,12 @@ export default function ExerciseBarChart() {
                 border: { display: false },
                 ticks: {
                     stepSize,
-                    font: { size: 12, weight: 600 }, // ✅ 숫자
+                    font: { size: 12, weight: 400 },
                     color: '#9CA3AF',
+                    padding: 8,
                     callback: (v) => `${v}회`,
                 },
-                grid: { color: '#EEF2FF' }, // ✅ v4에서는 drawBorder 없음
+                grid: { color: '#EEF2FF' },
             },
         },
 
@@ -208,7 +213,7 @@ export default function ExerciseBarChart() {
 
     return (
         <div style={{ width: 267, height: 198 }}>
-            <Bar data={data} options={options} plugins={[dayBubblePlugin]} />
+            <Bar key={maxAxis} data={data} options={options} plugins={[bubblePlugin]} />
         </div>
     )
 }
