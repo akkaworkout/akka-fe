@@ -1,0 +1,107 @@
+.total-expense-card {
+  width: 330px;
+  height: 324px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 12px;
+  padding-top: 8px;
+  overflow: hidden;
+}
+
+/* 헤더 */
+.card-header {
+  position: relative;
+  z-index: 2;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111;
+}
+
+.detail-btn {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 400;
+}
+
+/* 선 */
+.card-divider {
+  height: 1px;
+  background: #eeeeee;
+  margin-top: 13px; /* 헤더 아래 간격 */
+  pointer-events: none;
+}
+
+/* 선 ↔ 첫 row 간격 19px */
+.expense-list {
+  list-style: none;
+  margin: 0 0 18px 0;
+  padding: 20px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* row 기본 */
+.expense-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 8px 18px;
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 400;
+  color: #111;
+}
+
+.amount {
+  font-size: 13px;
+  font-weight: 200;
+  color: #111;
+}
+
+/* 최대 금액 row: 배경 + 색*/
+.expense-row.highlight {
+  background: #FF58580D; /* 강조 배경 */
+}
+
+.amount-max {
+  color: #ff5858;
+}
+
+/* footer */
+.card-footer {
+  margin-top: 8px;
+}
+
+.summary-main {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #111;
+}
+
+.summary-number {
+  color: #3A974C;
+  font-weight: 500;
+}
+
+.summary-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #6b7280;
+}

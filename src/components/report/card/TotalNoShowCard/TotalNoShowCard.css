@@ -1,0 +1,169 @@
+.total-noshow-card {
+  width: 291px;
+  height: 324px;
+  box-sizing: border-box;
+
+  background: #ffffff;
+  border-radius: 16px;
+
+  /* 수치 반영: 좌우 22, 상단 15 */
+  padding: 12px;
+  padding-top: 15px;
+  padding-left: 22px;
+  padding-right: 22px;
+
+  overflow: visible;
+}
+
+/* 헤더: 정렬만 담당 (간격 만들지 않음) */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  /* 높이 고정은 유지해도 되는데, 수치 맞추려면 padding/margin은 0 */
+  height: 44px;
+  margin: 0;
+  padding: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111;
+
+  /* 수치 반영: 제목 ↔ 왼쪽 22는 카드 padding-left가 담당 */
+}
+
+.action-btn {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+/* divider */
+.card-divider {
+  height: 1px;
+  background: #eeeeee;
+
+  /* 수치 반영: 제목 ↔ 선 = 11 */
+  margin-top: 11px;
+  margin-bottom: 19px;
+
+  /* 좌우 padding 22 기준으로 '끝까지' */
+  width: calc(100% + 44px);
+  margin-left: -22px;
+}
+
+/* 리스트 */
+.noshow-list {
+  list-style: none;
+  margin: 0;
+  padding: 19px 0 0 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.noshow-row {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 18px;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.check {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* SVG baseline 이슈 방지 */
+  line-height: 0;
+  flex: 0 0 26px;
+
+  color: #4f46e5;
+}
+
+.check svg {
+  display: block;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 400;
+  color: #111;
+}
+
+.count {
+  font-size: 13px;
+  font-weight: 400;
+  color: #111;
+}
+
+.count-red {
+  color: #ff5858;
+}
+
+/* 나머지 보기 */
+.more-btn {
+  margin-top: 14px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+  text-align: left;
+}
+
+.more-underline {
+  height: 0.5px;
+  background: #111;
+  margin-top: 0.5px;
+  width: 120px;
+}
+
+/* footer */
+.card-footer {
+  margin-top: 20px;
+}
+
+.summary-main {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+}
+
+.summary-number {
+  color: #16a34a;
+  font-weight: 900;
+}
+
+.summary-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+}
