@@ -33,6 +33,7 @@ export default function SignUpPage() {
   const [nickname, setNickname] = useState('')
   const [budget, setBudget] = useState('') // 목표 예산(월 기준)
   const [exerciseGoal, setExerciseGoal] = useState('') // 목표 운동 횟수(월 기준)
+  const [isSidebarFolded, setIsSidebarFolded] = useState(false)
 
   // ui states
   const [showPw, setShowPw] = useState(false)
@@ -43,6 +44,7 @@ export default function SignUpPage() {
   const handlePickProfile = () => {
     fileRef.current?.click()
   }
+
 
   const handleProfileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -107,9 +109,17 @@ export default function SignUpPage() {
 
   return (
     <div className={styles.wrap}>
-      <SideNav />
+      <SideNav
+        folded={isSidebarFolded}
+        onToggle={() => setIsSidebarFolded(prev => !prev)}
+      />
 
-      <main className={styles.main}>
+      <main
+        className={styles.main}
+        style={{
+          marginLeft: isSidebarFolded ? 74 : 220,
+        }}
+      >
         <div className={styles.mainInner}>
           <div className={styles.page}>
             <div className={styles.cardWrap}>

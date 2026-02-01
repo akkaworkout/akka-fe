@@ -307,3 +307,96 @@
     top: 561px;
     right: 0px;
 }
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0 20px 0;
+    margin: 0;
+    scrollbar-gutter: stable;
+}
+
+.list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 999px;
+}
+
+.list::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 53px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+.item:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dot {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+}
+
+.status {
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+.success {
+    color: #00AA21;
+    font-weight: 600;
+}
+
+.fail {
+    color: #FF5858;
+    text-decoration: line-through;
+    font-weight: 600;
+}
+
+.purchase {
+    color: #E5B53B;
+    font-weight: 600;
+}
+
+.addBtn {
+    flex-shrink: 0;
+    height: 27px;
+    border-radius: 10px;
+    background: #F2F2F4;
+    border: none;
+    font-size: 24px;
+    color: #919191;
+    cursor: pointer;
+}
+
+.addBtn:hover {
+    background-color: #E9ECFF;
+}
