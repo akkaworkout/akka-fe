@@ -1,0 +1,21 @@
+.card {
+    box-sizing: border-box;
+}
+
+.header {
+    border-bottom: 1px solid #F4F4F4;
+    height: 53px;
+}
+
+.title {
+    color: #2C2C2C;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 16px 23px;
+}
+
+.content {
+    font-size: 14px;
+    color: #2c2c2c;
+    padding: 14px 23px 0 23px;
+}
