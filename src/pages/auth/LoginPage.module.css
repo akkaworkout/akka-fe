@@ -1,3 +1,16 @@
 .wrap {
-  padding: 40px;
+    display: flex;
+    min-height: 100vh;
+}
+
+.login {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    background-color: #FAFAFB;
+}
+
+.loginInner {
+    width: 100%;
+    max-width: 960px;
 }

@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Main from './pages/main/Main'
 import ReportPage from "./pages/report/ReportPage";
 import CalendarPage from "./pages/calendar/CalendarPage";
+import SignUpPage from "./pages/auth/SignUpPage";
+import LoginPage from "./pages/auth/LoginPage";
 
 function App() {
   return (
@@ -15,6 +17,10 @@ function App() {
 
       {/* 캘린더 */}
       <Route path="/calendar" element={<CalendarPage />} />
+
+      {/* 로그인/회원가입 */}
+      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/login" element={<LoginPage />} />
     </Routes>
   )
 }
