@@ -1,0 +1,264 @@
+.wrap {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* 오른쪽 메인 영역 */
+.main {
+  flex: 1;
+  background-color: #fafafb;
+
+  
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* center -> start (위에서부터 자연스럽게) */
+  padding: 60px 24px;
+}
+
+/* 메인 내부 컨테이너: 카드/타이틀 기준 폭 고정 */
+.mainInner {
+  width: 700px;
+}
+
+.headerArea {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #111;
+}
+
+/* 숨김 */
+.top {
+  display: none;
+}
+
+.page {
+  font-family: Nunito, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #2c2c2c;
+  width: 100%;
+}
+
+/* 카드 */
+.cardWrap {
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  border-radius: 16px;
+  padding: 0;
+}
+
+/* 프로필 */
+.profileArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.avatar {
+  position: relative;
+  width: 84px;
+  height: 84px;
+}
+
+.avatarMask {
+  width: 84px;
+  height: 84px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #e8e8e8;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;     
+  transform: scale(1.15);
+}
+
+.editAvatarBtn {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 36.5px;
+  height: 36.5px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.editAvatarBtn img {
+  width: 36.5px;
+  height: 36.5px;
+  display: block;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+}
+
+.fileInput {
+  display: none;
+}
+
+/* 폼 전체 */
+.form {
+  width: 100%;
+  margin-top: 39px;
+  display: flex;
+  flex-direction: column;
+  gap: 33px;              /* 전체 33 통일 */
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  column-gap: 24px;
+  align-items: start;   
+}
+
+.label {
+  justify-self: start;
+  text-align: left;
+  padding-top: 12px;
+  white-space: nowrap;    
+}
+
+.fieldLine {
+  display: grid;
+  grid-template-columns: 333px 100px;
+  gap: 16px;
+  align-items: start;   
+}
+
+
+/* input + error */
+.inputWrap {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.error {
+  min-height: 16px;    
+  margin-top: 4px;
+  font-size: 12px;
+  color: #ff5858;
+}
+
+/* input */
+.input {
+  width: 333px;
+  height: 46px;
+  border-radius: 9px;
+  border: 1px solid #d1d5db;
+  padding: 0 16px;     
+  font-size: 14px;
+  font-weight: 400;
+  color: #2c2c2c;
+  outline: none;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.input::placeholder {
+  color: #bdbdbd;
+}
+
+.input:focus {
+  border-color: #4f46e5;
+}
+
+.inputError {
+  border-color: #ff5858;
+}
+
+/* 아이콘 input */
+.inputWithIcon {
+  position: relative;
+  width: 333px;
+}
+
+.inputWithIcon .input {
+  padding-right: 54px;
+}
+
+.iconBtn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 46px;          
+  height: 46px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.iconBtn img {
+  width: 24px;
+  height: 24px;
+  opacity: 0.9;
+}
+
+/* 중복확인 버튼 */
+.dupBtn {
+  width: 100px;
+  height: 46px;         /* input과 동일 */
+  border: 0;
+  border-radius: 10px;
+  background: #454dd7;
+  color: #ffffff;
+  font-size: 14px;     
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0;          
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dupBtn:active {
+  transform: translateY(1px);
+}
+
+/* 제출 버튼 */
+.submitArea {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  margin-top: 36px;
+  padding-bottom: 40px;
+}
+
+.submitBtn {
+  width: 333px;
+  height: 46px;
+  border-radius: 10px;
+  border: 0;
+  background: #454dd7;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submitBtn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  opacity: 1;
+}
