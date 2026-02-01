@@ -1,14 +1,18 @@
-/* 전체 레이아웃 */
 .layout {
     display: flex;
     min-height: 100vh;
 }
 
-/* 사이드바 */
 .sideNav {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 220px;
+    height: 100vh;
+    min-height: 600px;
     flex-shrink: 0;
+    background: #fff;
+    z-index: 100;
 }
 
 .sideNavFolded {
@@ -112,6 +116,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .sidebarProfileImg {

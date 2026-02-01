@@ -1,0 +1,309 @@
+.wrap {
+    display: flex;
+    min-height: 100vh;
+    min-width: 1280px;
+}
+
+.calendarPage {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    background-color: #FAFAFB;
+    margin-left: 220px;
+    min-height: 900px;
+}
+
+.calendarInner {
+    position: relative;
+    width: 100%;
+    max-width: 1008px;
+    margin-bottom: 32px;
+}
+
+.title {
+    position: absolute;
+    color: #2C2C2C;
+    top: 37px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+
+.calendar {
+    position: absolute;
+    top: 98px;
+    width: 546px;
+    height: 770px;
+    background: #fff;
+    border-radius: 20px;
+}
+
+.header {
+    display: flex;
+    height: 53px;
+}
+
+.month {
+    position: relative;
+    top: 16px;
+    left: 23px;
+    color: #2C2C2C;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.arrow {
+    position: absolute;
+    top: 20px;
+    right: 23px;
+    display: flex;
+    justify-content: space-between;
+    width: 59px;
+}
+
+.arrowBtn {
+    width: 17px;
+    height: 19px;
+    cursor: pointer;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
+
+.week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    height: 78px;
+    text-align: center;
+    line-height: 78px;
+    font-size: 12px;
+    color: #2C2C2C;
+    font-weight: 500;
+    background: #F2F2F4;
+}
+
+.weekItem {
+    text-align: center;
+}
+
+.days {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    grid-auto-rows: 1fr;
+    height: calc(770px - 78px - 60px);
+    z-index: 1;
+}
+
+.days::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+
+    background-image:
+        linear-gradient(to right, #F2F2F4 1px, transparent 1px),
+        linear-gradient(to bottom, #F2F2F4 1px, transparent 1px);
+
+    background-size:
+        calc(100% / 7) 100%,
+        100% calc(100% / 6);
+
+    background-position:
+        0 0,
+        0 calc(100% / 5);
+}
+
+.day {
+    position: relative;
+    border-radius: 12px;
+    font-size: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+}
+
+.date {
+    font-size: 12px;
+    color: #2C2C2C;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+
+.activeDate {
+    color: #FF8F6B;
+    font-weight: 600;
+}
+
+.activeDateLine {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 4px);
+    height: 1px;
+    background-color: #FF8F6B;
+    border-radius: 999px;
+    border: none;
+    z-index: 3;
+}
+
+.tag {
+    width: 71px;
+    margin-top: 4px;
+    padding: 3px;
+    border-radius: 2px;
+    font-size: 11px;
+    text-align: center;
+    color: #2c2c2c;
+}
+
+.health {
+    background: #dcd8ff;
+    color: #4b44c7;
+}
+
+.ballet {
+    background: #f5d9ff;
+    color: #a23bc7;
+}
+
+.workout {
+    background: #dff6f6;
+    color: #1d7a7a;
+}
+
+.money {
+    position: absolute;
+    top: 98px;
+    right: 0px;
+}
+
+.moneyCard {
+    padding: 9.5px;
+}
+
+.moneyMain {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c2c2c;
+}
+
+.label {
+    margin-right: 6px;
+}
+
+.current {
+    color: #f0b429;
+}
+
+.total {
+    color: #2c2c2c;
+}
+
+.badges {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.badgeYellow {
+    background: #fff6df;
+    padding: 9.5px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #2C2C2C;
+    width: fit-content;
+}
+
+.badgeBlue {
+    background: #eef0ff;
+    padding: 9.5px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #2C2C2C;
+    width: fit-content;
+}
+
+.goal {
+    position: absolute;
+    top: 303px;
+    right: 0px;
+}
+
+.goalBtn {
+    position: absolute;
+    top: 14px;
+    right: 23px;
+    width: 58px;
+    height: 31px;
+    border-radius: 10px;
+    background: #454DD7;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.goalBtn:hover {
+    background: #38359D;
+}
+
+.goalList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.goalItem {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    background-color: #F2F2F4;
+    border-radius: 10px;
+    height: 38px;
+    padding-left: 15px;
+}
+
+.goalItem:focus-within,
+.goalItem:hover {
+    background-color: #E9ECFF;
+}
+
+.goalItem span {
+    display: flex;
+    color: #919191;
+}
+
+.goalItem:has(input:not(:placeholder-shown)) span {
+    color: #2C2C2C;
+}
+
+.goalItem input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    padding: 0 0 2px 0;
+    color: #2C2C2C;
+}
+
+
+.goalItem input::placeholder {
+    color: #919191;
+}
+
+.today {
+    position: absolute;
+    top: 561px;
+    right: 0px;
+}
