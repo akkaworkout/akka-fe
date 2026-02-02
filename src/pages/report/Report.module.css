@@ -1,23 +1,28 @@
 .wrap {
     display: flex;
     min-height: 100vh;
+    min-width: 1280px;
 }
 
-.report {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; 
-  background-color: #FAFAFB;
-  padding-top: 30px;
+.reportPage {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    background-color: #FAFAFB;
+    margin-left: 220px;
+    min-height: 900px;
 }
 
 .reportInner {
+    position: relative;
     width: 100%;
-    max-width: 987px;
+    max-width: 1008px;
+    margin-bottom: 32px;
 }
 
 .reportGrid {
+    position: absolute;
+    top: 98px;
     display: grid;
     grid-template-columns: 291px 330px 330px;
     gap: 18px;
@@ -47,4 +52,63 @@
 .listSection3 {
     grid-column: 3;
     grid-row: 3;
+}
+
+.reportHeader {}
+
+.monthArea {
+    position: absolute;
+    color: #2C2C2C;
+    top: 37px;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.monthText {
+    color: #2C2C2C;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.iconBtn {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    margin-top: 7px;
+}
+
+.summaryArea {
+    position: absolute;
+    color: #2C2C2C;
+    top: 37px;
+    right: 68px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.summaryItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.value {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.divider {
+    width: 4px;
+    height: 51px;
+    background-color: #000;
 }
