@@ -69,24 +69,29 @@ export default function SignUpPage() {
   const isPasswordValid = (v: string) => v.length >= 8
   const isNicknameValid = (v: string) => v.trim().length >= 2
 
-  const validate = () => {
+  const getErrors = () => {
     const next: FieldErrors = {}
 
     if (!email.trim()) next.email = '이메일을 입력해주세요.'
-    else if (!isEmailValid(email)) next.email = '올바른 이메일 형식이 아닙니다.'
+    else if (!isEmailValid(email)) next.email = '올바른 이메일 형식이 아닙니다'
 
     if (!password) next.password = '비밀번호를 입력해주세요.'
-    else if (!isPasswordValid(password)) next.password = '비밀번호는 8자 이상이어야 합니다.'
+    else if (!isPasswordValid(password)) next.password = '비밀번호는 8자 이상이어야 합니다'
 
     if (!passwordConfirm) next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
-    else if (passwordConfirm !== password) next.passwordConfirm = '비밀번호가 일치하지 않습니다.'
+    else if (passwordConfirm !== password) next.passwordConfirm = '비밀번호가 일치하지 않습니다'
 
     if (!nickname.trim()) next.nickname = '닉네임을 입력해주세요.'
-    else if (!isNicknameValid(nickname)) next.nickname = '닉네임은 2자 이상이어야 합니다.'
+    else if (!isNicknameValid(nickname)) next.nickname = '닉네임은 2자 이상이어야 합니다'
 
     if (budget && !/^\d+$/.test(budget)) next.budget = '숫자만 입력 가능합니다.'
     if (exerciseGoal && !/^\d+$/.test(exerciseGoal)) next.exerciseGoal = '숫자만 입력 가능합니다.'
 
+    return next
+  }
+
+  const validate = () => {
+    const next = getErrors()
     setErrors(next)
     return Object.keys(next).length === 0
   }
@@ -171,7 +176,11 @@ export default function SignUpPage() {
                         <input
                           className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) => {
+                            setEmail(e.target.value)
+                            setErrors(getErrors())
+                          }}
+
                           placeholder="akka@naver.com"
                           inputMode="email"
                           autoComplete="email"
