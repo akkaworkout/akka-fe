@@ -4,12 +4,12 @@
 }
 
 .report {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FAFAFB;
-    padding-top: 30px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; 
+  background-color: #FAFAFB;
+  padding-top: 30px;
 }
 
 .reportInner {

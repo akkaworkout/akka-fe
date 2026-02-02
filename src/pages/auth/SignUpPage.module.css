@@ -8,11 +8,12 @@
   flex: 1;
   background-color: #fafafb;
 
-  
   display: flex;
-  justify-content: center;
-  align-items: flex-start; /* center -> start (위에서부터 자연스럽게) */
+  justify-content: flex-start;  
+  align-items: flex-start;
   padding: 60px 24px;
+
+  padding-left: 220px;          /* ✅ 사이드바랑 거리(원하는 값으로) */
 }
 
 /* 메인 내부 컨테이너: 카드/타이틀 기준 폭 고정 */
@@ -114,25 +115,32 @@
 
 /* 폼 전체 */
 .form {
-  width: 100%;
-  margin-top: 39px;
   display: flex;
   flex-direction: column;
-  gap: 33px;              /* 전체 33 통일 */
+  gap: 33px;
 }
 
 .row {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 200px 449px; /* ✅ 라벨 / (333+16+100) */
   column-gap: 24px;
-  align-items: start;   
+  align-items: center;
 }
 
 .label {
-  justify-self: start;
-  text-align: left;
-  padding-top: 12px;
-  white-space: nowrap;    
+  padding-top: 0;
+  white-space: nowrap;
+}
+
+
+.fieldLine {
+  display: grid;
+  grid-template-columns: 333px 100px;
+  gap: 16px;
+}
+
+.field:last-child {
+  margin-bottom: 0;
 }
 
 .fieldLine {
@@ -147,16 +155,20 @@
 .inputWrap {
   display: flex;
   flex-direction: column;
+  gap: 0;          
+  padding: 0;    
+  position: relative;  
 }
 
 
 .error {
-  min-height: 16px;    
-  margin-top: 4px;
+  position: absolute;
+  left: 0;
+  top: calc(46px + 4px); /* input 아래 4 */
+  margin: 0;
   font-size: 12px;
   color: #ff5858;
 }
-
 /* input */
 .input {
   width: 333px;
