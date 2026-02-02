@@ -19,6 +19,7 @@ type TodayItem = {
   status: '성공' | '실패' | '구매'
   color: string
   amount: number
+  memo?: string
 }
 
 const CalenderPage = () => {
@@ -35,7 +36,6 @@ const CalenderPage = () => {
 
   const [selectedItem, setSelectedItem] = useState<TodayItem | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-
 
   const handlePrevMonth = () => {
     if (month === 0) {
@@ -67,7 +67,7 @@ const CalenderPage = () => {
     { date: '2026-01-16', label: '운동식품', color: 'rgb(223, 246, 246)' },
   ]
 
-  const todayItems: TodayItem[] = [
+  const [todayItems, setTodayItems] = useState<TodayItem[]>([
     {
       id: 1,
       date: '2026-01-16',
@@ -75,6 +75,10 @@ const CalenderPage = () => {
       status: '성공',
       color: 'rgb(213, 211, 255)',
       amount: 7000,
+      memo: `하체 루틴 끝!
+레그프레스랑 런지까지 다 함 💪
+끝나고 계단 내려갈 때 다리 후들후들
+그래도 뿌듯해서 기분 좋음 😊`,
     },
     {
       id: 2,
@@ -83,6 +87,10 @@ const CalenderPage = () => {
       status: '실패',
       color: 'rgb(245, 217, 255)',
       amount: 20000,
+      memo: `비 오는 날이라 귀찮아서 안 나감…
+옷 갈아입기까지 했는데 결국 포기 🥲
+다음 주엔 무조건 가자
+나 자신과의 약속 🩰`,
     },
     {
       id: 3,
@@ -91,30 +99,22 @@ const CalenderPage = () => {
       status: '구매',
       color: 'rgb(223, 247, 247)',
       amount: 18000,
+      memo: `프로틴 바랑 쉐이크 샀음
+냉장고 한 칸 운동 전용으로 확보 🍫
+이번엔 진짜 꾸준히 먹어보자
+유통기한 안 넘기게 조심`,
     },
-    {
-      id: 4,
-      date: '2026-01-16',
-      name: '운동식품',
-      status: '구매',
-      color: 'rgb(223, 247, 247)',
-      amount: 18000,
-    },
-    {
-      id: 5,
-      date: '2026-01-16',
-      name: '운동식품',
-      status: '구매',
-      color: 'rgb(223, 247, 247)',
-      amount: 18000,
-    },
-  ]
+  ])
 
   const handleItemClick = (item: TodayItem) => {
     setSelectedItem(item)
     setIsModalOpen(true)
   }
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedItem(null)
+  }
 
   return (
     <>
@@ -169,13 +169,14 @@ const CalenderPage = () => {
             </div>
 
             <div className={styles.goal}>
-              <button className={styles.goalBtn}>저장</button>
               <Card
                 title="이달의 목표"
+                buttonText="저장"
+                onButtonClick={() => {
+                  console.log('목표 저장')
+                }}
                 width={445}
                 height={223}
-                backgroundColor="#ffffff"
-                radius={20}
               >
                 <div className={styles.goalList}>
                   <div className={styles.goalItem}>
@@ -244,14 +245,12 @@ const CalenderPage = () => {
         </main>
       </div>
 
-      {
-        isModalOpen && selectedItem && (
-          <TodayItemModal
-            item={selectedItem}
-            onClose={() => setIsModalOpen(false)}
-          />
-        )
-      }
+      {isModalOpen && selectedItem && (
+        <TodayItemModal
+          item={selectedItem}
+          onClose={handleCloseModal}
+        />
+      )}
     </>
   )
 }

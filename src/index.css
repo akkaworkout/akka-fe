@@ -8,4 +8,9 @@ body {
   font-family: 'Nunito', sans-serif;
   min-height: 100%;
   background-color: #FAFAFB;
+  color: #2C2C2C;
+}
+
+body.modal-open {
+  overflow: hidden;
 }

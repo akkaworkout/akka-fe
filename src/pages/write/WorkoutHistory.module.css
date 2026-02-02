@@ -1,0 +1,30 @@
+.wrap {
+    display: flex;
+    min-height: 100vh;
+    min-width: 1280px;
+}
+
+.writePage {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    background-color: #FAFAFB;
+    margin-left: 220px;
+    min-height: 900px;
+}
+
+.writeInner {
+    position: relative;
+    width: 100%;
+    max-width: 1008px;
+    margin-bottom: 32px;
+    background: aquamarine;
+}
+
+.title {
+    position: absolute;
+    color: #2C2C2C;
+    top: 37px;
+    font-size: 24px;
+    font-weight: 700;
+}

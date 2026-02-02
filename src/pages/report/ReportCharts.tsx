@@ -1,5 +1,5 @@
 import ChartCard from '../../components/report/ChartCard';
-import ExerciseBarChart from '../../components/report/charts/ExerciseBarChart';
+import ExerciseBarChart from '../../components/report/charts/BarChart';
 
 export default function ReportCharts() {
   return (

@@ -28,7 +28,6 @@
     font-weight: 700;
 }
 
-
 .calendar {
     position: absolute;
     top: 98px;
@@ -36,6 +35,7 @@
     height: 770px;
     background: #fff;
     border-radius: 20px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
 }
 
 .header {
@@ -237,26 +237,6 @@
     right: 0px;
 }
 
-.goalBtn {
-    position: absolute;
-    top: 14px;
-    right: 23px;
-    width: 58px;
-    height: 31px;
-    border-radius: 10px;
-    background: #454DD7;
-    color: #FFF;
-    font-size: 12px;
-    font-weight: 700;
-    border: none;
-    outline: none;
-    cursor: pointer;
-}
-
-.goalBtn:hover {
-    background: #38359D;
-}
-
 .goalList {
     display: flex;
     flex-direction: column;
@@ -265,7 +245,7 @@
 
 .goalItem {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 2px;
     background-color: #F2F2F4;
     border-radius: 10px;
@@ -280,6 +260,9 @@
 
 .goalItem span {
     display: flex;
+    align-items: center;
+    height: 100%;
+    line-height: 38px;
     color: #919191;
 }
 
@@ -293,13 +276,16 @@
     outline: none;
     width: 100%;
     height: 100%;
-    padding: 0 0 2px 0;
+    line-height: 38px;
+    padding: 0;
     color: #2C2C2C;
 }
 
 
 .goalItem input::placeholder {
+    line-height: 38px;
     color: #919191;
+    transform: translateY(1.5px);
 }
 
 .today {
