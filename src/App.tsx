@@ -9,6 +9,8 @@ import CalendarPage from "./pages/calendar/CalendarPage";
 
 import SignUpPage from "./pages/auth/SignUpPage";
 import LoginPage from "./pages/auth/LoginPage";
+import SignUpSuccessPage from './pages/auth/SignUpSuccessPage'
+
 
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
       {/* 로그인/회원가입 */}
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup/success" element={<SignUpSuccessPage />} />
     </Routes>
   )
 }
