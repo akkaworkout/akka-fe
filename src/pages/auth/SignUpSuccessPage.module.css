@@ -1,0 +1,51 @@
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.subTitle {
+  margin-top: 6px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.mainInner {
+  position: relative;
+  width: 100%;
+  max-width: 1008px;
+  margin: 94px auto 0; /* 가로 중앙 */
+}
+
+.image {
+  width: 120px;
+  margin: 32px auto 24px;
+  display: block;
+}
+
+.desc {
+  text-align: center;
+  color: #374151;
+  margin-bottom: 31px;
+}
+
+.ctaBtn {
+  width: 240px;
+  height: 46px;
+  border-radius: 10px;
+  border: 0;
+  background: #454dd7;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+
+  display: block;  
+  margin: 0 auto; 
+}
+
+.successBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
