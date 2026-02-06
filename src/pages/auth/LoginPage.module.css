@@ -4,15 +4,23 @@
     min-width: 1280px;
 }
 
-.main {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    background-color: #FAFAFB;
-    min-height: 900px;
-    margin-left: 0;
-    padding-left: 0;
+
+.wrap {
+  display: grid;
+  grid-template-columns: 224px 1fr; /* 사이드바 폭 */
+  width: 100%;
+  min-height: 100vh;
 }
+
+.main {
+  grid-column: 2;
+  display: flex;
+  justify-content: center;
+  background: #fafafb;
+  min-height: 900px;
+}
+
+
 
 .mainInner {
     position: relative;
@@ -51,6 +59,7 @@
     gap: 33px;
     width: 619px;
     margin: 0 auto;
+    transform: translateX(-50px);
 }
 
 /* 비번칸 ↔ 버튼 62 */
@@ -72,26 +81,23 @@
 }
 
 .submitBtn {
-    width: 333px;
-    height: 46px;
-    border-radius: 10px;
-    border: 0;
-    box-sizing: border-box;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
+  width: 333px;
+  height: 46px;
+  border-radius: 10px;
+  border: 0;
+  box-sizing: border-box;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  background: #454dd7;   /* 통일 */
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transform: translateX(-82px);
 }
 
-.submitDisabled {
-    background: #bdbdbd;
-    color: #ffffff;
-    cursor: not-allowed;
-}
-
-.submitActive {
-    background: #454dd7;
-    color: #ffffff;
-}
 
 .signupGuide {
     margin-top: 22px;
