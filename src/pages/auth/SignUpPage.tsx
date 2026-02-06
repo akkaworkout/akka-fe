@@ -94,7 +94,7 @@ export default function SignUpPage() {
     if (!validate()) return
 
     alert('회원가입 완료!')
-     nav('/signup/success')
+    nav('/signup/success')
   }
 
   const handlePickProfile = () => {
@@ -261,7 +261,8 @@ export default function SignUpPage() {
                 onChange={(e) => {
                   const v = e.target.value
                   setNickname(v)
-                  // 지금 단계에서는 에러 사용 안 함
+
+                  // 입력 중에는 에러 안 띄움
                   setErrors(prev => ({ ...prev, nickname: undefined }))
                 }}
                 placeholder="5글자 이내로 입력해주세요"
@@ -269,11 +270,24 @@ export default function SignUpPage() {
                 rightButton={{
                   label: '중복 확인',
                   onClick: () => {
-                    // 임시: 항상 통과
+                    const v = nickname.trim()
+
+                    if (v.length === 0) {
+                      alert('닉네임을 입력해주세요')
+                      return
+                    }
+
+                    if (v.length > 5) {
+                      alert('5글자 이내로 입력해주세요')
+                      return
+                    }
+
+                    alert('사용 가능한 닉네임입니다 (임시)')
                   },
                   disabled: nickname.trim().length === 0,
                 }}
               />
+
 
 
               <Form
