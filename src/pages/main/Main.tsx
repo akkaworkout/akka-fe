@@ -2,28 +2,41 @@ import { useState } from 'react'
 import styles from './Main.module.css'
 import SideNav from '../../components/sideNav/SideNav'
 
-const Main = () => {
+import mainAkka from '../../assets/images/mainakka.png'
+import mainWorkout from '../../assets/images/mainworkout.png'
+import mainpage from '../../assets/images/mainpage.png'
+
+export default function MainPage() {
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
 
   return (
     <div className={styles.wrap}>
       <SideNav
         folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded(prev => !prev)}
+        onToggle={() => setIsSidebarFolded((prev) => !prev)}
       />
 
-      <main
-        className={styles.main}
-        style={{
-          marginLeft: isSidebarFolded ? 74 : 220,
-        }}
-      >
-        <div className={styles.mainInner}>
-          메인 내용
+      <main className={styles.main}>
+        <div className={styles.inner}>
+          <section className={styles.hero}>
+            {/* 왼쪽 텍스트 */}
+            <div className={styles.copy}>
+              <p className={styles.kicker}>운동 안 가면, 돈도 사라집니다</p>
+              <h1 className={styles.title}>이제 숫자로 확인하세요</h1>
+
+              <div className={styles.brand}>
+                <img className={styles.brandAkka} src={mainAkka} alt="akka" />
+                <img className={styles.brandWorkout} src={mainWorkout} alt="workout" />
+              </div>
+            </div>
+
+            {/* 오른쪽 일러스트 */}
+            <div className={styles.illustWrap}>
+              <img className={styles.illust} src={mainpage} alt="메인 일러스트" />
+            </div>
+          </section>
         </div>
       </main>
     </div>
   )
 }
-
-export default Main
