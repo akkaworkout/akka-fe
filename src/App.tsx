@@ -1,7 +1,12 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Main from './pages/main/Main'
 
+import WorkoutHistoryPage from './pages/write/WorkoutHistoryPage'
+import ExpenseHistoryPage from './pages/write/ExpenseHistoryPage'
+import TicketHistoryPage from './pages/write/TicketHistoryPage'
 
+import ReportPage from './pages/report/ReportPage'
+import CalendarPage from './pages/calendar/CalendarPage'
 
 import SignUpPage from './pages/auth/SignUpPage'
 import LoginPage from './pages/auth/LoginPage'
@@ -12,17 +17,20 @@ import MyPage from './pages/mypage/MyPage'
 function App() {
   return (
     <Routes>
-      {/* 메인 */}
       <Route path="/main" element={<Main />} />
       <Route path="/" element={<Navigate to="/main" replace />} />
 
+      <Route path="/write" element={<WorkoutHistoryPage />} />
+      <Route path="/expense" element={<ExpenseHistoryPage />} />
+      <Route path="/ticket" element={<TicketHistoryPage />} />
 
-      {/* 로그인/회원가입 */}
+      <Route path="/report" element={<ReportPage />} />
+      <Route path="/calendar" element={<CalendarPage />} />
+
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup/success" element={<SignUpSuccessPage />} />
 
-      {/* 마이페이지 */}
       <Route path="/mypage" element={<MyPage />} />
     </Routes>
   )
