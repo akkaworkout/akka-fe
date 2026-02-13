@@ -1,46 +1,3 @@
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.20);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.modal {
-  position: relative;
-  width: 489px;
-  min-width: 489px;
-  height: 567px;
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 26px 27px 0px 27px;
-}
-
-.close {
-  position: absolute;
-  top: 26px;
-  right: 27px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #454DD7;
-  color: #fff;
-  border: none;
-  font-size: 26px;
-  font-weight: 600;
-  line-height: 40px;
-  cursor: pointer;
-}
-
-.header {
-  color: #2C2C2C;
-  font-size: 24px;
-  font-weight: 700;
-  margin-top: 11px;
-}
-
 .images {
   overflow-x: auto;
   margin-top: 14px;
@@ -64,19 +21,19 @@
 }
 
 /* 실패 */
-.alert.fail {
+.fail {
   background: rgba(255, 88, 88, 0.07);
   color: #FF5858;
 }
 
 /* 성공 */
-.alert.success {
+.success {
   background: rgba(0, 170, 33, 0.07);
   color: #00AA21;
 }
 
 /* 구매 */
-.alert.purchase {
+.purchase {
   background: rgba(229, 181, 59, 0.07);
   color: #E5B53B;
 }

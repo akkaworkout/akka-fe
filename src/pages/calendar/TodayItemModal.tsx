@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import BaseModal from '../../components/common/BaseModal'
 import styles from './TodayItemModal.module.css'
 import exampleExercise from '../../assets/images/example_exercise.png'
 
@@ -34,46 +34,31 @@ const TodayItemModal = ({ item, onClose }: Props) => {
     구매: styles.purchase,
   }
 
-  useEffect(() => {
-    document.body.classList.add('modal-open')
-
-    return () => {
-      document.body.classList.remove('modal-open')
-    }
-  }, [])
-
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div
-        className={styles.modal}
-        onClick={e => e.stopPropagation()}
-      >
-        <button className={styles.close} onClick={onClose}>
-          ✕
+    <BaseModal
+      title={formatDate(item.date)}
+      onClose={onClose}
+      footer={
+        <button className={styles.editBtn}>
+          수정하러 가기
         </button>
-
-        <div className={styles.header}>
-          {formatDate(item.date)}
-        </div>
-
-        <div className={styles.images}>
-          <img src={exampleExercise} alt="exercise" />
-        </div>
-
-        <div className={`${styles.alert} ${alertClassMap[item.status]}`}>
-          {alertTextMap[item.status](item.amount)}
-        </div>
-
-        <div className={styles.section}>
-          <div className={styles.label}>{item.name}</div>
-          <div className={styles.memo}>
-            {item.memo ?? ''}
-          </div>
-        </div>
-
-        <button className={styles.editBtn}>수정하러 가기</button>
+      }
+    >
+      <div className={styles.images}>
+        <img src={exampleExercise} alt="exercise" />
       </div>
-    </div>
+
+      <div className={`${styles.alert} ${alertClassMap[item.status]}`}>
+        {alertTextMap[item.status](item.amount)}
+      </div>
+
+      <div className={styles.section}>
+        <div className={styles.label}>{item.name}</div>
+        <div className={styles.memo}>
+          {item.memo ?? ''}
+        </div>
+      </div>
+    </BaseModal>
   )
 }
 
