@@ -39,8 +39,8 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
     navigate(path)
   }
 
-  const isActive = (path: string) => {
-    return location.pathname.startsWith(path)
+  const isActive = (paths: string[]) => {
+    return paths.some(path => location.pathname.startsWith(path))
   }
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
       }
     }
 
-    handleResize() // 최초 진입 시
+    handleResize()
     window.addEventListener('resize', handleResize)
 
     return () => {
@@ -61,10 +61,7 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
   }, [])
 
   return (
-    <aside
-      className={`${styles.sideNav} ${folded ? styles.sideNavFolded : ''}`}
-    >
-      {/* 토글 버튼 */}
+    <aside className={`${styles.sideNav} ${folded ? styles.sideNavFolded : ''}`}>
       <div className={styles.sidebarToggleWrapper} onClick={onToggle}>
         <img
           src={sidebarToggleIcon}
@@ -73,7 +70,6 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         />
       </div>
 
-      {/* 로고 */}
       {!folded ? (
         <img src={akkaLogo} className={styles.sideNavLogo} alt="akka logo" />
       ) : (
@@ -84,78 +80,113 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         />
       )}
 
-      {/* 메뉴 */}
       <div className={styles.sidebarMenuWrapper}>
         <div
-          className={`${styles.sidebarMenu} ${isActive('/main') ? styles.active : ''}`}
+          className={`${styles.sidebarMenu} ${
+            isActive(['/main']) ? styles.active : ''
+          }`}
           onClick={() => handleNavigate('/main')}
         >
           <img
-            src={isActive('/main') ? sidebarMenuActiveIcon : sidebarMenuIcon}
+            src={
+              isActive(['/main'])
+                ? sidebarMenuActiveIcon
+                : sidebarMenuIcon
+            }
             className={styles.sidebarMenuIcon}
+            alt="main"
           />
           {!folded && '메인'}
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${isActive('/write') ? styles.active : ''}`}
+          className={`${styles.sidebarMenu} ${
+            isActive(['/write', '/expense', '/ticket']) ? styles.active : ''
+          }`}
           onClick={() => handleNavigate('/write')}
         >
           <img
-            src={isActive('/write') ? sidebarWriteActiveIcon : sidebarWriteIcon}
+            src={
+              isActive(['/write', '/expense', '/ticket'])
+                ? sidebarWriteActiveIcon
+                : sidebarWriteIcon
+            }
             className={styles.sidebarMenuIcon}
+            alt="write"
           />
           {!folded && '운동 기록'}
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${isActive('/report') ? styles.active : ''}`}
+          className={`${styles.sidebarMenu} ${
+            isActive(['/report']) ? styles.active : ''
+          }`}
           onClick={() => handleNavigate('/report')}
         >
           <img
-            src={isActive('/report') ? sidebarReportActiveIcon : sidebarReportIcon}
+            src={
+              isActive(['/report'])
+                ? sidebarReportActiveIcon
+                : sidebarReportIcon
+            }
             className={styles.sidebarMenuIcon}
+            alt="report"
           />
           {!folded && '분석/리포트'}
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${isActive('/calendar') ? styles.active : ''}`}
+          className={`${styles.sidebarMenu} ${
+            isActive(['/calendar']) ? styles.active : ''
+          }`}
           onClick={() => handleNavigate('/calendar')}
         >
           <img
-            src={isActive('/calendar') ? sidebarCalendarActiveIcon : sidebarCalendarIcon}
+            src={
+              isActive(['/calendar'])
+                ? sidebarCalendarActiveIcon
+                : sidebarCalendarIcon
+            }
             className={styles.sidebarMenuIcon}
+            alt="calendar"
           />
           {!folded && '캘린더'}
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${isActive('/mypage') ? styles.active : ''}`}
+          className={`${styles.sidebarMenu} ${
+            isActive(['/mypage']) ? styles.active : ''
+          }`}
           onClick={() => handleNavigate('/mypage')}
         >
           <img
-            src={isActive('/mypage') ? sidebarSettingActiveIcon : sidebarSettingIcon}
+            src={
+              isActive(['/mypage'])
+                ? sidebarSettingActiveIcon
+                : sidebarSettingIcon
+            }
             className={styles.sidebarMenuIcon}
+            alt="mypage"
           />
           {!folded && '마이페이지'}
         </div>
       </div>
 
-      {/* 프로필 */}
       <div className={styles.sidebarProfileWrapper}>
         <div
           className={styles.sidebarProfile}
           onClick={() => handleNavigate('/login')}
         >
-          <img src={example} className={styles.sidebarProfileImg} />
+          <img src={example} className={styles.sidebarProfileImg} alt="profile" />
         </div>
 
         {!folded && <div className={styles.sidebarUser}>Minju Lee</div>}
+
         {!folded && (
           <img
             src={akkaLogout}
             className={styles.sidebarLogout}
+            alt="logout"
             onClick={() => handleNavigate('/')}
           />
         )}

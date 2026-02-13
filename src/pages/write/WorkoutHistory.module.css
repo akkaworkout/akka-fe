@@ -1,30 +1,254 @@
 .wrap {
-    display: flex;
-    min-height: 100vh;
-    min-width: 1280px;
+  display: flex;
+  min-height: 100vh;
+  min-width: 1280px;
 }
 
 .writePage {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    background-color: #FAFAFB;
-    margin-left: 220px;
-    min-height: 900px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  background-color: #FAFAFB;
+  margin-left: 220px;
+  min-height: 900px;
 }
 
 .writeInner {
-    position: relative;
-    width: 100%;
-    max-width: 1008px;
-    margin-bottom: 32px;
-    background: aquamarine;
+  position: relative;
+  width: 100%;
+  max-width: 1008px;
+  margin-bottom: 32px;
 }
 
 .title {
-    position: absolute;
-    color: #2C2C2C;
-    top: 37px;
-    font-size: 24px;
-    font-weight: 700;
+  position: absolute;
+  color: #2C2C2C;
+  top: 37px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.tabContainer {
+  position: absolute;
+  right: 0px;
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.write {
+  position: absolute;
+  top: 98px;
+  width: 604px;
+  border-radius: 20px;
+  background: #FFF;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+  padding: 31px 23px;
+}
+
+.row {
+  display: flex;
+  gap: 30px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 42px;
+}
+
+.field label {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2C2C2C;
+}
+
+.limit {
+  font-size: 14px;
+}
+
+.selectBox {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid #E5E6EB;
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  justify-content: space-between;
+}
+
+.selectBox span {
+  font-size: 14px;
+  color: #2C2C2C;
+}
+
+.arrow {
+  color: #999;
+  font-size: 12px;
+}
+
+.resultButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.resultBtn {
+  width: 102px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  background: #F2F2F4;
+  color: #626262;
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  cursor: pointer;
+}
+
+.success {
+  background: #00AA21;
+  color: #FFFFFF;
+}
+
+.fail {
+  background: #FF5858;
+  color: #FFFFFF;
+}
+
+.uploadBox {
+  width: 558px;
+  height: 49px;
+  border-radius: 10px;
+  border: none;
+  background: #F2F2F4;
+  color: #626262;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.uploadBox img {
+  width: 28px;
+  height: 28px;
+}
+
+.imagePreviewBox {
+  position: relative;
+  width: 558px;
+  height: 180px;
+  border-radius: 10px;
+  background: #F2F2F4;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.removeImageBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.input {
+  width: 558px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid #D9D9D9;
+  font-size: 16px;
+  line-height: 40px;
+  box-sizing: border-box;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.required {
+  color: #FF5858;
+  font-size: 14px;
+}
+
+.submitBtn {
+  width: 127px;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background: #454DD7;
+  color: #FFFFFF;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 50px;
+}
+
+.currentRecord {
+  position: absolute;
+  top: 98px;
+  right: 0px;
+}
+
+.recordPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0;
+  padding-top: 9px;
+  margin: 0;
+}
+
+.recordItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 16px;
+  color: #2c2c2c;
+}
+
+.checkIcon {
+  display: flex;
+  align-items: center;
+  color: #454DD7;
+}
+
+.priceInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priceInput .input {
+  width: 172px;
+}
+
+.unit {
+  font-size: 16px;
+  color: #2C2C2C;
 }

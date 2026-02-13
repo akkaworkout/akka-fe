@@ -1,0 +1,87 @@
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.select {
+  width: 250px;
+  height: 49px;
+  border-radius: 10px;
+  border: 1px solid #D9D9D9;
+  background: #FFF;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 13px 0 17px;
+  line-height: 49px;
+}
+
+.dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.text {
+  color: #2C2C2C;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.arrow {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s ease;
+}
+
+.open {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: 49px;
+  left: 0;
+  width: 250px;
+  border-radius: 7px;
+  border: 1px solid #D9D9D9;
+  background: #FFF;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.dropdownItem {
+  width: 100%;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 17px;
+  color: #2C2C2C;
+  font-size: 16px;
+  font-weight: 500;
+  background: #fff;
+  border: none;
+  line-height: 49px;
+}
+
+.dropdownItem:hover {
+  background: #F4F6FF;
+}
+
+.addButton {
+  width: calc(100% - 16px);
+  height: 27px;
+  margin: 8px;
+  border-radius: 10px;
+  background: #F2F2F4;
+  border: none;
+  font-size: 24px;
+  color: #919191;
+  text-align: center;
+  cursor: pointer;
+}

@@ -1,19 +1,32 @@
 import { useState } from 'react'
 
 import ReportHeader from './ReportHeader'
-
 import SideNav from '../../components/sideNav/SideNav'
-import SummaryCard from '../../components/report/SummaryCard'
+import SummaryCard, {
+  type Exercise,
+} from '../../components/common/SummaryCard'
 import InsightCard from '../../components/report/InsightCard'
 import Card from '../../components/common/Card'
 import BarChart from '../../components/report/charts/BarChart'
 import TotalExpenseCard from '../../components/report/card/TotalExpenseCard/TotalExpenseCard'
 import TotalExerciseCard from '../../components/report/card/TotalExerciseCard/TotalExerciseCard'
 import TotalNoShowCard from '../../components/report/card/TotalNoShowCard/TotalNoShowCard'
+import RingChart from '../../components/report/charts/RingChart'
 import styles from './Report.module.css'
+
+const EXERCISES: Exercise[] = [
+  { id: 1, label: '발레', color: 'rgb(252, 215, 255)' },
+  { id: 2, label: '헬스', color: '#DAD7FF' },
+  { id: 3, label: '필라테스', color: '#FFE6CC' },
+  { id: 4, label: '수영', color: '#E0F0FF' },
+]
 
 export default function ReportPage() {
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
+
+  const [selectedExercise, setSelectedExercise] = useState<Exercise>(
+    EXERCISES[0]
+  )
 
   return (
     <div className={styles.wrap}>
@@ -30,19 +43,30 @@ export default function ReportPage() {
           <ReportHeader />
 
           <div className={styles.reportGrid}>
-            {/* 좌측 Summary */}
             <div className={styles.summarySection}>
-              <SummaryCard />
+              <Card
+                title="운동별 목표 달성률"
+                width="100%"
+                height={412}
+                radius={20}
+                backgroundColor="#ffffff"
+              >
+                <SummaryCard
+                  exercises={EXERCISES}
+                  selected={selectedExercise}
+                  onChange={setSelectedExercise}
+                />
+
+                <RingChart percent={75} />
+              </Card>
             </div>
 
-            {/* 상단 Insight */}
             <div className={styles.insightSection}>
               <InsightCard />
             </div>
 
-            {/* 차트: 운동 기록 */}
             <Card
-              title={"운동 기록"}
+              title="운동 기록"
               width={330}
               height={289}
               backgroundColor="#ffffff"
@@ -57,12 +81,10 @@ export default function ReportPage() {
                 bubbleTextColor="#FFFFFF"
                 gridColor="#EEF2FF"
               />
-
             </Card>
 
-            {/* 차트: 지출 기록 */}
             <Card
-              title={"지출 기록"}
+              title="지출 기록"
               width={330}
               height={289}
               backgroundColor="#ffffff"
@@ -79,7 +101,6 @@ export default function ReportPage() {
               />
             </Card>
 
-            {/* 하단 3개 카드 */}
             <div className={styles.listSection1}>
               <TotalNoShowCard />
             </div>
@@ -94,6 +115,6 @@ export default function ReportPage() {
           </div>
         </div>
       </main>
-    </div >
+    </div>
   )
 }
