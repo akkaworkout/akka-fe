@@ -28,8 +28,9 @@ export default function LoginPage() {
     return email.trim() !== '' && password.trim() !== ''
   }, [email, password])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
     const next: FieldErrors = {}
 
     if (email.trim() && !isEmailValid(email)) {
@@ -43,9 +44,53 @@ export default function LoginPage() {
     setErrors(next)
     if (Object.keys(next).length > 0) return
 
-    alert('로그인 성공했습니다')
-    nav('/main')
+    try {
+      const res = await fetch(
+        'https://port-0-akka-workout-be-mkqkv57u21e615f4.sel3.cloudtype.app/auth/login',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email.trim(),
+            password,
+          }),
+        }
+      )
+
+      const data = await res.json().catch(() => ({}))
+
+      // 콘솔로 확인
+      console.log('LOGIN status:', res.status)
+      console.log('LOGIN response:', data)
+
+      if (!res.ok) {
+        // 서버가 message를 주면 그거 쓰고, 없으면 기본 문구
+        setErrors(prev => ({
+          ...prev,
+          email: data?.message || '로그인 실패',
+        }))
+        return
+      }
+
+      const token = data?.data?.token
+
+      if (token) {
+        localStorage.setItem('accessToken', token)
+        console.log('Saved token:', token)
+      } else {
+        console.log('No token in response. Check backend response shape.')
+      }
+
+      nav('/main')
+    } catch (err) {
+      console.error('LOGIN fetch error:', err)
+      setErrors(prev => ({
+        ...prev,
+        email: '네트워크 오류가 발생했습니다. 서버/주소를 확인해주세요.',
+      }))
+    }
   }
+
 
   return (
     <div className={styles.wrap}>
