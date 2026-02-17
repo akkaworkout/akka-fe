@@ -25,14 +25,14 @@
 .selectBox div {
   color: #2C2C2C;
   font-family: Nunito;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
 }
 
 .arrow {
   margin-left: auto;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   transition: transform 0.2s ease;
 }
 

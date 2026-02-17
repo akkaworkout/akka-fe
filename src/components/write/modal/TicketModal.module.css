@@ -1,0 +1,44 @@
+.divider {
+  height: 1px;
+  background-color: #E5E5E8;
+  margin: 23px -27px 33px -27px;
+}
+
+.body {
+  font-size: 16px;
+  color: #2C2C2C;
+  line-height: 1.5;
+}
+
+.footer {
+  margin-top: 48px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.nextBtn {
+  position: absolute;
+  bottom: 26px;
+  min-width: 127px;
+  height: 50px;
+  line-height: 52px;
+  padding: 0 45px;
+  border-radius: 10px;
+  border: none;
+  background-color: #4C4FD5;
+  color: #FFF;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.nextBtn:hover {
+  background-color: #454DD7;
+}
+
+.nextBtn:active {
+  transform: scale(0.98);
+}
