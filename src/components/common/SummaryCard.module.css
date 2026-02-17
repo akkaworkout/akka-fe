@@ -14,7 +14,7 @@
   align-items: center;
   gap: 12px;
   padding: 0 13px 0 17px;
-  line-height: 49px;
+  cursor: pointer;
 }
 
 .dot {
@@ -28,6 +28,7 @@
   color: #2C2C2C;
   font-size: 16px;
   font-weight: 500;
+  transform: translateY(-1px);
 }
 
 .arrow {
@@ -52,6 +53,7 @@
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
   overflow: hidden;
   z-index: 10;
+  
 }
 
 .dropdownItem {
@@ -66,7 +68,7 @@
   font-weight: 500;
   background: #fff;
   border: none;
-  line-height: 49px;
+  cursor: pointer;
 }
 
 .dropdownItem:hover {
@@ -84,4 +86,8 @@
   color: #919191;
   text-align: center;
   cursor: pointer;
+}
+
+.addButton:hover {
+  background: #E5E5E8;
 }

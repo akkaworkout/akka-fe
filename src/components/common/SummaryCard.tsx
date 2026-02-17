@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styles from './SummaryCard.module.css'
 import arrow from '../../assets/icons/arrow-down.png'
 
@@ -12,15 +13,20 @@ type SummaryCardProps = {
   exercises: Exercise[]
   selected: Exercise
   onChange: (exercise: Exercise) => void
+  showAddButton?: boolean
+  addPath?: string
 }
 
 export default function SummaryCard({
   exercises,
   selected,
   onChange,
+  showAddButton = false,
+  addPath = '/ticket',
 }: SummaryCardProps) {
   const [isOpen, setIsOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement | null>(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!isOpen) return
@@ -35,7 +41,6 @@ export default function SummaryCard({
     }
 
     document.addEventListener('mousedown', handleClickOutside)
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
@@ -77,11 +82,21 @@ export default function SummaryCard({
                   className={styles.dot}
                   style={{ backgroundColor: item.color }}
                 />
-                <span>{item.label}</span>
+                <span className={styles.text}>{item.label}</span>
               </button>
             ))}
 
-          <button className={styles.addButton}>+</button>
+          {showAddButton && (
+            <button
+              className={styles.addButton}
+              onClick={() => {
+                setIsOpen(false)
+                navigate(addPath)
+              }}
+            >
+              +
+            </button>
+          )}
         </div>
       )}
     </div>

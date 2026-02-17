@@ -75,6 +75,7 @@ const WorkoutHistoryPage = () => {
                   exercises={EXERCISES}
                   selected={selectedExercise}
                   onChange={setSelectedExercise}
+                  showAddButton
                 />
               </div>
             </div>

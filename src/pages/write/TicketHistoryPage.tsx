@@ -1,19 +1,44 @@
 import { useState, useRef, useEffect } from 'react'
-
 import styles from './TicketHistory.module.css'
 import SideNav from '../../components/sideNav/SideNav'
 import WorkoutTabs from '../../components/write/WorkoutTabs'
-import CalendarIcon from '../../assets/icons/sidebar/sidebar_calendar_active.png'
-import Goal from '../../assets/icons/goal.png'
-import MoreButton from '../../assets/icons/moreButton.png'
-import EditIcon from '../../assets/icons/edit.png'
-import DeleteIcon from '../../assets/icons/delete.png'
+import ConfirmModal from '../../components/write/modal/ConfirmModal'
+import TicketEndModal from '../../components/write/modal/TicketEndModal'
+import TicketAddModal from '../../components/write/modal/TicketAddModal'
+
+import SummaryCard, { type Exercise } from '../../components/common/SummaryCard'
+import TicketRow from '../../components/write/TicketRow'
+
+const END_TYPES: Exercise[] = [
+  { id: 1, label: '완료', color: '#E0F0FF' },
+  { id: 2, label: '기간만료', color: '#FFE6CC' },
+  { id: 3, label: '환불', color: '#FFDADA' },
+  { id: 4, label: '기타', color: '#E5E5E8' },
+]
+
+const COLOR_OPTIONS = [
+  '#FFD7D7',
+  '#FFEAD7',
+  '#FFF7D3',
+  '#D7FFD3',
+  '#D7EDFF',
+  '#D5D3FF',
+  '#FCD7FF',
+  '#D7FFF3',
+]
 
 const TicketHistoryPage = () => {
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [confirmIndex, setConfirmIndex] = useState<number | null>(null)
+  const [endIndex, setEndIndex] = useState<number | null>(null)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
+  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [ticketType, setTicketType] = useState<'횟수권' | '기간권'>('횟수권')
+  const [selectedColor, setSelectedColor] = useState(COLOR_OPTIONS[0])
+  const [selectedEndType, setSelectedEndType] = useState<Exercise>(END_TYPES[0])
+  const [price, setPrice] = useState('')
+  const [viewIndex, setViewIndex] = useState<number | null>(null)
 
   const [ticketList, setTicketList] = useState([
     {
@@ -30,7 +55,7 @@ const TicketHistoryPage = () => {
       color: '#D5D3FF',
       period: '2026.01.05 - 2026.03.05',
       count: '24회',
-      status: '진행 중',
+      status: '완료',
     },
   ])
 
@@ -40,7 +65,10 @@ const TicketHistoryPage = () => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setOpenIndex(null)
       }
     }
@@ -53,9 +81,23 @@ const TicketHistoryPage = () => {
 
   const handleDelete = () => {
     if (confirmIndex === null) return
-
     setTicketList(prev => prev.filter((_, i) => i !== confirmIndex))
     setConfirmIndex(null)
+  }
+
+  const handleEnd = () => {
+    if (endIndex === null) return
+
+    setTicketList(prev =>
+      prev.map((item, i) =>
+        i === endIndex
+          ? { ...item, status: selectedEndType.label }
+          : item
+      )
+    )
+
+    setEndIndex(null)
+    setPrice('')
   }
 
   return (
@@ -79,108 +121,110 @@ const TicketHistoryPage = () => {
           <div className={styles.write}>
             {ticketList.length === 0 ? (
               <div className={styles.emptyText}>
-                아직 등록된 티켓이 없어요
+                등록된 티켓이 없어요
               </div>
             ) : (
-              ticketList.map((ticket, index) => (
-                <div key={ticket.id} className={styles.ticket}>
-                  <div className={styles.left}>
-                    <div
-                      className={styles.dot}
-                      style={{ backgroundColor: ticket.color }}
-                    />
-                    <div className={styles.exercise}>{ticket.name}</div>
-                  </div>
+              ticketList.map((ticket, index) => {
+                const isActive = ticket.status === '진행 중'
 
-                  <div className={styles.center}>
-                    <div className={styles.period}>
-                      <img src={CalendarIcon} alt="calendar_icon" />
-                      {ticket.period}
-                    </div>
-                    <div className={styles.count}>
-                      <img src={Goal} alt="goal_icon" />
-                      {ticket.count}
-                    </div>
-                  </div>
-
-                  <div className={styles.right}>
-                    <div className={styles.status}>{ticket.status}</div>
-
-                    <div
-                      className={styles.moreWrapper}
-                      ref={openIndex === index ? dropdownRef : null}
-                    >
-                      <button
-                        type="button"
-                        className={styles.moreButton}
-                        onClick={() => handleToggle(index)}
-                      >
-                        <img src={MoreButton} alt="more_button_icon" />
-                      </button>
-
-                      {openIndex === index && (
-                        <div className={styles.dropdown}>
-                          <div className={styles.dropdownItem}>
-                            <img
-                              src={EditIcon}
-                              alt="edit"
-                              className={styles.editIcon}
-                            />
-                            이용권 종료
-                          </div>
-
-                          <div
-                            className={`${styles.dropdownItem} ${styles.delete}`}
-                            onClick={() => {
-                              setConfirmIndex(index)
-                              setOpenIndex(null)
-                            }}
-                          >
-                            <img
-                              src={DeleteIcon}
-                              alt="delete"
-                              className={styles.deleteIcon}
-                            />
-                            이용권 삭제
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))
+                return (
+                  <TicketRow
+                    key={ticket.id}
+                    ticket={ticket}
+                    index={index}
+                    isActive={isActive}
+                    openIndex={openIndex}
+                    onToggle={handleToggle}
+                    onEnd={(i) => {
+                      setEndIndex(i)
+                      setOpenIndex(null)
+                    }}
+                    onDelete={(i) => {
+                      setConfirmIndex(i)
+                      setOpenIndex(null)
+                    }}
+                    onView={(i) => {
+                      setViewIndex(i)
+                    }}
+                    dropdownRef={dropdownRef}
+                  />
+                )
+              })
             )}
 
-            <div className={styles.addBtn}>+</div>
+            <div
+              className={styles.addBtn}
+              onClick={() => setIsAddOpen(true)}
+            >
+              +
+            </div>
           </div>
         </div>
       </main>
 
+      {/* 이용권 삭제 */}
       {confirmIndex !== null && (
-        <div className={styles.confirmOverlay}>
-          <div className={styles.confirmModal}>
-            <div className={styles.confirmText}>
-              이용권을 정말 삭제하시겠습니까?
-            </div>
-
-            <div className={styles.confirmButtons}>
-              <button
-                className={styles.cancelBtn}
-                onClick={() => setConfirmIndex(null)}
-              >
-                취소
-              </button>
-
-              <button
-                className={styles.confirmBtn}
-                onClick={handleDelete}
-              >
-                삭제
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          onCancel={() => setConfirmIndex(null)}
+          onConfirm={handleDelete}
+        />
       )}
+
+      {/* 이용권 종료 */}
+      {endIndex !== null && (
+        <TicketEndModal
+          ticket={ticketList[endIndex]}
+          selectedEndType={selectedEndType}
+          setSelectedEndType={setSelectedEndType}
+          price={price}
+          setPrice={setPrice}
+          END_TYPES={END_TYPES}
+          onClose={() => setEndIndex(null)}
+          onConfirm={handleEnd}
+        />
+      )}
+
+      {/* 이용권 추가 */}
+      {isAddOpen && (
+        <TicketAddModal
+          ticketType={ticketType}
+          setTicketType={setTicketType}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+          COLOR_OPTIONS={COLOR_OPTIONS}
+          onClose={() => setIsAddOpen(false)}
+          onConfirm={() => {
+            setTicketList(prev => [
+              ...prev,
+              {
+                id: Date.now(),
+                name: '새 이용권',
+                color: selectedColor,
+                period: '2026.04.01 - 2026.06.01',
+                count: ticketType === '횟수권' ? '20회' : '3개월',
+                status: '진행 중',
+              },
+            ])
+            setIsAddOpen(false)
+          }}
+        />
+      )}
+
+      {/* 이용권 조회 */}
+      {viewIndex !== null && (
+        <TicketAddModal
+          mode="view"
+          ticketType={ticketType}
+          setTicketType={setTicketType}
+          selectedColor={ticketList[viewIndex].color}
+          setSelectedColor={setSelectedColor}
+          COLOR_OPTIONS={COLOR_OPTIONS}
+          onClose={() => setViewIndex(null)}
+          onConfirm={() => setViewIndex(null)}
+        />
+      )}
+
+
     </div>
   )
 }
