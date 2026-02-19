@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import './TotalExerciseCard.css'
 import Card from '../../../common/Card'
+import DetailModal from '../../../../pages/report/modals/DetailModal'
 
 const exerciseList = [
   { label: '발레', count: 10 },
@@ -11,6 +13,8 @@ const exerciseList = [
 const VISIBLE_COUNT = 3
 
 export default function TotalExerciseCard() {
+  const [open, setOpen] = useState(false)
+
   const totalCount = exerciseList.reduce((sum, i) => sum + i.count, 0)
   const restCount = Math.max(exerciseList.length - VISIBLE_COUNT, 0)
 
@@ -21,51 +25,63 @@ export default function TotalExerciseCard() {
   const maxLabel = maxItem?.label
 
   return (
-    <Card
-      title="총 운동"
-      width={330}
-      height={324}
-      backgroundColor="#ffffff"
-      radius={20}
-    >
-      <section className="total-exercise-card">
-        <ul className="exercise-list">
-          {exerciseList.slice(0, VISIBLE_COUNT).map((item, idx) => {
-            const isMax = item.count === maxCount && maxCount > 0
-            return (
-              <li
-                key={`${item.label}-${idx}`}
-                className={`exercise-row ${isMax ? 'highlight' : ''}`}
-              >
-                <span className="label">{item.label}</span>
-                <span className={`count ${isMax ? 'count-max' : ''}`}>
-                  {item.count}회
-                </span>
-              </li>
-            )
-          })}
-        </ul>
+    <>
+      <Card
+        title="총 운동"
+        width={330}
+        height={324}
+        backgroundColor="#ffffff"
+        radius={20}
+      >
+        <section className="total-exercise-card">
+          <ul className="exercise-list">
+            {exerciseList.slice(0, VISIBLE_COUNT).map((item, idx) => {
+              const isMax = item.count === maxCount && maxCount > 0
+              return (
+                <li
+                  key={`${item.label}-${idx}`}
+                  className={`exercise-row ${isMax ? 'highlight' : ''}`}
+                >
+                  <span className="label">{item.label}</span>
+                  <span className={`count ${isMax ? 'count-max' : ''}`}>
+                    {item.count}회
+                  </span>
+                </li>
+              )
+            })}
+          </ul>
 
-        {restCount > 0 && (
-          <>
-            <button className="more-btn" type="button">
+          {restCount > 0 && (
+            <button
+              className="more-btn"
+              type="button"
+              onClick={() => setOpen(true)}
+            >
               나머지 {restCount}개 항목 보기
             </button>
-            <div className="more-underline" />
-          </>
-        )}
-
-        <footer className="card-footer">
-          <p className="summary-main">
-            총 <span className="summary-number">{totalCount}</span>회 운동했어요.
-          </p>
-          {maxLabel && (
-            <p className="summary-sub">
-              {maxLabel}를 가장 많이 운동했어요.
-            </p>
           )}
-        </footer>
-      </section>
-    </Card>
+
+          <footer className="card-footer">
+            <p className="summary-main">
+              총 <span className="summary-number">{totalCount}</span>회 운동했어요.
+            </p>
+            {maxLabel && (
+              <p className="summary-sub">
+                {maxLabel}를 가장 많이 운동했어요.
+              </p>
+            )}
+          </footer>
+        </section>
+      </Card>
+
+      {/* 공통 DetailModal */}
+      <DetailModal
+        open={open}
+        onClose={() => setOpen(false)}
+        restCount={restCount}
+        subject="운동"
+        items={exerciseList.slice(VISIBLE_COUNT)}
+      />
+    </>
   )
 }

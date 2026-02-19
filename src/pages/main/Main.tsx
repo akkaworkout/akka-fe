@@ -6,6 +6,9 @@ import mainAkka from '../../assets/images/mainakka.png'
 import mainWorkout from '../../assets/images/mainworkout.png'
 import mainpage from '../../assets/images/mainpage.png'
 
+import '../../chartDefaults'
+
+
 export default function MainPage() {
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
 

@@ -56,26 +56,15 @@
 
 /* 나머지 항목 보기 */
 .more-btn {
-  margin-top: 14px;
-  padding: 0;
-  border: none;
-  background: transparent;
+  display: inline-block;
   cursor: pointer;
-
-  font-size: 12px;
-  font-weight: 700;
-  color: #111;
-  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 2px solid #000 !important;
+  padding-bottom: 3px;
 }
 
-/* “나머지 글씨 ↔ 밑줄” 간격 0.5 */
-.more-underline {
-  height: 0.5px;
-  background: #111;
-  margin-top: 0.5px;
-  width: 120px;
-  /* 밑줄 길이(피그마 값 있으면 바꿔) */
-}
+
 
 /* 밑줄 ↔ 요약문구 = 20 */
 .card-footer {

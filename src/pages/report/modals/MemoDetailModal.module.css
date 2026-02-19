@@ -1,0 +1,84 @@
+/* 좌우 여백 */
+.wrap {
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* 제목 */
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+  color: #2C2C2C;
+}
+
+.table {
+  margin-top: 80px;
+}
+
+/* 헤더(날짜/종목/이유) */
+.headerRow {
+  display: grid;
+  grid-template-columns: 72px 87px 181px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 400;
+  color: #2C2C2C;
+}
+
+
+.thickDivider {
+  margin-top: 22px;
+  height: 11px;
+  background: rgba(96, 91, 255, 0.1);
+  border-radius: 999px;
+}
+
+/* 리스트 영역 */
+.body {
+  margin-top: 22px;
+  max-height: 340px;
+  overflow: auto;
+
+  /* 스크롤바 숨김 */
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE/Edge */
+}
+
+.body::-webkit-scrollbar {
+  display: none;              /* Chrome/Safari */
+}
+
+/* 데이터 행 */
+.dataRow {
+  display: grid;
+  grid-template-columns: 72px 87px 181px;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: #2C2C2C;
+}
+
+/* 행 아래 실선 */
+.dataRow::after {
+  content: "";
+  display: block;
+  width: 433px;
+  height: 1px;
+  background: rgba(44,44,44,0.2);
+  margin-top: 22px;
+}
+
+/* 다음 행과의 간격 */
+.dataRow + .dataRow {
+  margin-top: 22px;
+}
+
+/* 셀 텍스트 처리 */
+.cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

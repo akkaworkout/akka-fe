@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
+import React, { useRef, useState } from 'react'
+import type { ChangeEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './SignUpPage.module.css'
 
@@ -27,6 +27,7 @@ export default function SignUpPage() {
   // profile
   const fileRef = useRef<HTMLInputElement | null>(null)
   const [profilePreview, setProfilePreview] = useState<string | null>(null)
+  const [profileFile, setProfileFile] = useState<File | null>(null)
 
   // form values
   const [email, setEmail] = useState('')
@@ -37,8 +38,6 @@ export default function SignUpPage() {
   const [exerciseGoal, setExerciseGoal] = useState('')
 
   // ui
-  const [showPw, setShowPw] = useState(false)
-  const [showPwConfirm, setShowPwConfirm] = useState(false)
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
 
   // errors
@@ -47,9 +46,8 @@ export default function SignUpPage() {
   /* ================= 유틸 ================= */
 
   const isEmailValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
-  const hasSpecialChar = (v: string) => /[^A-Za-z0-9]/.test(v) // 특수문자 
+  const hasSpecialChar = (v: string) => /[^A-Za-z0-9]/.test(v)
   const isPasswordValid = (v: string) => v.length >= 8 && hasSpecialChar(v)
-
   const isNicknameValid = (v: string) => v.trim().length >= 2
 
   const getErrors = () => {
@@ -60,11 +58,9 @@ export default function SignUpPage() {
 
     if (!password) next.password = '비밀번호를 입력해주세요.'
     else if (!isPasswordValid(password))
-      next.password = '올바른 비밀번호 형식이 아닙니다.'
+      next.password = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
 
-
-    if (!passwordConfirm)
-      next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
+    if (!passwordConfirm) next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
     else if (passwordConfirm !== password)
       next.passwordConfirm = '비밀번호가 일치하지 않습니다.'
 
@@ -72,11 +68,12 @@ export default function SignUpPage() {
     else if (!isNicknameValid(nickname))
       next.nickname = '닉네임은 2자 이상이어야 합니다.'
 
-    if (budget && !/^\d+$/.test(budget))
-      next.budget = '숫자만 입력 가능합니다.'
-
+    if (budget && !/^\d+$/.test(budget)) next.budget = '숫자만 입력 가능합니다.'
     if (exerciseGoal && !/^\d+$/.test(exerciseGoal))
       next.exerciseGoal = '숫자만 입력 가능합니다.'
+
+    // 프로필을 필수로 하고 싶으면 주석 해제
+    // if (!profileFile) next.profile = '프로필 이미지를 선택해주세요.'
 
     return next
   }
@@ -89,12 +86,47 @@ export default function SignUpPage() {
 
   /* ================= 이벤트 ================= */
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!validate()) return
 
-    alert('회원가입 완료!')
-    nav('/signup/success')
+    try {
+      const formData = new FormData()
+      formData.append('email', email)
+      formData.append('password', password)
+      formData.append('nickname', nickname)
+      formData.append('target_budget', String(Number(budget)))
+      formData.append('target_exercise_count', String(Number(exerciseGoal)))
+
+      // 파일 키는 반드시 "profile"
+      if (profileFile) formData.append('profile', profileFile)
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+        method: 'POST',
+        body: formData,
+      })
+
+      // 400 원인 확인용 (지금 단계에서 필수)
+      const raw = await res.text()
+      console.log('STATUS:', res.status)
+      console.log('RAW:', raw)
+
+      let data: any = null
+      try {
+        data = JSON.parse(raw)
+      } catch {}
+
+      if (!res.ok) {
+        alert(data?.message ?? raw ?? '회원가입 실패')
+        return
+      }
+
+      alert('회원가입 성공!')
+      nav('/signup/success')
+    } catch (err) {
+      console.error(err)
+      alert('서버 연결 실패')
+    }
   }
 
   const handlePickProfile = () => {
@@ -102,7 +134,7 @@ export default function SignUpPage() {
   }
 
   const handleProfileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0] ?? null
     if (!file) return
 
     if (!file.type.startsWith('image/')) {
@@ -116,6 +148,7 @@ export default function SignUpPage() {
     }
 
     setErrors((prev) => ({ ...prev, profile: undefined }))
+    setProfileFile(file)
     setProfilePreview(URL.createObjectURL(file))
   }
 
@@ -129,7 +162,6 @@ export default function SignUpPage() {
     exerciseGoal.trim() !== '' &&
     /^\d+$/.test(exerciseGoal)
 
-
   /* ================= 렌더 ================= */
 
   return (
@@ -139,11 +171,7 @@ export default function SignUpPage() {
         onToggle={() => setIsSidebarFolded((prev) => !prev)}
       />
 
-
-      <main
-        className={styles.main}
-        style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
-      >
+      <main className={styles.main} style={{ marginLeft: isSidebarFolded ? 74 : 220 }}>
         <div className={styles.mainInner}>
           <section className={styles.card}>
             <header className={styles.headerArea}>
@@ -176,6 +204,9 @@ export default function SignUpPage() {
                 className={styles.fileInput}
                 onChange={handleProfileChange}
               />
+
+              {/* 필요하면 프로필 에러 표시 */}
+              {/* {errors.profile && <p className={styles.errorText}>{errors.profile}</p>} */}
             </div>
 
             <form className={styles.form} onSubmit={handleSubmit}>
@@ -185,8 +216,7 @@ export default function SignUpPage() {
                 onChange={(e) => {
                   const v = e.target.value
                   setEmail(v)
-
-                  setErrors(prev => ({
+                  setErrors((prev) => ({
                     ...prev,
                     email: v && !isEmailValid(v) ? '올바른 이메일 형식이 아닙니다' : undefined,
                   }))
@@ -201,25 +231,22 @@ export default function SignUpPage() {
                 }}
               />
 
-
               <Form
                 label="비밀번호"
-                type={showPw ? 'text' : 'password'}
+                type="password"
                 value={password}
                 onChange={(e) => {
                   const v = e.target.value
                   setPassword(v)
 
-                  setErrors(prev => {
+                  setErrors((prev) => {
                     const next: FieldErrors = { ...prev }
 
-                    // password 실시간 검증
                     if (!v) next.password = '비밀번호를 입력해주세요.'
                     else if (!isPasswordValid(v))
                       next.password = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
                     else next.password = undefined
 
-                    // 비밀번호가 바뀌면 확인 값도 같이 체크
                     if (passwordConfirm) {
                       next.passwordConfirm =
                         passwordConfirm !== v ? '비밀번호가 일치하지 않습니다.' : undefined
@@ -228,7 +255,6 @@ export default function SignUpPage() {
                     return next
                   })
                 }}
-
                 placeholder="비밀번호 (특수문자 포함, 8자 이상)"
                 autoComplete="new-password"
                 showPasswordToggle
@@ -241,19 +267,16 @@ export default function SignUpPage() {
                 onChange={(e) => {
                   const v = e.target.value
                   setPasswordConfirm(v)
-
-                  setErrors(prev => ({
+                  setErrors((prev) => ({
                     ...prev,
-                    passwordConfirm:
-                      v && v !== password ? '비밀번호가 일치하지 않습니다' : undefined,
+                    passwordConfirm: v && v !== password ? '비밀번호가 일치하지 않습니다' : undefined,
                   }))
                 }}
                 placeholder="비밀번호 (특수문자 포함, 8자 이상)"
-                type={showPwConfirm ? 'text' : 'password'}
+                type="password"
                 showPasswordToggle
                 errorText={errors.passwordConfirm}
               />
-
 
               <Form
                 label="닉네임"
@@ -261,26 +284,17 @@ export default function SignUpPage() {
                 onChange={(e) => {
                   const v = e.target.value
                   setNickname(v)
-
-                  // 입력 중에는 에러 안 띄움
-                  setErrors(prev => ({ ...prev, nickname: undefined }))
+                  setErrors((prev) => ({ ...prev, nickname: undefined }))
                 }}
                 placeholder="5글자 이내로 입력해주세요"
-                errorText={undefined}
+                errorText={errors.nickname}
                 rightButton={{
                   label: '중복 확인',
                   onClick: () => {
                     const v = nickname.trim()
 
-                    if (v.length === 0) {
-                      alert('닉네임을 입력해주세요')
-                      return
-                    }
-
-                    if (v.length > 5) {
-                      alert('5글자 이내로 입력해주세요')
-                      return
-                    }
+                    if (v.length === 0) return alert('닉네임을 입력해주세요')
+                    if (v.length > 5) return alert('5글자 이내로 입력해주세요')
 
                     alert('사용 가능한 닉네임입니다 (임시)')
                   },
@@ -288,25 +302,19 @@ export default function SignUpPage() {
                 }}
               />
 
-
-
               <Form
                 label="목표 예산(월 기준)"
                 value={budget}
                 onChange={(e) => {
                   const v = e.target.value
                   setBudget(v)
-
-                  setErrors(prev => ({
+                  setErrors((prev) => ({
                     ...prev,
-                    budget:
-                      v && !/^\d+$/.test(v)
-                        ? '숫자만 입력 가능합니다'
-                        : undefined,
+                    budget: v && !/^\d+$/.test(v) ? '숫자만 입력 가능합니다' : undefined,
                   }))
                 }}
                 inputMode="numeric"
-                placeholder="120,000"
+                placeholder="120000"
                 errorText={errors.budget}
               />
 
@@ -316,13 +324,9 @@ export default function SignUpPage() {
                 onChange={(e) => {
                   const v = e.target.value
                   setExerciseGoal(v)
-
-                  setErrors(prev => ({
+                  setErrors((prev) => ({
                     ...prev,
-                    exerciseGoal:
-                      v && !/^\d+$/.test(v)
-                        ? '숫자만 입력 가능합니다'
-                        : undefined,
+                    exerciseGoal: v && !/^\d+$/.test(v) ? '숫자만 입력 가능합니다' : undefined,
                   }))
                 }}
                 inputMode="numeric"
@@ -330,15 +334,15 @@ export default function SignUpPage() {
                 errorText={errors.exerciseGoal}
               />
 
-
               <div className={styles.submitRow}>
-                <div /> {/* 라벨 칸 비움 */}
+                <div />
                 <div className={styles.submitArea}>
                   <button
                     type="submit"
                     disabled={!canSubmit}
-                    className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
-                      }`}
+                    className={`${styles.submitBtn} ${
+                      !canSubmit ? styles.submitDisabled : styles.submitActive
+                    }`}
                   >
                     회원가입
                   </button>

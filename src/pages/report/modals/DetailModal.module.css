@@ -1,0 +1,58 @@
+/* ===== 모달 내부 컨텐츠 래퍼 ===== */
+.workoutDetail {
+  padding-left: 19px;
+  padding-top: 22px;
+}
+
+
+/* ===== 상단 안내 문구 ===== */
+/* 상위 N개 제외 설명 텍스트 */
+.detailTitle {
+  margin: 0; 
+  font-size: 14px;
+  font-weight: 400;
+  color: #2C2C2C;
+}
+
+
+/* ===== 운동 상세 리스트 영역 ===== */
+.detailList {
+  list-style: none;      
+  padding: 0;           
+  margin: 15px 0 0 0;    
+  display: flex;
+  flex-direction: column;
+  gap: 15px;            
+}
+
+
+/* ===== 개별 pill row ===== */
+.detailRow {
+  width: 282px;
+  height: 38px;
+  background: #FAFAFB;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;          /* 수직 중앙 정렬 */
+  justify-content: space-between; /* 좌측 label / 우측 count 분리 */
+
+  padding-left: 15px;  /* 내부 왼쪽 여백 */
+  padding-right: 17px; /* 내부 오른쪽 여백 */
+}
+
+
+/* ===== 운동명 텍스트 ===== */
+.detailLabel {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2C2C2C;
+}
+
+
+/* ===== 횟수 텍스트 ===== */
+.detailCount {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2C2C2C;
+}

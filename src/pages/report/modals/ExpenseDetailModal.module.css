@@ -1,0 +1,173 @@
+.resetBody {
+  height: 100%;
+  margin: -18px -22px -22px;
+}
+
+/* 모달 내부 전체 */
+.root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  /* 리스트 영역만 스크롤 되게 */
+  overflow: hidden;
+
+  /* 좌측 기준선 33px */
+  padding-left: 33px;
+  padding-right: 33px;
+}
+
+/* ===== Header (고정) ===== */
+.header {
+  flex: 0 0 auto;
+  padding-top: 20px;
+  box-sizing: border-box;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+  color: #2c2c2c;
+}
+
+.ment {
+  margin: 0;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #2c2c2c;
+}
+
+.total {
+  margin-top: 18px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #3a974c;
+}
+
+
+.tabs {
+  margin-top: 26px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0px;
+}
+
+
+.tabBtn {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.tabLabel {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.tabLabelActive {
+  color: #2c2c2c;
+}
+
+.tabLabelInactive {
+  color: #959595;
+}
+
+.tabAmount {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #2c2c2c;
+}
+
+
+.tabBar {
+  margin-top: 10px;
+  height: 3px;
+  width: 100%;
+  border-radius: 999px;
+}
+
+.tabBarActive {
+  background: #454dd7;
+}
+
+.tabBarInactive {
+  background: #e9e9e9;
+}
+
+/* ===== List (스크롤) ===== */
+
+.listArea {
+  flex: 1 1 auto;
+  margin-top: 45px;
+  overflow: auto;
+
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.listArea::-webkit-scrollbar {
+  display: none;
+}
+
+/* 날짜 */
+.group {
+  display: block;
+}
+
+
+.rowBlock {
+  display: block;
+}
+
+
+.row {
+  display: grid;
+  align-items: center;
+
+
+  grid-template-columns: 48px 226px 1fr;
+  column-gap: 24px;
+
+  font-size: 14px;
+  font-weight: 400;
+  color: #2c2c2c;
+
+
+  margin-bottom: 16px;
+}
+
+.date {
+  min-height: 1em; 
+}
+
+.itemName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.amount {
+  justify-self: end;
+  white-space: nowrap;
+  font-weight: 700; /* 금액만 bold */
+}
+
+/* 줄 */
+.divider {
+  height: 1px;
+  background: rgba(96, 91, 255, 0.1);
+
+
+  margin-bottom: 16px;
+}
