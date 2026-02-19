@@ -7,68 +7,54 @@
 .main {
   flex: 1;
   display: flex;
-  justify-content: center;   
+  justify-content: center;
   background-color: #FAFAFB;
   min-height: 900px;
-  padding: 0 40px;
+  padding: 0;
 }
-
 
 .mainInner {
+  position: relative; /* 추가 */
   width: 100%;
   max-width: 1008px;
-  margin: 94px auto 0;  
+  margin: 0 auto; /* 94px 제거 */
 }
 
-
-
-
-
 .headerArea {
+  position: absolute;
+  top: 37px; /* 캘린더 title이랑 동일 */
   display: flex;
   justify-content: flex-start;
-  margin-bottom: 18px;
 }
 
 .pageTitle {
   margin: 0;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
   color: #111;
 }
 
 /* 레이아웃 고정 */
 .grid {
+  position: absolute;
+  top: 98px; /* 캘린더 calendar top이 98px */
   display: grid;
   grid-template-columns: 665px 325px;
   column-gap: 18px;
   align-items: start;
 }
 
-/* 카드 공통 */
+/* ✅ 카드 래퍼: 이제 "배치"만 담당 (Card 컴포넌트가 사이즈/배경/라운드/패딩 처리) */
 .leftCard {
-  width: 665px;
-  height: 783px;
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-   padding: 32px 40px;
+  /* empty: layout wrapper only */
 }
 
 .rightCard {
-  width: 325px;
-  height: 312px;
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
+  /* empty: layout wrapper only */
 }
 
-.sectionTitle {
-  padding: 18px 20px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #111;
-  border-bottom: 1px solid #EEEFF3;
+.premiumCard {
+  /* empty: layout wrapper only */
 }
 
 /* 프로필 */
@@ -135,17 +121,13 @@
   flex-direction: column;
   gap: 33px;
   margin: 0;
-
 }
-
-
-
 
 .row {
   display: grid;
   grid-template-columns: 150px 1fr;
-  align-items: center;row-gap: 12px;
-
+  align-items: center;
+  row-gap: 12px;
 }
 
 .label {
@@ -157,7 +139,6 @@
   grid-template-columns: 1fr 100px;
   gap: 12px;
 }
-
 
 .fieldOnly {
   display: flex;
@@ -171,8 +152,8 @@
 
 /* 오른쪽 카드 input wrap */
 .inputWrapRight {
-  position: relative;
-  width: 260px;
+  width: 100%;
+  min-width: 0;
 }
 
 .error {
@@ -205,7 +186,7 @@
 }
 
 .inputRight {
-  width: 260px;
+  width: 100%;
   height: 46px;
   border-radius: 9px;
   border: 1px solid #d1d5db;
@@ -295,7 +276,6 @@
   display: flex;
   justify-content: flex-start;
   padding-left: 150px;
-
 }
 
 .submitBtn {
@@ -311,15 +291,10 @@
   color: #ffffff;
 }
 
-
 .submitBtn:disabled {
-  opacity: 0.6;         
+  opacity: 0.6;
   cursor: not-allowed;
 }
-
-
-
-
 
 /* 오른쪽 컬럼 */
 .rightCol {
@@ -352,6 +327,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: nowrap;
 }
 
 .unit {
@@ -361,26 +337,11 @@
 }
 
 /* 프리미엄 */
-.premiumCard {
-  width: 325px;
-  height: 439px;
-  background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
-  padding: 16px 18px 18px;
-}
-
 .premiumHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
-}
-
-.premiumTitle {
-  font-size: 16px;
-  font-weight: 800;
-  color: #111;
 }
 
 .premiumPoint {

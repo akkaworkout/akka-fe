@@ -1,0 +1,101 @@
+/* ===== Overlay ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* ===== Modal Box (공통) ===== */
+.modal {
+  position: relative;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+/* ===== Sizes ===== */
+/* sm: 344x254 */
+.sm {
+  width: 344px;
+  height: 254px;
+}
+
+/* lg: 466x567 */
+.lg {
+  width: 466px;
+  height: 567px;
+}
+
+/* ===== Close Button ===== */
+/* 큰 원형 + 큰 X */
+.closeBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+
+  border: 0;
+  background: #454DD7;
+  color: #fff;
+
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.closeBtn::before {
+  content: "×";
+  font-size: 32px;     /* 약간 크게 */
+  font-weight: 300;  
+  line-height: 1;  /* 얇게 */
+  transform: translateY(-2px); /* 살짝 위로 */
+}
+
+/* 기존 버튼 안에 × 텍스트는 숨김 (TSX 그대로 둬도 됨) */
+.closeBtn {
+  font-size: 0;
+}
+
+
+/* ===== Optional Header (title 있을 때만) ===== */
+.header {
+  padding: 22px 66px 0 22px; /* 닫기 버튼 영역 확보 */
+  font-size: 14px;
+  font-weight: 700;
+  color: #2C2C2C;
+}
+
+/* ===== Body (기본) ===== */
+/* lg 같은 일반 모달은 body에서 패딩/스크롤 담당 */
+.body {
+  height: 100%;
+  padding: 18px 22px 22px;
+  overflow: auto;
+}
+
+/* 헤더 있을 때 body 높이 보정 */
+.header + .body {
+  height: calc(100% - 44px);
+  padding-top: 14px;
+}
+
+/* ===== sm 전용: 내부 컨텐츠가 패딩/간격을 직접 잡는 케이스 ===== */
+/* (WorkoutDetailModal 같은 피그마 팝업) */
+.sm .body {
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
