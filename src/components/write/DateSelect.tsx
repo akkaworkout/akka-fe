@@ -6,7 +6,8 @@ import styles from './DateSelect.module.css'
 
 type DateSelectProps = {
   value: Date
-  onChange?: (date: Date) => void
+  onChange: (date: Date) => void
+  disabled?: boolean
 }
 
 const formatDate = (date: Date) => {
@@ -21,7 +22,7 @@ const isSameDate = (a: Date, b: Date) =>
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate()
 
-const DateSelect = ({ value, onChange }: DateSelectProps) => {
+const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const wrapperRef = useRef<HTMLDivElement | null>(null)
@@ -66,6 +67,7 @@ const DateSelect = ({ value, onChange }: DateSelectProps) => {
     <div className={styles.wrapper} ref={wrapperRef}>
       <button
         type="button"
+        disabled={disabled}
         className={styles.selectBox}
         onClick={() => setIsOpen(prev => !prev)}
       >

@@ -4,10 +4,13 @@ import styles from '../../../pages/write/TicketHistory.module.css'
 
 type Ticket = {
   id: number
-  name: string
+  exercise_type: string
   color: string
-  period: string
-  count: string
+  ticket_type: 'COUNT' | 'PERIOD'
+  target_count: number
+  total_price: number
+  start_date: string
+  end_date: string
   status: string
 }
 
@@ -32,12 +35,39 @@ const TicketEndModal = ({
   onConfirm,
   END_TYPES,
 }: Props) => {
+  const isValid =
+    selectedEndType.label !== '환불' ||
+    (price.trim() !== '' && Number(price) > 0)
+
+  const isModified =
+    selectedEndType.label !== '' ||
+    price.trim() !== ''
+
+  const handleClose = () => {
+    if (isModified) {
+      const ok = window.confirm(
+        '작성 중인 내용이 사라집니다. 나가시겠습니까?'
+      )
+      if (!ok) return
+    }
+
+    onClose()
+  }
+
+  const handleConfirm = () => {
+    if (!isValid) return
+
+    onConfirm()
+    alert('이용권이 정상적으로 종료되었습니다.')
+  }
+
   return (
     <TicketModal
-      title={`이용권 종료 - ${ticket.name}`}
+      title={`이용권 종료 - ${ticket.exercise_type}`}
       buttonText="종료"
-      onClose={onClose}
-      onNext={onConfirm}
+      onClose={handleClose}
+      onNext={handleConfirm}
+      nextDisabled={!isValid}
     >
       <div className={styles.field}>
         <label>사유*</label>
@@ -58,8 +88,9 @@ const TicketEndModal = ({
               onChange={e =>
                 setPrice(e.target.value.replace(/[^0-9]/g, ''))
               }
-              placeholder="23,000"
+              placeholder="23000"
               maxLength={8}
+              autoFocus
             />
             <span className={styles.unit}>원</span>
           </div>

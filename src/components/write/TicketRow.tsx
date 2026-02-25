@@ -8,10 +8,13 @@ import DeleteIcon from '../../assets/icons/delete.png'
 
 type Ticket = {
   id: number
-  name: string
+  exercise_type: string
   color: string
-  period: string
-  count: string
+  ticket_type: 'COUNT' | 'PERIOD'
+  target_count: number
+  total_price: number
+  start_date: string
+  end_date: string
   status: string
 }
 
@@ -27,6 +30,14 @@ type TicketRowProps = {
   dropdownRef: React.RefObject<HTMLDivElement | null>
 }
 
+const getMonthDiff = (start: string, end: string) => {
+  const startDate = new Date(start)
+  const endDate = new Date(end)
+  const yearDiff = endDate.getFullYear() - startDate.getFullYear()
+  const monthDiff = endDate.getMonth() - startDate.getMonth()
+  return yearDiff * 12 + monthDiff
+}
+
 const TicketRow = ({
   ticket,
   index,
@@ -38,28 +49,33 @@ const TicketRow = ({
   onView,
   dropdownRef,
 }: TicketRowProps) => {
+  const formattedPeriod = `${ticket.start_date.replaceAll('-', '.')} - ${ticket.end_date.replaceAll('-', '.')}`
+
+  const formattedCount = `${ticket.target_count}회`
+
   return (
     <div
-      className={`${styles.ticketRow} ${
-        !isActive ? styles.ended : ''
-      }`}
+      className={`${styles.ticketRow} ${!isActive ? styles.ended : ''
+        }`}
     >
       <div className={styles.colName}>
         <div
           className={styles.dot}
           style={{ backgroundColor: ticket.color }}
         />
-        <span className={styles.exercise}>{ticket.name}</span>
+        <span className={styles.exercise}>
+          {ticket.exercise_type}
+        </span>
       </div>
 
       <div className={styles.colPeriod}>
         <img src={CalendarIcon} alt="calendar_icon" />
-        {ticket.period}
+        {formattedPeriod}
       </div>
 
       <div className={styles.colCount}>
         <img src={Goal} alt="goal_icon" />
-        {ticket.count}
+        {formattedCount}
       </div>
 
       <button
