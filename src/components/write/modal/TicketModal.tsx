@@ -7,7 +7,8 @@ type Props = {
   buttonText: string
   onClose: () => void
   onNext: () => void
-  children?: ReactNode
+  children: React.ReactNode
+  nextDisabled?: boolean
 }
 
 const TicketModal = ({
@@ -16,6 +17,7 @@ const TicketModal = ({
   onClose,
   onNext,
   children,
+  nextDisabled,
 }: Props) => {
   return (
     <BaseModal
@@ -30,8 +32,10 @@ const TicketModal = ({
 
       <div className={styles.footer}>
         <button
-          className={styles.nextBtn}
           onClick={onNext}
+          disabled={nextDisabled}
+          className={`${styles.nextBtn} ${nextDisabled ? styles.disabled : ''
+            }`}
         >
           {buttonText}
         </button>

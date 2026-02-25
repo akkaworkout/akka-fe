@@ -1,13 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
+import axios from 'axios'
+
 import styles from './TicketHistory.module.css'
+
 import SideNav from '../../components/sideNav/SideNav'
 import WorkoutTabs from '../../components/write/WorkoutTabs'
 import ConfirmModal from '../../components/write/modal/ConfirmModal'
 import TicketEndModal from '../../components/write/modal/TicketEndModal'
 import TicketAddModal from '../../components/write/modal/TicketAddModal'
-
-import SummaryCard, { type Exercise } from '../../components/common/SummaryCard'
 import TicketRow from '../../components/write/TicketRow'
+import SummaryCard, { type Exercise } from '../../components/common/SummaryCard'
+import { API_BASE_URL, TICKET_ENDPOINTS } from '../../api/tickets'
 
 const END_TYPES: Exercise[] = [
   { id: 1, label: '완료', color: '#E0F0FF' },
@@ -27,6 +30,18 @@ const COLOR_OPTIONS = [
   '#D7FFF3',
 ]
 
+type Ticket = {
+  id: number
+  exercise_type: string
+  color: string
+  ticket_type: 'COUNT' | 'PERIOD'
+  target_count: number
+  total_price: number
+  start_date: string
+  end_date: string
+  status: string
+}
+
 const TicketHistoryPage = () => {
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
@@ -39,28 +54,180 @@ const TicketHistoryPage = () => {
   const [selectedEndType, setSelectedEndType] = useState<Exercise>(END_TYPES[0])
   const [price, setPrice] = useState('')
   const [viewIndex, setViewIndex] = useState<number | null>(null)
-
-  const [ticketList, setTicketList] = useState([
-    {
-      id: 1,
-      name: '발레',
-      color: '#FCD7FF',
-      period: '2026.01.05 - 2026.03.05',
-      count: '24회',
-      status: '진행 중',
-    },
-    {
-      id: 2,
-      name: '헬스',
-      color: '#D5D3FF',
-      period: '2026.01.05 - 2026.03.05',
-      count: '24회',
-      status: '완료',
-    },
-  ])
+  const [ticketList, setTicketList] = useState<Ticket[]>([])
 
   const handleToggle = (index: number) => {
     setOpenIndex(prev => (prev === index ? null : index))
+  }
+
+  const handleDelete = async () => {
+    try {
+      const token = localStorage.getItem('accessToken')
+      if (!token) return
+
+      const ticketId = ticketList[confirmIndex!].id
+
+      const response = await axios.delete(
+        `${API_BASE_URL}/tickets/${ticketId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      if (confirmIndex === null) return
+      setTicketList(prev => prev.filter((_, i) => i !== confirmIndex))
+      setConfirmIndex(null)
+
+      alert('이용권이 정상적으로 삭제되었습니다.')
+
+      console.log('DELETE 성공', response)
+    } catch (error) {
+      console.log('DELETE 실패', error)
+    }
+  }
+
+  const handleEnd = async () => {
+    try {
+      const token = localStorage.getItem('accessToken')
+      if (!token) return
+
+      const ticketId = ticketList[endIndex!].id
+
+      await axios.patch(
+        `${API_BASE_URL}/tickets/${ticketId}/end`,
+        {
+          end_reason: selectedEndType.label === '완료'
+            ? 'COMPLETED'
+            : selectedEndType.label === '기간만료'
+              ? 'EXPIRED'
+              : selectedEndType.label === '환불'
+                ? 'REFUNDED'
+                : 'ETC',
+          refund_price:
+            selectedEndType.label === '환불'
+              ? Number(price)
+              : null,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      alert('이용권이 정상적으로 종료되었습니다.')
+
+      setEndIndex(null)
+      setSelectedEndType(END_TYPES[0])
+      setPrice('')
+      fetchTickets()
+
+    } catch (error) {
+      console.log('PATCH 실패', error)
+    }
+  }
+
+  const handleAddClose = () => {
+    setIsAddOpen(false)
+
+    setTicketType('횟수권')
+    setSelectedColor(COLOR_OPTIONS[0])
+  }
+
+  const handleEndClose = () => {
+    setEndIndex(null)
+
+    setSelectedEndType(END_TYPES[0])
+    setPrice('')
+  }
+
+  const fetchTickets = async () => {
+    try {
+      const token = localStorage.getItem('accessToken')
+      if (!token) return
+
+      const response = await axios.get(
+        `${API_BASE_URL}${TICKET_ENDPOINTS.LIST}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      setTicketList(
+        response.data.map((item: any) => {
+          let formattedStatus = '진행 중'
+
+          if (item.status === 'ENDED') {
+            switch (item.end_reason) {
+              case 'COMPLETED':
+                formattedStatus = '완료'
+                break
+              case 'EXPIRED':
+                formattedStatus = '기간만료'
+                break
+              case 'REFUNDED':
+                formattedStatus = '환불'
+                break
+              default:
+                formattedStatus = '기타'
+            }
+          }
+
+          return {
+            id: item.ticket_id,
+            exercise_type: item.exercise_type,
+            color: item.color,
+            ticket_type: item.ticket_type,
+            target_count: item.target_count,
+            total_price: item.total_price,
+            start_date: item.start_date.split('T')[0],
+            end_date: item.end_date.split('T')[0],
+            status: formattedStatus,
+          }
+        })
+      )
+
+      console.log('GET 성공', response.data)
+    } catch (error) {
+      console.log('GET 실패', error)
+    }
+  }
+
+  const createTicket = async (data: any) => {
+    try {
+      const token = localStorage.getItem('accessToken')
+      if (!token) return
+
+      const response = await axios.post(
+        `${API_BASE_URL}${TICKET_ENDPOINTS.CREATE}`,
+        {
+          exercise_type: data.exercise_type,
+          color: data.color,
+          ticket_type: data.ticket_type,
+          target_count: data.target_count,
+          total_price: data.total_price,
+          start_date: data.start_date,
+          end_date: data.end_date,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      console.log('POST 성공:', response.data)
+      alert('이용권 등록이 완료되었습니다.')
+
+      await fetchTickets()
+      setIsAddOpen(false)
+    } catch (error) {
+      console.log('POST 실패:', error)
+    }
   }
 
   useEffect(() => {
@@ -79,26 +246,9 @@ const TicketHistoryPage = () => {
     }
   }, [])
 
-  const handleDelete = () => {
-    if (confirmIndex === null) return
-    setTicketList(prev => prev.filter((_, i) => i !== confirmIndex))
-    setConfirmIndex(null)
-  }
-
-  const handleEnd = () => {
-    if (endIndex === null) return
-
-    setTicketList(prev =>
-      prev.map((item, i) =>
-        i === endIndex
-          ? { ...item, status: selectedEndType.label }
-          : item
-      )
-    )
-
-    setEndIndex(null)
-    setPrice('')
-  }
+  useEffect(() => {
+    fetchTickets()
+  }, [])
 
   return (
     <div className={styles.wrap}>
@@ -162,7 +312,6 @@ const TicketHistoryPage = () => {
         </div>
       </main>
 
-      {/* 이용권 삭제 */}
       {confirmIndex !== null && (
         <ConfirmModal
           onCancel={() => setConfirmIndex(null)}
@@ -170,7 +319,6 @@ const TicketHistoryPage = () => {
         />
       )}
 
-      {/* 이용권 종료 */}
       {endIndex !== null && (
         <TicketEndModal
           ticket={ticketList[endIndex]}
@@ -179,12 +327,11 @@ const TicketHistoryPage = () => {
           price={price}
           setPrice={setPrice}
           END_TYPES={END_TYPES}
-          onClose={() => setEndIndex(null)}
+          onClose={handleEndClose}
           onConfirm={handleEnd}
         />
       )}
 
-      {/* 이용권 추가 */}
       {isAddOpen && (
         <TicketAddModal
           ticketType={ticketType}
@@ -192,38 +339,28 @@ const TicketHistoryPage = () => {
           selectedColor={selectedColor}
           setSelectedColor={setSelectedColor}
           COLOR_OPTIONS={COLOR_OPTIONS}
-          onClose={() => setIsAddOpen(false)}
-          onConfirm={() => {
-            setTicketList(prev => [
-              ...prev,
-              {
-                id: Date.now(),
-                name: '새 이용권',
-                color: selectedColor,
-                period: '2026.04.01 - 2026.06.01',
-                count: ticketType === '횟수권' ? '20회' : '3개월',
-                status: '진행 중',
-              },
-            ])
-            setIsAddOpen(false)
-          }}
+          onClose={handleAddClose}
+          onConfirm={createTicket}
         />
       )}
 
-      {/* 이용권 조회 */}
       {viewIndex !== null && (
         <TicketAddModal
           mode="view"
-          ticketType={ticketType}
+          ticketType={
+            ticketList[viewIndex].ticket_type === 'COUNT'
+              ? '횟수권'
+              : '기간권'
+          }
           setTicketType={setTicketType}
           selectedColor={ticketList[viewIndex].color}
           setSelectedColor={setSelectedColor}
           COLOR_OPTIONS={COLOR_OPTIONS}
+          initialData={ticketList[viewIndex]}
           onClose={() => setViewIndex(null)}
           onConfirm={() => setViewIndex(null)}
         />
       )}
-
 
     </div>
   )
