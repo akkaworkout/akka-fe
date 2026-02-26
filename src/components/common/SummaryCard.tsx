@@ -3,22 +3,23 @@ import { useNavigate } from 'react-router-dom'
 import styles from './SummaryCard.module.css'
 import arrow from '../../assets/icons/arrow-down.png'
 
-export type Exercise = {
+export interface Expense {
   id: number
+  value: string
   label: string
   color: string
 }
 
 type SummaryCardProps = {
-  exercises: Exercise[]
-  selected: Exercise
-  onChange: (exercise: Exercise) => void
+  expenses: Expense[]
+  selected: Expense
+  onChange: (expense: Expense) => void
   showAddButton?: boolean
   addPath?: string
 }
 
 export default function SummaryCard({
-  exercises,
+  expenses,
   selected,
   onChange,
   showAddButton = false,
@@ -67,7 +68,7 @@ export default function SummaryCard({
 
       {isOpen && (
         <div className={styles.dropdown}>
-          {exercises
+          {expenses
             .filter(item => item.id !== selected.id)
             .map(item => (
               <button

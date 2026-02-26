@@ -209,6 +209,11 @@
   line-height: 50px;
 }
 
+.submitBtn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 .currentRecord {
   position: absolute;
   top: 98px;

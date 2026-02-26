@@ -1,34 +1,62 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { API_BASE_URL } from '../../api/write'
 
 import WorkoutTabs from '../../components/write/WorkoutTabs'
 import DateSelect from '../../components/write/DateSelect'
-import SummaryCard, { type Exercise } from '../../components/common/SummaryCard'
+import SummaryCard, { type Expense } from '../../components/common/SummaryCard'
 import Card from '../../components/common/Card'
 import CheckIcon from '../../components/common/icons/CheckIcon'
 import styles from './WorkoutHistory.module.css'
 import SideNav from '../../components/sideNav/SideNav'
 
-const EXERCISES: Exercise[] = [
-  { id: 1, label: '운동 용품', color: 'rgb(252, 215, 255)' },
-  { id: 2, label: '운동 식품', color: '#FFE6CC' },
-  { id: 3, label: '기타(교통비 등)', color: '#E0F0FF' },
+const EXPENSES = [
+  { id: 1, value: '운동 용품', label: '운동 용품', color: '#fcd7ff' },
+  { id: 2, value: '운동 식품', label: '운동 식품', color: '#FFE6CC' },
+  { id: 3, value: '기타', label: '기타(교통비 등)', color: '#E0F0FF' },
 ]
 
 const ExpenseHistoryPage = () => {
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
-
   const [date, setDate] = useState<Date>(new Date())
-  const [selectedExercise, setSelectedExercise] = useState<Exercise>(
-    EXERCISES[0]
-  )
-
+  const [selectedCategory, setSelectedCategory] = useState<Expense>(EXPENSES[0])
   const [category, setCategory] = useState('')
   const [price, setPrice] = useState('')
-
   const [monthlyExpenseCount, setMonthlyExpenseCount] = useState(3)
   const [monthlyTotalExpense, setMonthlyTotalExpense] = useState(75000)
-  const [topExpenseCategory, setTopExpenseCategory] =
-    useState('운동 식품')
+  const [topExpenseCategory, setTopExpenseCategory] = useState('운동 식품')
+  const isFormValid = category.trim() !== '' && price.trim() !== ''
+  const navigate = useNavigate()
+
+  const handelBtnClick = async () => {
+    try {
+      const token = localStorage.getItem('accessToken')
+      if (!token) return
+
+      const response = await axios.post(
+        `${API_BASE_URL}/expense`,
+        {
+          category: selectedCategory.value,
+          title: category,
+          amount: Number(price),
+          expense_date: date.toISOString().split('T')[0],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      console.log('운동지출 POST 성공:', response.data)
+
+      alert('운동지출 기록이 완료되었습니다.')
+      navigate('/calendar')
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className={styles.wrap}>
@@ -58,9 +86,9 @@ const ExpenseHistoryPage = () => {
               <div className={styles.field}>
                 <label>지출 분류*</label>
                 <SummaryCard
-                  exercises={EXERCISES}
-                  selected={selectedExercise}
-                  onChange={setSelectedExercise}
+                  expenses={EXPENSES}
+                  selected={selectedCategory}
+                  onChange={setSelectedCategory}
                 />
               </div>
             </div>
@@ -96,7 +124,13 @@ const ExpenseHistoryPage = () => {
               <span className={styles.required}>
                 *는 필수 입력사항입니다.
               </span>
-              <button className={styles.submitBtn}>완료</button>
+              <button
+                className={styles.submitBtn}
+                onClick={handelBtnClick}
+                disabled={!isFormValid}
+              >
+                완료
+              </button>
             </div>
           </div>
 
