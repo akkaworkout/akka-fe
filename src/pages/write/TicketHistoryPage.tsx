@@ -10,7 +10,7 @@ import TicketEndModal from '../../components/write/modal/TicketEndModal'
 import TicketAddModal from '../../components/write/modal/TicketAddModal'
 import TicketRow from '../../components/write/TicketRow'
 import SummaryCard, { type Exercise } from '../../components/common/SummaryCard'
-import { API_BASE_URL, TICKET_ENDPOINTS } from '../../api/tickets'
+import { API_BASE_URL, TICKET_ENDPOINTS } from '../../api/write'
 
 const END_TYPES: Exercise[] = [
   { id: 1, label: '완료', color: '#E0F0FF' },
