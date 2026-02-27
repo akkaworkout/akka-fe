@@ -10,21 +10,29 @@ export interface Expense {
   color: string
 }
 
-type SummaryCardProps = {
-  expenses: Expense[]
-  selected: Expense
-  onChange: (expense: Expense) => void
+export interface Exercise {
+  id: number
+  label: string
+  color: string
+}
+
+type SummaryCardProps<T extends { id: number; label: string; color: string }> = {
+  expenses: T[]
+  selected: T
+  onChange: (item: T) => void
   showAddButton?: boolean
   addPath?: string
 }
 
-export default function SummaryCard({
+export default function SummaryCard<
+  T extends { id: number; label: string; color: string }
+>({
   expenses,
   selected,
   onChange,
   showAddButton = false,
   addPath = '/ticket',
-}: SummaryCardProps) {
+}: SummaryCardProps<T>) {
   const [isOpen, setIsOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const navigate = useNavigate()
