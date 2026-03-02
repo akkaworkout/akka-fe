@@ -14,6 +14,10 @@ const isEmailValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
 const hasSpecialChar = (v: string) => /[^A-Za-z0-9]/.test(v)
 const isPasswordValid = (v: string) => v.length >= 8 && hasSpecialChar(v)
 
+// ✅ 환경변수 있으면 그거 쓰고, 없으면 배포 도메인 fallback
+const API_BASE =
+  (import.meta as any).env?.VITE_API_BASE?.trim() || 'https://api.akkaworkout.store'
+
 export default function LoginPage() {
   const nav = useNavigate()
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
@@ -45,41 +49,45 @@ export default function LoginPage() {
     if (Object.keys(next).length > 0) return
 
     try {
-      const res = await fetch(
-        'https://port-0-akka-workout-be-mkqkv57u21e615f4.sel3.cloudtype.app/auth/login',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: email.trim(),
-            password,
-          }),
-        }
-      )
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+        }),
+      })
 
       const data = await res.json().catch(() => ({}))
 
-      // 콘솔로 확인
       console.log('LOGIN status:', res.status)
       console.log('LOGIN response:', data)
 
       if (!res.ok) {
-        // 서버가 message를 주면 그거 쓰고, 없으면 기본 문구
+        const msg =
+          data?.message ||
+          (res.status === 401 ? '이메일 또는 비밀번호가 올바르지 않습니다.' : '로그인 실패')
         setErrors(prev => ({
           ...prev,
-          email: data?.message || '로그인 실패',
+          email: msg,
+          password: msg,
         }))
         return
       }
 
       const token = data?.data?.token
 
-      if (token) {
-        localStorage.setItem('accessToken', token)
-        console.log('Saved token:', token)
-      } else {
-        console.log('No token in response. Check backend response shape.')
+      if (!token) {
+        setErrors(prev => ({
+          ...prev,
+          email: '토큰이 없습니다. 서버 응답을 확인해주세요.',
+        }))
+        return
       }
+
+      localStorage.setItem('accessToken', token)
+      console.log('Saved token:', token)
 
       nav('/main')
     } catch (err) {
@@ -90,7 +98,6 @@ export default function LoginPage() {
       }))
     }
   }
-
 
   return (
     <div className={styles.wrap}>
@@ -107,7 +114,7 @@ export default function LoginPage() {
               <Form
                 label="이메일"
                 value={email}
-                onChange={(e) => {
+                onChange={e => {
                   const v = e.target.value
                   setEmail(v)
                   setErrors(prev => ({
@@ -124,7 +131,7 @@ export default function LoginPage() {
                   label="비밀번호"
                   type={showPw ? 'text' : 'password'}
                   value={password}
-                  onChange={(e) => {
+                  onChange={e => {
                     const v = e.target.value
                     setPassword(v)
                     setErrors(prev => ({ ...prev, password: undefined }))
@@ -142,7 +149,9 @@ export default function LoginPage() {
                   <button
                     type="submit"
                     disabled={!canSubmit}
-                    className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive}`}
+                    className={`${styles.submitBtn} ${
+                      !canSubmit ? styles.submitDisabled : styles.submitActive
+                    }`}
                   >
                     로그인
                   </button>

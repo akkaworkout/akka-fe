@@ -34,11 +34,11 @@
   border-radius: 10px;
 
   display: flex;
-  align-items: center;          /* 수직 중앙 정렬 */
-  justify-content: space-between; /* 좌측 label / 우측 count 분리 */
+  align-items: center;         
+  justify-content: space-between; 
 
-  padding-left: 15px;  /* 내부 왼쪽 여백 */
-  padding-right: 17px; /* 내부 오른쪽 여백 */
+  padding-left: 15px;  
+  padding-right: 17px; 
 }
 
 
