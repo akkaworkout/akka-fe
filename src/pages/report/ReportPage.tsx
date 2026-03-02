@@ -52,7 +52,7 @@ export default function ReportPage() {
                 backgroundColor="#ffffff"
               >
                 <SummaryCard
-                  exercises={EXERCISES}
+                  expenses={EXERCISES}
                   selected={selectedExercise}
                   onChange={setSelectedExercise}
                 />
