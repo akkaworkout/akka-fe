@@ -58,7 +58,6 @@ const TicketEndModal = ({
     if (!isValid) return
 
     onConfirm()
-    alert('이용권이 정상적으로 종료되었습니다.')
   }
 
   return (
@@ -72,7 +71,7 @@ const TicketEndModal = ({
       <div className={styles.field}>
         <label>사유*</label>
         <SummaryCard
-          exercises={END_TYPES}
+          expenses={END_TYPES}
           selected={selectedEndType}
           onChange={setSelectedEndType}
         />

@@ -1,33 +1,43 @@
-import { useState } from 'react';
-import leftIcon from '../../assets/icons/chevron-left.png';
-import styles from './Report.module.css';
+import leftIcon from '../../assets/icons/chevron-left.png'
+import styles from './Report.module.css'
 
-export default function ReportHeader() {
-  const [monthDate, setMonthDate] = useState(new Date(2026, 0, 1));
+type Props = {
+  year: number
+  month: number // 1~12
+  onPrevMonth: () => void
+  onNextMonth: () => void
 
-  const handlePrev = () => {
-    setMonthDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1));
-  };
+  totalExerciseCount: number
+  totalExpenseAmount: number
+  noShowCount: number
+}
 
-  const handleNext = () => {
-    setMonthDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1));
-  };
+export default function ReportHeader({
+  year,
+  month,
+  onPrevMonth,
+  onNextMonth,
+  totalExerciseCount,
+  totalExpenseAmount,
+  noShowCount,
+}: Props) {
+  const monthText = `${year}.${String(month).padStart(2, '0')}`
 
-  const monthText = `${monthDate.getFullYear()}.${String(
-    monthDate.getMonth() + 1
-  ).padStart(2, '0')}`;
+  const expenseText = `₩${Math.max(0, Number(totalExpenseAmount) || 0).toLocaleString()}`
+  const exerciseText = `${Math.max(0, Number(totalExerciseCount) || 0)}회`
+  const noShowText = `${Math.max(0, Number(noShowCount) || 0)}회`
 
   return (
     <div className={styles.reportHeader}>
       {/* 월 이동 */}
       <div className={styles.monthArea}>
-        <button className={styles.iconBtn} onClick={handlePrev}>
+        <button className={styles.iconBtn} onClick={onPrevMonth}>
           <img src={leftIcon} alt="prev" width={17} height={19} />
         </button>
 
         <span className={styles.monthText}>{monthText}</span>
 
-        <button className={styles.iconBtn} onClick={handleNext}>
+        <button className={styles.iconBtn} onClick={onNextMonth}>
           <img
             src={leftIcon}
             alt="next"
@@ -40,14 +50,14 @@ export default function ReportHeader() {
 
       {/* 우측 요약 */}
       <div className={styles.summaryArea}>
-        <Summary label="총 운동" value="15회" />
+        <Summary label="총 운동" value={exerciseText} />
         <Divider />
-        <Summary label="총 지출" value="₩918,000" />
+        <Summary label="총 지출" value={expenseText} />
         <Divider />
-        <Summary label="노쇼 횟수" value="3회" />
+        <Summary label="노쇼 횟수" value={noShowText} />
       </div>
     </div>
-  );
+  )
 }
 
 function Summary({ label, value }: { label: string; value: string }) {
@@ -56,9 +66,9 @@ function Summary({ label, value }: { label: string; value: string }) {
       <span className={styles.label}>{label}</span>
       <span className={styles.value}>{value}</span>
     </div>
-  );
+  )
 }
 
 function Divider() {
-  return <div className={styles.divider} />;
+  return <div className={styles.divider} />
 }

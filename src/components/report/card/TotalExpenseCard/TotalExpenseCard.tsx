@@ -2,7 +2,10 @@ import { useState } from 'react'
 import './TotalExpenseCard.css'
 import Card from '../../../common/Card'
 import ExpenseDetailModal from '../../../../pages/report/modals/ExpenseDetailModal'
-// ⚠️ 경로 맞게 수정
+
+type Props = {
+  totalAmount: number
+}
 
 const expenseList = [
   { label: '운동비', amount: 290000 },
@@ -11,10 +14,9 @@ const expenseList = [
   { label: '기타', amount: 20000 },
 ]
 
-export default function TotalExpenseCard() {
-  const [openExpense, setOpenExpense] = useState(false) // ✅ 추가
+export default function TotalExpenseCard({ totalAmount }: Props) {
+  const [openExpense, setOpenExpense] = useState(false)
 
-  const totalAmount = expenseList.reduce((sum, item) => sum + item.amount, 0)
   const maxAmount = Math.max(...expenseList.map(item => item.amount))
   const maxItem = expenseList.find(item => item.amount === maxAmount)
 
@@ -27,7 +29,7 @@ export default function TotalExpenseCard() {
         backgroundColor="#ffffff"
         radius={20}
         buttonText="상세항목"
-        onButtonClick={() => setOpenExpense(true)}  // ✅ 여기만 연결
+        onButtonClick={() => setOpenExpense(true)}
       >
         <section className="total-expense-card">
           <ul className="expense-list">
@@ -63,7 +65,6 @@ export default function TotalExpenseCard() {
         </section>
       </Card>
 
-      {/* ✅ 모달 붙이기만 */}
       <ExpenseDetailModal
         open={openExpense}
         onClose={() => setOpenExpense(false)}
