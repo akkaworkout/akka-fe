@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import styles from './MyPage.module.css'
 
@@ -10,6 +10,8 @@ import editAvatar from '../../assets/icons/edit-avatar.png'
 import eyeOn from '../../assets/icons/icon-eye-on.png'
 import eyeOff from '../../assets/icons/icon-eye-off.png'
 import premiumCard from '../../assets/images/premium-card.png'
+
+import { apiFetch } from '../../api/api'
 
 type FieldErrors = Partial<{
   email: string
@@ -28,13 +30,13 @@ const hasSpecialChar = (v: string) => /[^A-Za-z0-9]/.test(v)
 const isPasswordValid = (v: string) => v.length >= 8 && hasSpecialChar(v)
 
 export default function MyPage() {
-  const initial = {
-    email: 'akka@naver.com',
-    nickname: '혜민',
-    budget: '23000',
-    exerciseGoal: '21',
-    premiumPoint: '3,000P',
-  }
+  const [initial, setInitial] = useState({
+    email: '',
+    nickname: '',
+    budget: '',
+    exerciseGoal: '',
+    premiumPoint: '',
+  })
 
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
 
@@ -60,80 +62,203 @@ export default function MyPage() {
 
   const showError = (k: keyof FieldErrors) => (submitted || touched[k]) && Boolean(errors[k])
 
+  /* ================= 조회: fetchMe ================= */
+  const fetchMe = useCallback(async () => {
+    const token = localStorage.getItem('accessToken')
+    if (!token) return
+
+    try {
+      const json = await apiFetch('/users/me', { method: 'GET' })
+      const me = json?.data ?? {}
+
+      const nextEmail = me.email ?? ''
+      const nextNickname = me.nickname ?? ''
+      const nextBudget =
+        me.target_budget === null || me.target_budget === undefined ? '' : String(me.target_budget)
+      const nextExercise =
+        me.target_exercise_count === null || me.target_exercise_count === undefined
+          ? ''
+          : String(me.target_exercise_count)
+
+      setInitial({
+        email: nextEmail,
+        nickname: nextNickname,
+        budget: nextBudget,
+        exerciseGoal: nextExercise,
+        premiumPoint: me.premium_point ? `${me.premium_point}P` : '0P',
+      })
+
+      // ✅ 인풋 value 자체를 서버 값으로 채움
+      setEmail(nextEmail)
+      setNickname(nextNickname)
+      setBudget(nextBudget)
+      setExerciseGoal(nextExercise)
+
+      // 비번칸은 보안상 비우기 유지
+      setPassword('')
+      setPasswordConfirm('')
+    } catch (err: any) {
+      console.error('내 정보 조회 실패', err)
+      const msg = err?.message || '내 정보 조회 실패'
+
+      if (String(msg).includes('401') || String(msg).includes('Unauthorized')) {
+        localStorage.removeItem('accessToken')
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchMe()
+  }, [fetchMe])
+
+  /* ================= 더티/검사 규칙 ================= */
+  const emailDirty = email !== initial.email
+  const nicknameDirty = nickname !== initial.nickname
+  const budgetDirty = budget !== initial.budget
+  const exerciseDirty = exerciseGoal !== initial.exerciseGoal
+  const passwordDirty = password.trim().length > 0 || passwordConfirm.trim().length > 0
+
+  const emailOk = !emailDirty || isEmailValid(email)
+  const nicknameOk = !nicknameDirty || nickname.trim().length <= 5
+  const budgetOk = !budgetDirty || /^\d+$/.test(budget)
+  const exerciseOk = !exerciseDirty || /^\d+$/.test(exerciseGoal)
+
+  const passwordOk = !passwordDirty || (isPasswordValid(password) && passwordConfirm === password)
+
+  const emailCheckOk = !emailDirty || emailChecked
+  const nicknameCheckOk = !nicknameDirty || nicknameChecked
+
+  const hasAnyChange = emailDirty || nicknameDirty || budgetDirty || exerciseDirty || passwordDirty
+
+  const canSubmit = useMemo(() => {
+    return (
+      hasAnyChange &&
+      emailOk &&
+      nicknameOk &&
+      budgetOk &&
+      exerciseOk &&
+      passwordOk &&
+      emailCheckOk &&
+      nicknameCheckOk
+    )
+  }, [
+    hasAnyChange,
+    emailOk,
+    nicknameOk,
+    budgetOk,
+    exerciseOk,
+    passwordOk,
+    emailCheckOk,
+    nicknameCheckOk,
+  ])
+
+  /* ================= validate: 입력한 것만 검사 ================= */
   const validate = () => {
     const next: FieldErrors = {}
 
-    if (!email.trim()) next.email = '이메일을 입력해주세요.'
-    else if (!isEmailValid(email)) next.email = '올바른 이메일 형식이 아닙니다.'
+    if (emailDirty) {
+      if (!isEmailValid(email)) next.email = '올바른 이메일 형식이 아닙니다.'
+      else if (!emailChecked) next.email = '이메일 중복 확인을 해주세요.'
+    }
 
-    if (!password.trim()) next.password = '비밀번호를 입력해주세요.'
-    else if (!isPasswordValid(password))
-      next.password = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
+    if (nicknameDirty) {
+      if (nickname.trim().length > 5) next.nickname = '5글자 이내로 입력해주세요.'
+      else if (!nicknameChecked) next.nickname = '닉네임 중복 확인을 해주세요.'
+    }
 
-    if (!passwordConfirm.trim()) next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
-    else if (passwordConfirm !== password) next.passwordConfirm = '비밀번호가 일치하지 않습니다.'
+    if (budgetDirty) {
+      if (!/^\d+$/.test(budget)) next.budget = '숫자만 입력 가능합니다.'
+    }
 
-    if (!nickname.trim()) next.nickname = '닉네임을 입력해주세요.'
-    else if (nickname.trim().length > 5) next.nickname = '5글자 이내로 입력해주세요.'
+    if (exerciseDirty) {
+      if (!/^\d+$/.test(exerciseGoal)) next.exerciseGoal = '숫자만 입력 가능합니다.'
+    }
 
-    if (!budget.trim()) next.budget = '목표 예산을 입력해주세요.'
-    else if (!/^\d+$/.test(budget)) next.budget = '숫자만 입력 가능합니다.'
+    if (passwordDirty) {
+      if (!password.trim()) next.password = '비밀번호를 입력해주세요.'
+      else if (!isPasswordValid(password))
+        next.password = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
 
-    if (!exerciseGoal.trim()) next.exerciseGoal = '목표 운동 횟수를 입력해주세요.'
-    else if (!/^\d+$/.test(exerciseGoal)) next.exerciseGoal = '숫자만 입력 가능합니다.'
+      if (!passwordConfirm.trim()) next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
+      else if (passwordConfirm !== password) next.passwordConfirm = '비밀번호가 일치하지 않습니다.'
+    }
 
     setErrors(next)
     return Object.keys(next).length === 0
   }
 
-  const passwordValid =
-    !password.trim() || (isPasswordValid(password) && passwordConfirm === password)
+  /* ================= PATCH ================= */
+  const updateMe = async (payload: Record<string, any>) => {
+    const token = localStorage.getItem('accessToken')
+    if (!token) throw new Error('토큰 없음')
 
-  const canSubmit = useMemo(() => {
-    return (
-      isEmailValid(email) &&
-      nickname.trim().length > 0 &&
-      nickname.trim().length <= 5 &&
-      /^\d+$/.test(budget) &&
-      /^\d+$/.test(exerciseGoal) &&
-      passwordValid &&
-      emailChecked &&
-      nicknameChecked
-    )
-  }, [
-    email,
-    password,
-    passwordConfirm,
-    nickname,
-    budget,
-    exerciseGoal,
-    emailChecked,
-    nicknameChecked,
-    passwordValid,
-  ])
+    return apiFetch('/users/me', {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    })
+  }
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setSubmitted(true)
 
-    if (!validate()) return
-    if (!emailChecked || !nicknameChecked) return
+    if (!canSubmit) {
+      validate()
+      return
+    }
 
-    alert('수정 완료')
+    if (!validate()) return
+
+    const payload: any = {}
+    if (emailDirty) payload.email = email.trim()
+    if (nicknameDirty) payload.nickname = nickname.trim()
+    if (budgetDirty) payload.target_budget = Number(budget)
+    if (exerciseDirty) payload.target_exercise_count = Number(exerciseGoal)
+    if (password.trim()) payload.password = password
+
+    if (Object.keys(payload).length === 0) {
+      alert('수정할 값이 없습니다.')
+      return
+    }
+
+    try {
+      await updateMe(payload)
+      alert('수정 완료')
+
+      setEmail('')
+      setNickname('')
+      setBudget('')
+      setExerciseGoal('')
+      setPassword('')
+      setPasswordConfirm('')
+
+      setEmailChecked(false)
+      setNicknameChecked(false)
+
+      setErrors({})
+      setTouched({})
+      setSubmitted(false)
+
+      await fetchMe()
+    } catch (err: any) {
+      alert(err?.message || '수정 실패')
+    }
   }
 
+  /* ================= 중복확인(현재는 stub) ================= */
   const handleEmailCheck = () => {
-    if (!isEmailValid(email)) {
+    if (!emailDirty || !isEmailValid(email)) {
       setErrors(prev => ({ ...prev, email: '올바른 이메일 형식이 아닙니다.' }))
       setTouched(t => ({ ...t, email: true }))
       return
     }
+
     alert('이메일 중복 확인')
     setEmailChecked(true)
   }
 
   const handleNicknameCheck = () => {
-    if (!nickname.trim()) {
+    if (!nicknameDirty) {
       setErrors(prev => ({ ...prev, nickname: '닉네임을 입력해주세요.' }))
       setTouched(t => ({ ...t, nickname: true }))
       return
@@ -173,17 +298,13 @@ export default function MyPage() {
     <div className={styles.wrap}>
       <SideNav folded={isSidebarFolded} onToggle={() => setIsSidebarFolded(p => !p)} />
 
-      <main
-        className={styles.main}
-        style={{ marginLeft: isSidebarFolded ? 74 : 220 }} // ✅ 접힘/펼침에 따라 밀기 (캘린더처럼)
-      >
+      <main className={styles.main} style={{ marginLeft: isSidebarFolded ? 74 : 220 }}>
         <div className={styles.mainInner}>
           <header className={styles.headerArea}>
             <h1 className={styles.pageTitle}>마이페이지</h1>
           </header>
 
           <div className={styles.grid}>
-            {/* ✅ 개인정보 수정 카드 */}
             <div className={styles.leftCard}>
               <Card title="개인 정보 수정" width={665} height={783} backgroundColor="#ffffff" radius={20}>
                 <div className={styles.profileArea}>
@@ -217,7 +338,6 @@ export default function MyPage() {
                 <div className={styles.profileToFormGap} />
 
                 <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
-                  {/* 이메일 */}
                   <div className={styles.row}>
                     <label className={styles.label}>이메일</label>
 
@@ -226,7 +346,6 @@ export default function MyPage() {
                         <input
                           className={`${styles.input} ${showError('email') ? styles.inputError : ''}`}
                           value={email}
-                          placeholder={initial.email}
                           onChange={e => {
                             const v = e.target.value
                             setEmail(v)
@@ -236,7 +355,7 @@ export default function MyPage() {
                             setErrors(prev => ({
                               ...prev,
                               email: !v.trim()
-                                ? '이메일을 입력해주세요.'
+                                ? undefined
                                 : !isEmailValid(v)
                                   ? '올바른 이메일 형식이 아닙니다.'
                                   : undefined,
@@ -252,14 +371,13 @@ export default function MyPage() {
                         type="button"
                         className={styles.dupBtn}
                         onClick={handleEmailCheck}
-                        disabled={!isEmailValid(email)}
+                        disabled={!emailDirty || !isEmailValid(email)}
                       >
                         중복 확인
                       </button>
                     </div>
                   </div>
 
-                  {/* 비밀번호 */}
                   <div className={styles.row}>
                     <label className={styles.label}>비밀번호</label>
 
@@ -276,16 +394,17 @@ export default function MyPage() {
                               setPassword(v)
                               setTouched(t => ({ ...t, password: true }))
 
-                              if (!v.trim()) {
-                                setErrors(prev => ({ ...prev, password: undefined }))
-                                return
-                              }
-
                               setErrors(prev => ({
                                 ...prev,
-                                password: !isPasswordValid(v)
-                                  ? '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
-                                  : undefined,
+                                password: !v.trim()
+                                  ? undefined
+                                  : !isPasswordValid(v)
+                                    ? '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
+                                    : undefined,
+                                passwordConfirm:
+                                  passwordConfirm.trim() && v !== passwordConfirm
+                                    ? '비밀번호가 일치하지 않습니다.'
+                                    : prev.passwordConfirm,
                               }))
                             }}
                           />
@@ -304,7 +423,6 @@ export default function MyPage() {
                     </div>
                   </div>
 
-                  {/* 비밀번호 확인 */}
                   <div className={styles.row}>
                     <label className={styles.label}>비밀번호 확인</label>
 
@@ -312,7 +430,8 @@ export default function MyPage() {
                       <div className={styles.inputWrap}>
                         <div className={styles.inputInner}>
                           <input
-                            className={`${styles.input} ${showError('passwordConfirm') ? styles.inputError : ''}`}
+                            className={`${styles.input} ${showError('passwordConfirm') ? styles.inputError : ''
+                              }`}
                             type={showPwConfirm ? 'text' : 'password'}
                             value={passwordConfirm}
                             placeholder="비밀번호 확인"
@@ -350,7 +469,6 @@ export default function MyPage() {
                     </div>
                   </div>
 
-                  {/* 닉네임 */}
                   <div className={styles.row}>
                     <label className={styles.label}>닉네임</label>
 
@@ -359,12 +477,20 @@ export default function MyPage() {
                         <input
                           className={`${styles.input} ${showError('nickname') ? styles.inputError : ''}`}
                           value={nickname}
-                          placeholder={initial.nickname}
                           onChange={e => {
-                            setNickname(e.target.value)
+                            const v = e.target.value
+                            setNickname(v)
                             setNicknameChecked(false)
                             setTouched(t => ({ ...t, nickname: true }))
-                            if (submitted) validate()
+
+                            setErrors(prev => ({
+                              ...prev,
+                              nickname: !v.trim()
+                                ? undefined
+                                : v.trim().length > 5
+                                  ? '5글자 이내로 입력해주세요.'
+                                  : undefined,
+                            }))
                           }}
                           onBlur={() => setTouched(t => ({ ...t, nickname: true }))}
                         />
@@ -375,7 +501,7 @@ export default function MyPage() {
                         type="button"
                         className={styles.dupBtn}
                         onClick={handleNicknameCheck}
-                        disabled={nickname.trim().length === 0}
+                        disabled={!nicknameDirty || nickname.trim().length > 5}
                       >
                         중복 확인
                       </button>
@@ -385,7 +511,8 @@ export default function MyPage() {
                   <div className={styles.submitArea}>
                     <button
                       type="submit"
-                      className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive}`}
+                      className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
+                        }`}
                     >
                       완료
                     </button>
@@ -395,7 +522,6 @@ export default function MyPage() {
             </div>
 
             <aside className={styles.rightCol}>
-              {/* ✅ 개인 목표 설정 카드 */}
               <div className={styles.rightCard}>
                 <Card title="개인 목표 설정" width={325} height={312} backgroundColor="#ffffff" radius={20}>
                   <div className={styles.rightInner}>
@@ -406,11 +532,19 @@ export default function MyPage() {
                           <input
                             className={`${styles.inputRight} ${showError('budget') ? styles.inputError : ''}`}
                             value={budget}
-                            placeholder={initial.budget}
                             onChange={e => {
-                              setBudget(e.target.value)
+                              const v = e.target.value
+                              setBudget(v)
                               setTouched(t => ({ ...t, budget: true }))
-                              if (submitted) validate()
+
+                              setErrors(prev => ({
+                                ...prev,
+                                budget: !v.trim()
+                                  ? undefined
+                                  : !/^\d+$/.test(v)
+                                    ? '숫자만 입력 가능합니다.'
+                                    : undefined,
+                              }))
                             }}
                           />
                           {showError('budget') && <p className={styles.error}>{errors.budget}</p>}
@@ -426,11 +560,19 @@ export default function MyPage() {
                           <input
                             className={`${styles.inputRight} ${showError('exerciseGoal') ? styles.inputError : ''}`}
                             value={exerciseGoal}
-                            placeholder={initial.exerciseGoal}
                             onChange={e => {
-                              setExerciseGoal(e.target.value)
+                              const v = e.target.value
+                              setExerciseGoal(v)
                               setTouched(t => ({ ...t, exerciseGoal: true }))
-                              if (submitted) validate()
+
+                              setErrors(prev => ({
+                                ...prev,
+                                exerciseGoal: !v.trim()
+                                  ? undefined
+                                  : !/^\d+$/.test(v)
+                                    ? '숫자만 입력 가능합니다.'
+                                    : undefined,
+                              }))
                             }}
                           />
                           {showError('exerciseGoal') && (
@@ -444,7 +586,6 @@ export default function MyPage() {
                 </Card>
               </div>
 
-              {/* ✅ 프리미엄 카드 */}
               <div className={styles.premiumCard}>
                 <Card title="프리미엄" width={325} height={439} backgroundColor="#ffffff" radius={20}>
                   <div className={styles.premiumHeader}>

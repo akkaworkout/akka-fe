@@ -305,7 +305,6 @@
 
 /* 오른쪽 내부 패딩 */
 .rightInner {
-  padding: 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 18px;

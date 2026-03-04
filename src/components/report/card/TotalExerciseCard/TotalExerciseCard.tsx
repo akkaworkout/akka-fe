@@ -3,6 +3,10 @@ import './TotalExerciseCard.css'
 import Card from '../../../common/Card'
 import DetailModal from '../../../../pages/report/modals/DetailModal'
 
+type Props = {
+  totalCount: number
+}
+
 const exerciseList = [
   { label: '발레', count: 10 },
   { label: '헬스', count: 1 },
@@ -12,10 +16,9 @@ const exerciseList = [
 
 const VISIBLE_COUNT = 3
 
-export default function TotalExerciseCard() {
+export default function TotalExerciseCard({ totalCount }: Props) {
   const [open, setOpen] = useState(false)
 
-  const totalCount = exerciseList.reduce((sum, i) => sum + i.count, 0)
   const restCount = Math.max(exerciseList.length - VISIBLE_COUNT, 0)
 
   const maxCount = exerciseList.length
@@ -74,7 +77,6 @@ export default function TotalExerciseCard() {
         </section>
       </Card>
 
-      {/* 공통 DetailModal */}
       <DetailModal
         open={open}
         onClose={() => setOpen(false)}

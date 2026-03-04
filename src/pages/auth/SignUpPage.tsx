@@ -106,7 +106,7 @@ export default function SignUpPage() {
         body: formData,
       })
 
-      // 400 원인 확인용 (지금 단계에서 필수)
+      // 400 원인 확인용
       const raw = await res.text()
       console.log('STATUS:', res.status)
       console.log('RAW:', raw)
