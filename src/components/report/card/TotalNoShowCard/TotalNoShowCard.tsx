@@ -84,6 +84,11 @@ export default function TotalNoShowCard({ totalCount, lossAmount }: Props) {
 
           <footer className="card-footer">
             <p className="summary-main">
+              총 <span className="summary-number">{totalCount}</span>회 노쇼로{' '}
+              <span className="summary-number">
+                {lossAmount.toLocaleString()}
+              </span>
+              원 잃었어요.
               총{' '}
               <span className="summary-number">
                 {lossAmount.toLocaleString()}
