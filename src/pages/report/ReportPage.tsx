@@ -34,10 +34,15 @@ type ReportsResponse = {
     goal?: {
       exerciseAchievementRate?: number
     }
-    charts?: any
+    charts?: {
+      exerciseByDow?: number[]
+      expenseByDow?: number[]
+    }
     summary?: any
   }
 }
+
+const EMPTY_WEEK = [0, 0, 0, 0, 0, 0, 0]
 
 export default function ReportPage() {
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
@@ -58,7 +63,7 @@ export default function ReportPage() {
     return typeof v === 'string' && v.length ? v.replace(/\/$/, '') : 'http://localhost:3000'
   }, [])
 
-  //  ReportHeader에서 끌어올린 연/월 state
+  // ReportHeader에서 끌어올린 연/월 state
   const [year, setYear] = useState(2026)
   const [month, setMonth] = useState(2) // 1~12
 
@@ -133,7 +138,7 @@ export default function ReportPage() {
     fetchTickets()
   }, [API_BASE])
 
-  // 2) reports로 리포트 데이터 가져오기 (달성률 + 상단 KPI)
+  // 2) reports로 리포트 데이터 가져오기 (달성률 + KPI + charts)
   useEffect(() => {
     const fetchReport = async () => {
       try {
@@ -172,7 +177,7 @@ export default function ReportPage() {
     fetchReport()
   }, [API_BASE, year, month, selectedExercise])
 
-  //  드롭다운에 실제로 뿌릴 배열(티켓 우선, 없으면 fallback)
+  // 드롭다운에 실제로 뿌릴 배열(티켓 우선, 없으면 fallback)
   const exerciseOptions = ticketExercises.length ? ticketExercises : EXERCISES
 
   // 상단 KPI 값 (없으면 0)
@@ -180,6 +185,17 @@ export default function ReportPage() {
   const totalExpenseAmount = reportData?.kpi?.totalExpenseAmount ?? 0
   const noShowCount = reportData?.kpi?.noShowCount ?? 0
   const noshowLossAmount = reportData?.kpi?.noshowLossAmount ?? 0
+
+  // ✅ charts 연결 (없으면 0배열)
+  const exerciseByDow =
+    Array.isArray(reportData?.charts?.exerciseByDow) && reportData!.charts!.exerciseByDow!.length === 7
+      ? reportData!.charts!.exerciseByDow!
+      : EMPTY_WEEK
+
+  const expenseByDow =
+    Array.isArray(reportData?.charts?.expenseByDow) && reportData!.charts!.expenseByDow!.length === 7
+      ? reportData!.charts!.expenseByDow!
+      : EMPTY_WEEK
 
   return (
     <div className={styles.wrap}>
@@ -199,30 +215,24 @@ export default function ReportPage() {
 
           <div className={styles.reportGrid}>
             <div className={styles.summarySection}>
-              <Card
-                title="운동별 목표 달성률"
-                width="100%"
-                height={412}
-                radius={20}
-                backgroundColor="#ffffff"
-              >
-                <SummaryCard
-                  expenses={exerciseOptions}
-                  selected={selectedExercise}
-                  onChange={setSelectedExercise}
-                />
-
+              <Card title="운동별 목표 달성률" width="100%" height={412} radius={20} backgroundColor="#ffffff">
+                <SummaryCard expenses={exerciseOptions} selected={selectedExercise} onChange={setSelectedExercise} />
                 <RingChart percent={ringPercent} />
               </Card>
             </div>
 
             <div className={styles.insightSection}>
-              <InsightCard />
+              <InsightCard
+                집중요일="주말"
+                추천요일="평일"
+                추천횟수={1}
+                noshowLoss={noshowLossAmount}
+              />
             </div>
 
             <Card title="운동 기록" width={330} height={289} backgroundColor="#ffffff" radius={20}>
               <BarChart
-                values={[2, 4, 2, 2, 1, 10, 2]}
+                values={exerciseByDow}
                 labels={['월', '화', '수', '목', '금', '토', '일']}
                 activeColor="#4F46E5"
                 normalColor="#C7D2FE"
@@ -234,7 +244,7 @@ export default function ReportPage() {
 
             <Card title="지출 기록" width={330} height={289} backgroundColor="#ffffff" radius={20}>
               <BarChart
-                values={[2, 4, 2, 10, 1, 5, 2]}
+                values={expenseByDow}
                 labels={['월', '화', '수', '목', '금', '토', '일']}
                 activeColor="#FFC227"
                 normalColor="#FFE7AA"
@@ -245,22 +255,15 @@ export default function ReportPage() {
             </Card>
 
             <div className={styles.listSection1}>
-              <TotalNoShowCard
-                totalCount={noShowCount}
-                lossAmount={noshowLossAmount}
-              />
+              <TotalNoShowCard totalCount={noShowCount} lossAmount={noshowLossAmount} />
             </div>
 
             <div className={styles.listSection2}>
-              <TotalExerciseCard
-                totalCount={totalExerciseCount}
-              />
+              <TotalExerciseCard totalCount={totalExerciseCount} />
             </div>
 
             <div className={styles.listSection3}>
-              <TotalExpenseCard
-                totalAmount={totalExpenseAmount}
-              />
+              <TotalExpenseCard totalAmount={totalExpenseAmount} />
             </div>
           </div>
         </div>
