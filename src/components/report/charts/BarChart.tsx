@@ -61,16 +61,13 @@ const bubblePlugin: Plugin<'bar'> = {
 
         ctx.save()
         ctx.font = '600 10px Nunito'
-        ctx.fillStyle = '#FFFFFF'
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
 
-        // bubble
         ctx.fillStyle = opt.bubbleColor
         roundRect(ctx, bubbleX, bubbleY, bubbleW, bubbleH, radius)
         ctx.fill()
 
-        // tail
         ctx.beginPath()
         ctx.moveTo(x - 9, bubbleY + bubbleH)
         ctx.lineTo(x, bubbleY + bubbleH + 10)
@@ -78,10 +75,7 @@ const bubblePlugin: Plugin<'bar'> = {
         ctx.closePath()
         ctx.fill()
 
-        // text
         ctx.fillStyle = opt.textColor
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
         ctx.fillText(opt.selectedLabel, x, bubbleY + bubbleH / 2)
 
         ctx.restore()
@@ -113,18 +107,17 @@ type Props = {
     width?: number
     height?: number
 
-    // bar 색상
     activeColor?: string
     normalColor?: string
 
-    // bubble 색상
     bubbleColor?: string
     bubbleTextColor?: string
 
-    // grid / axis 색상
     gridColor?: string
     xTickColor?: string
     yTickColor?: string
+
+    unit?: string
 }
 
 /* ---------- component ---------- */
@@ -143,7 +136,10 @@ export default function ExerciseBarChart({
     gridColor = '#EEF2FF',
     xTickColor = '#6B7280',
     yTickColor = '#9CA3AF',
+
+    unit = '',
 }: Props) {
+
     const maxIndex = useMemo(() => values.indexOf(Math.max(...values)), [values])
     const [selectedIndex, setSelectedIndex] = useState(maxIndex)
 
@@ -201,7 +197,7 @@ export default function ExerciseBarChart({
                     stepSize,
                     color: yTickColor,
                     padding: 8,
-                    callback: v => `${v}회`,
+                    callback: v => `${v}${unit}`,
                 },
                 grid: { color: gridColor },
             },

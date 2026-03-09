@@ -3,39 +3,56 @@ import './TotalNoShowCard.css'
 import CheckIcon from '../../../common/icons/CheckIcon'
 import Card from '../../../common/Card'
 import DetailModal from '../../../../pages/report/modals/DetailModal'
-import MemoDetailModal from '../../../../pages/report/modals/MemoDetailModal'
+
+type Item = {
+  label: string
+  count: number
+}
+
+type Exercise = {
+  label: string
+}
 
 type Props = {
   totalCount: number
   lossAmount: number
+  items: Item[]
+  exercises: Exercise[]
+  onOpenMemo: () => void
 }
-
-const noShowList = [
-  { label: '발레', count: 2 },
-  { label: '필라테스', count: 1 },
-  { label: '수영', count: 1 },
-  { label: '필라테스', count: 1 },
-]
 
 const VISIBLE_COUNT = 3
 
-export default function TotalNoShowCard({ totalCount, lossAmount }: Props) {
+export default function TotalNoShowCard({
+  totalCount,
+  lossAmount,
+  items,
+  exercises,
+  onOpenMemo,
+}: Props) {
   const [openDetail, setOpenDetail] = useState(false)
-  const [openMemo, setOpenMemo] = useState(false)
 
-  const restCount = Math.max(noShowList.length - VISIBLE_COUNT, 0)
+  // 등록된 운동 기준으로 노쇼 데이터 매칭
+  const safeItems: Item[] =
+    exercises && exercises.length
+      ? exercises.map(ex => {
+          const found = items.find(i => i.label === ex.label)
 
-  const maxCount = noShowList.length
-    ? Math.max(...noShowList.map(i => i.count))
+          return {
+            label: ex.label,
+            count: found ? found.count : 0,
+          }
+        })
+      : []
+
+  const restCount = Math.max(safeItems.length - VISIBLE_COUNT, 0)
+
+  const maxCount = safeItems.length
+    ? Math.max(...safeItems.map(i => i.count))
     : 0
-  const maxItem = noShowList.find(i => i.count === maxCount)
-  const maxLabel = maxItem?.label
 
-  // 메모 모달 더미 데이터
-  const memoRows = [
-    { date: '1/3', category: '발레', reason: '늦잠을 자버렸다' },
-    { date: '1/4', category: '발레', reason: '늦잠을 자버렸다' },
-  ]
+  const maxItem = safeItems.find(i => i.count === maxCount)
+  const maxLabel = maxItem?.label
 
   return (
     <>
@@ -46,12 +63,13 @@ export default function TotalNoShowCard({ totalCount, lossAmount }: Props) {
         backgroundColor="#ffffff"
         radius={20}
         buttonText="캘린더 메모 보기"
-        onButtonClick={() => setOpenMemo(true)}
+        onButtonClick={onOpenMemo}
       >
         <section className="total-noshow-card">
           <ul className="noshow-list">
-            {noShowList.slice(0, VISIBLE_COUNT).map((item, idx) => {
+            {safeItems.slice(0, VISIBLE_COUNT).map((item, idx) => {
               const isMax = item.count === maxCount && maxCount > 0
+
               return (
                 <li key={`${item.label}-${idx}`} className="noshow-row">
                   <span className="left">
@@ -84,18 +102,14 @@ export default function TotalNoShowCard({ totalCount, lossAmount }: Props) {
 
           <footer className="card-footer">
             <p className="summary-main">
-              총 <span className="summary-number">{totalCount}</span>회 노쇼로{' '}
-              <span className="summary-number">
-                {lossAmount.toLocaleString()}
-              </span>
-              원 잃었어요.
               총{' '}
               <span className="summary-number">
                 {lossAmount.toLocaleString()}
               </span>
               원 잃었어요.
             </p>
-            {maxLabel && (
+
+            {maxCount > 0 && maxLabel && (
               <p className="summary-sub">
                 {maxLabel}에서 노쇼 발생률이 높아요.
               </p>
@@ -109,14 +123,7 @@ export default function TotalNoShowCard({ totalCount, lossAmount }: Props) {
         onClose={() => setOpenDetail(false)}
         restCount={restCount}
         subject="노쇼"
-        items={noShowList.slice(VISIBLE_COUNT)}
-      />
-
-      <MemoDetailModal
-        open={openMemo}
-        onClose={() => setOpenMemo(false)}
-        monthText="2026.01"
-        rows={memoRows}
+        items={safeItems.slice(VISIBLE_COUNT)}
       />
     </>
   )

@@ -49,6 +49,7 @@ export default function MyPage() {
   const [nickname, setNickname] = useState('')
   const [budget, setBudget] = useState('')
   const [exerciseGoal, setExerciseGoal] = useState('')
+  const [user, setUser] = useState<any>(null)
 
   const [showPw, setShowPw] = useState(false)
   const [showPwConfirm, setShowPwConfirm] = useState(false)
@@ -59,6 +60,8 @@ export default function MyPage() {
   const [errors, setErrors] = useState<FieldErrors>({})
   const [touched, setTouched] = useState<Touched>({})
   const [submitted, setSubmitted] = useState(false)
+
+  const API_BASE = import.meta.env.VITE_API_URL
 
   const showError = (k: keyof FieldErrors) => (submitted || touched[k]) && Boolean(errors[k])
 
@@ -110,6 +113,24 @@ export default function MyPage() {
   useEffect(() => {
     fetchMe()
   }, [fetchMe])
+
+  useEffect(() => {
+  const fetchUser = async () => {
+    const token = localStorage.getItem('accessToken')
+    if (!token) return
+
+    const res = await fetch(`${API_BASE}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    const json = await res.json()
+    setUser(json.data)
+  }
+
+  fetchUser()
+}, [])
 
   /* ================= 더티/검사 규칙 ================= */
   const emailDirty = email !== initial.email
@@ -311,7 +332,10 @@ export default function MyPage() {
                   <div className={styles.avatar}>
                     <img
                       className={styles.avatarImg}
-                      src={profilePreview ?? profileDefault}
+                      src={
+                        profilePreview ??
+                        (user?.profile ? `${API_BASE}${user.profile}` : profileDefault)
+                      }
                       alt="프로필"
                       draggable={false}
                     />

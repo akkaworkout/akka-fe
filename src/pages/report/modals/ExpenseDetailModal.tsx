@@ -2,75 +2,28 @@ import { useMemo, useState } from 'react'
 import Modal from './Modal'
 import styles from './ExpenseDetailModal.module.css'
 
+type ExpenseItem = {
+  label: string
+  amount: number
+}
+
 type Props = {
   open: boolean
   onClose: () => void
+  items: ExpenseItem[]
 }
 
 type TabKey = 'workout' | 'gear' | 'food' | 'etc'
 
-type ExpenseItem = {
-  name: string
-  amount: number
-}
-
-type ExpenseGroup = {
-  date: string // e.g. "1/12"
-  items: ExpenseItem[]
+type Group = {
+  date: string
+  items: { name: string; amount: number }[]
 }
 
 const formatWon = (n: number) => `${n.toLocaleString('ko-KR')}원`
 
-export default function ExpenseDetailModal({ open, onClose }: Props) {
+export default function ExpenseDetailModal({ open, onClose, items }: Props) {
   const [activeTab, setActiveTab] = useState<TabKey>('workout')
-
-  //더미 데이터 (나중에 API/상태로 교체)
-  const dataByTab: Record<TabKey, ExpenseGroup[]> = useMemo(
-    () => ({
-      workout: [
-        {
-          date: '1/12',
-          items: [
-            { name: '닭가슴살', amount: 10000 },
-            { name: '프로틴 세트', amount: 480000 },
-            { name: '곤약젤리', amount: 118000 },
-          ],
-        },
-        {
-          date: '1/15',
-          items: [
-            { name: 'PT 10회', amount: 290000 },
-            { name: '스트레칭 클래스', amount: 20000 },
-          ],
-        },
-      ],
-      gear: [
-        {
-          date: '1/10',
-          items: [
-            { name: '러닝화', amount: 190000 },
-            { name: '요가매트', amount: 45000 },
-          ],
-        },
-      ],
-      food: [
-        {
-          date: '1/08',
-          items: [
-            { name: '닭가슴살', amount: 32000 },
-            { name: '단백질바', amount: 18000 },
-          ],
-        },
-      ],
-      etc: [
-        {
-          date: '1/03',
-          items: [{ name: '기타 지출', amount: 50000 }],
-        },
-      ],
-    }),
-    []
-  )
 
   const tabs = useMemo(
     () => [
@@ -82,10 +35,36 @@ export default function ExpenseDetailModal({ open, onClose }: Props) {
     []
   )
 
+  const dataByTab: Record<TabKey, Group[]> = useMemo(() => {
+    const map: Record<TabKey, Group[]> = {
+      workout: [],
+      gear: [],
+      food: [],
+      etc: [],
+    }
+
+    items.forEach(i => {
+      let key: TabKey = 'etc'
+
+      // 카테고리 매칭 순서 중요
+      if (i.label.includes('운동비')) key = 'workout'
+      else if (i.label.includes('용품')) key = 'gear'
+      else if (i.label.includes('식품')) key = 'food'
+      else key = 'etc'
+
+      map[key].push({
+        date: '',
+        items: [{ name: i.label, amount: i.amount }],
+      })
+    })
+
+    return map
+  }, [items])
+
   const activeGroups = dataByTab[activeTab]
 
   const tabSums: Record<TabKey, number> = useMemo(() => {
-    const sum = (groups: ExpenseGroup[]) =>
+    const sum = (groups: Group[]) =>
       groups.reduce(
         (acc, g) => acc + g.items.reduce((s, it) => s + it.amount, 0),
         0
@@ -99,16 +78,20 @@ export default function ExpenseDetailModal({ open, onClose }: Props) {
     }
   }, [dataByTab])
 
-  const total = tabSums.workout + tabSums.gear + tabSums.food + tabSums.etc
+  const total =
+    tabSums.workout +
+    tabSums.gear +
+    tabSums.food +
+    tabSums.etc
+
+  const isEmpty = total === 0
 
   return (
     <Modal open={open} onClose={onClose} size="lg">
-      {/* 공통 Modal body padding 제거용 래퍼 */}
       <div className={styles.resetBody}>
         <div className={styles.root}>
-          {/* ===== Header (고정) ===== */}
           <div className={styles.header}>
-            <h2 className={styles.title}>2026.01 상세지출</h2>
+            <h2 className={styles.title}>상세지출</h2>
 
             <p className={styles.ment}>
               이번 달 지출 내역을 항목별로 확인할 수 있어요
@@ -118,10 +101,10 @@ export default function ExpenseDetailModal({ open, onClose }: Props) {
               총 {formatWon(total)}
             </div>
 
-            {/* 탭 영역 */}
-            <div className={styles.tabs} role="tablist" aria-label="지출 항목">
+            <div className={styles.tabs} role="tablist">
               {tabs.map(t => {
                 const isActive = t.key === activeTab
+
                 return (
                   <button
                     key={t.key}
@@ -132,9 +115,10 @@ export default function ExpenseDetailModal({ open, onClose }: Props) {
                     onClick={() => setActiveTab(t.key)}
                   >
                     <div
-                      className={`${styles.tabLabel} ${
-                        isActive ? styles.tabLabelActive : styles.tabLabelInactive
-                      }`}
+                      className={`${styles.tabLabel} ${isActive
+                          ? styles.tabLabelActive
+                          : styles.tabLabelInactive
+                        }`}
                     >
                       {t.label}
                     </div>
@@ -144,9 +128,10 @@ export default function ExpenseDetailModal({ open, onClose }: Props) {
                     </div>
 
                     <div
-                      className={`${styles.tabBar} ${
-                        isActive ? styles.tabBarActive : styles.tabBarInactive
-                      }`}
+                      className={`${styles.tabBar} ${isActive
+                          ? styles.tabBarActive
+                          : styles.tabBarInactive
+                        }`}
                     />
                   </button>
                 )
@@ -154,31 +139,36 @@ export default function ExpenseDetailModal({ open, onClose }: Props) {
             </div>
           </div>
 
-          {/* ===== List (스크롤) ===== */}
           <div className={styles.listArea}>
-            {activeGroups.map((group, gi) => (
-              <div key={`${group.date}-${gi}`} className={styles.group}>
-                {group.items.map((item, idx) => (
-                  <div key={`${group.date}-${idx}`} className={styles.rowBlock}>
-                    <div className={styles.row}>
-                      {/* 날짜는 덩어리당 1번만 */}
-                      <div className={styles.date}>
-                        {idx === 0 ? group.date : ''}
-                      </div>
-
-                      <div className={styles.itemName}>{item.name}</div>
-
-                      <div className={styles.amount}>
-                        {formatWon(item.amount)}
-                      </div>
-                    </div>
-
-                    {/* 텍스트 → 16 → 줄 → 16 → 다음 텍스트 */}
-                    <div className={styles.divider} />
-                  </div>
-                ))}
+            {isEmpty ? (
+              <div className={styles.empty}>
+                이번 달 지출 내역이 없습니다
               </div>
-            ))}
+            ) : (
+              activeGroups.map((group, gi) => (
+                <div key={gi} className={styles.group}>
+                  {group.items.map((item, idx) => (
+                    <div key={idx} className={styles.rowBlock}>
+                      <div className={styles.row}>
+                        <div className={styles.date}>
+                          {idx === 0 ? group.date : ''}
+                        </div>
+
+                        <div className={styles.itemName}>
+                          {item.name}
+                        </div>
+
+                        <div className={styles.amount}>
+                          {formatWon(item.amount)}
+                        </div>
+                      </div>
+
+                      <div className={styles.divider} />
+                    </div>
+                  ))}
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

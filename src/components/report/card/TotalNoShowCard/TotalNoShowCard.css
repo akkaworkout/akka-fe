@@ -98,3 +98,10 @@
   color: #16a34a;
   font-weight: 900;
 }
+
+.summary-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9ca3af;
+}
