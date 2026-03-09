@@ -3,28 +3,30 @@ import './TotalExerciseCard.css'
 import Card from '../../../common/Card'
 import DetailModal from '../../../../pages/report/modals/DetailModal'
 
-type Props = {
-  totalCount: number
+type Item = {
+  label: string
+  count: number
 }
 
-const exerciseList = [
-  { label: '발레', count: 10 },
-  { label: '헬스', count: 1 },
-  { label: '필라테스', count: 7 },
-  { label: '러닝', count: 2 },
-]
+type Props = {
+  totalCount: number
+  items: Item[]
+}
 
 const VISIBLE_COUNT = 3
 
-export default function TotalExerciseCard({ totalCount }: Props) {
+export default function TotalExerciseCard({ totalCount, items }: Props) {
   const [open, setOpen] = useState(false)
 
-  const restCount = Math.max(exerciseList.length - VISIBLE_COUNT, 0)
+  const sortedItems = [...items].sort((a, b) => b.count - a.count)
 
-  const maxCount = exerciseList.length
-    ? Math.max(...exerciseList.map(i => i.count))
+  const restCount = Math.max(sortedItems.length - VISIBLE_COUNT, 0)
+
+  const maxCount = sortedItems.length
+    ? Math.max(...sortedItems.map(i => i.count))
     : 0
-  const maxItem = exerciseList.find(i => i.count === maxCount)
+
+  const maxItem = sortedItems.find(i => i.count === maxCount)
   const maxLabel = maxItem?.label
 
   return (
@@ -38,20 +40,32 @@ export default function TotalExerciseCard({ totalCount }: Props) {
       >
         <section className="total-exercise-card">
           <ul className="exercise-list">
-            {exerciseList.slice(0, VISIBLE_COUNT).map((item, idx) => {
+
+            {Array.from({ length: VISIBLE_COUNT }).map((_, idx) => {
+              const item = sortedItems[idx]
+
+              if (!item) {
+                return (
+                  <li key={idx} className="exercise-row empty" />
+                )
+              }
+
               const isMax = item.count === maxCount && maxCount > 0
+
               return (
                 <li
-                  key={`${item.label}-${idx}`}
+                  key={idx}
                   className={`exercise-row ${isMax ? 'highlight' : ''}`}
                 >
                   <span className="label">{item.label}</span>
+
                   <span className={`count ${isMax ? 'count-max' : ''}`}>
                     {item.count}회
                   </span>
                 </li>
               )
             })}
+
           </ul>
 
           {restCount > 0 && (
@@ -68,6 +82,7 @@ export default function TotalExerciseCard({ totalCount }: Props) {
             <p className="summary-main">
               총 <span className="summary-number">{totalCount}</span>회 운동했어요.
             </p>
+
             {maxLabel && (
               <p className="summary-sub">
                 {maxLabel}를 가장 많이 운동했어요.
@@ -82,7 +97,7 @@ export default function TotalExerciseCard({ totalCount }: Props) {
         onClose={() => setOpen(false)}
         restCount={restCount}
         subject="운동"
-        items={exerciseList.slice(VISIBLE_COUNT)}
+        items={sortedItems.slice(VISIBLE_COUNT)}
       />
     </>
   )

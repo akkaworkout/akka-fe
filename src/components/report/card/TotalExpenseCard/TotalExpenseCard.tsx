@@ -3,22 +3,45 @@ import './TotalExpenseCard.css'
 import Card from '../../../common/Card'
 import ExpenseDetailModal from '../../../../pages/report/modals/ExpenseDetailModal'
 
-type Props = {
-  totalAmount: number
+type Item = {
+  label: string
+  amount: number
 }
 
-const expenseList = [
-  { label: '운동비', amount: 290000 },
-  { label: '운동용품비', amount: 420000 },
-  { label: '운동식품비', amount: 300000 },
-  { label: '기타', amount: 20000 },
-]
+type Props = {
+  totalAmount: number
+  items: Item[]
+}
 
-export default function TotalExpenseCard({ totalAmount }: Props) {
+export default function TotalExpenseCard({ totalAmount, items }: Props) {
   const [openExpense, setOpenExpense] = useState(false)
 
-  const maxAmount = Math.max(...expenseList.map(item => item.amount))
-  const maxItem = expenseList.find(item => item.amount === maxAmount)
+  // 항상 4개 고정
+  const baseItems: Item[] = [
+    { label: '운동비', amount: 0 },
+    { label: '운동용품비', amount: 0 },
+    { label: '운동식품비', amount: 0 },
+    { label: '기타', amount: 0 },
+  ]
+
+  // label 키워드 매칭으로 API 값 덮어쓰기
+  const safeItems = baseItems.map(base => {
+    const keyword = base.label.replace('비', '').replace(/\s/g, '')
+
+    const found = items?.find(i =>
+      i.label.replace(/\s/g, '').includes(keyword)
+    )
+
+    return found
+      ? { ...base, amount: found.amount }
+      : base
+  })
+
+  const maxAmount = safeItems.length
+    ? Math.max(...safeItems.map(item => item.amount))
+    : 0
+
+  const maxItem = safeItems.find(item => item.amount === maxAmount)
 
   return (
     <>
@@ -33,8 +56,8 @@ export default function TotalExpenseCard({ totalAmount }: Props) {
       >
         <section className="total-expense-card">
           <ul className="expense-list">
-            {expenseList.map(item => {
-              const isMax = item.amount === maxAmount
+            {safeItems.map(item => {
+              const isMax = item.amount === maxAmount && maxAmount > 0
 
               return (
                 <li
@@ -42,6 +65,7 @@ export default function TotalExpenseCard({ totalAmount }: Props) {
                   className={`expense-row ${isMax ? 'highlight' : ''}`}
                 >
                   <span className="label">{item.label}</span>
+
                   <span className={`amount ${isMax ? 'amount-max' : ''}`}>
                     {item.amount.toLocaleString()}원
                   </span>
@@ -58,9 +82,12 @@ export default function TotalExpenseCard({ totalAmount }: Props) {
               </span>
               원 사용했어요.
             </p>
-            <p className="summary-sub">
-              {maxItem?.label}에 가장 많이 썼어요.
-            </p>
+
+            {maxItem && maxAmount > 0 && (
+              <p className="summary-sub">
+                {maxItem.label}에 가장 많이 썼어요.
+              </p>
+            )}
           </footer>
         </section>
       </Card>
@@ -68,6 +95,7 @@ export default function TotalExpenseCard({ totalAmount }: Props) {
       <ExpenseDetailModal
         open={openExpense}
         onClose={() => setOpenExpense(false)}
+        items={safeItems}
       />
     </>
   )

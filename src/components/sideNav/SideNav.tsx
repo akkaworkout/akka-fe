@@ -33,7 +33,11 @@ type SideNavProps = {
 const SideNav = ({ folded, onToggle }: SideNavProps) => {
   const navigate = useNavigate()
   const location = useLocation()
+
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
+  const [user, setUser] = useState<any>(null)
+
+  const API_BASE = import.meta.env.VITE_API_URL
 
   const handleNavigate = (path: string) => {
     navigate(path)
@@ -43,6 +47,7 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
     return paths.some(path => location.pathname.startsWith(path))
   }
 
+  /* 사이드바 반응형 */
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1200) {
@@ -59,6 +64,35 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
       window.removeEventListener('resize', handleResize)
     }
   }, [])
+
+  /* 로그인 유저 가져오기 */
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken')
+    if (!token) return
+
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        const json = await res.json()
+        setUser(json.data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchUser()
+  }, [API_BASE])
+
+  /* 로그아웃 */
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken')
+    navigate('/login')
+  }
 
   return (
     <aside className={`${styles.sideNav} ${folded ? styles.sideNavFolded : ''}`}>
@@ -172,25 +206,36 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         </div>
       </div>
 
-      <div className={styles.sidebarProfileWrapper}>
-        <div
-          className={styles.sidebarProfile}
-          onClick={() => handleNavigate('/login')}
-        >
-          <img src={example} className={styles.sidebarProfileImg} alt="profile" />
+      {/* 로그인 했을 때만 프로필 표시 */}
+      {user && (
+        <div className={styles.sidebarProfileWrapper}>
+          <div
+            className={styles.sidebarProfile}
+            onClick={() => handleNavigate('/mypage')}
+          >
+            <img
+              src={
+                user?.profile
+                  ? `${API_BASE}${user.profile}`
+                  : example
+              }
+              className={styles.sidebarProfileImg}
+              alt="profile"
+            />
+          </div>
+
+          {!folded && <div className={styles.sidebarUser}>{user.nickname}</div>}
+
+          {!folded && (
+            <img
+              src={akkaLogout}
+              className={styles.sidebarLogout}
+              alt="logout"
+              onClick={handleLogout}
+            />
+          )}
         </div>
-
-        {!folded && <div className={styles.sidebarUser}>Minju Lee</div>}
-
-        {!folded && (
-          <img
-            src={akkaLogout}
-            className={styles.sidebarLogout}
-            alt="logout"
-            onClick={() => handleNavigate('/')}
-          />
-        )}
-      </div>
+      )}
     </aside>
   )
 }
