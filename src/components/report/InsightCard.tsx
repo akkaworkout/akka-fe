@@ -27,7 +27,7 @@ export default function InsightCard({
     >
       <p style={{ margin: 0, fontSize: 16, color: '#2C2C2C' }}>
         이번 달엔{' '}
-        <span style={{ color: '#454DD7' }}>{집중요일}에 운동</span>이 몰렸어요.
+        <span style={{ color: '#454DD7' }}>{집중요일}요일에 운동</span>이 몰렸어요.
         다음 달엔{' '}
         <span style={{ color: '#454DD7' }}>
           {추천요일} {추천횟수}회
