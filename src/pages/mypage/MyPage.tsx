@@ -74,6 +74,8 @@ export default function MyPage() {
       const json = await apiFetch('/users/me', { method: 'GET' })
       const me = json?.data ?? {}
 
+      setUser(me)  // ⭐ 추가
+
       const nextEmail = me.email ?? ''
       const nextNickname = me.nickname ?? ''
       const nextBudget =
@@ -91,22 +93,15 @@ export default function MyPage() {
         premiumPoint: me.premium_point ? `${me.premium_point}P` : '0P',
       })
 
-      // ✅ 인풋 value 자체를 서버 값으로 채움
       setEmail(nextEmail)
       setNickname(nextNickname)
       setBudget(nextBudget)
       setExerciseGoal(nextExercise)
 
-      // 비번칸은 보안상 비우기 유지
       setPassword('')
       setPasswordConfirm('')
-    } catch (err: any) {
+    } catch (err) {
       console.error('내 정보 조회 실패', err)
-      const msg = err?.message || '내 정보 조회 실패'
-
-      if (String(msg).includes('401') || String(msg).includes('Unauthorized')) {
-        localStorage.removeItem('accessToken')
-      }
     }
   }, [])
 
@@ -114,23 +109,7 @@ export default function MyPage() {
     fetchMe()
   }, [fetchMe])
 
-  useEffect(() => {
-  const fetchUser = async () => {
-    const token = localStorage.getItem('accessToken')
-    if (!token) return
-
-    const res = await fetch(`${API_BASE}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    const json = await res.json()
-    setUser(json.data)
-  }
-
-  fetchUser()
-}, [])
+ 
 
   /* ================= 더티/검사 규칙 ================= */
   const emailDirty = email !== initial.email
@@ -334,7 +313,9 @@ export default function MyPage() {
                       className={styles.avatarImg}
                       src={
                         profilePreview ??
-                        (user?.profile ? `${API_BASE}${user.profile}` : profileDefault)
+                        (user?.profile
+                          ? `${API_BASE}${user.profile}?v=${user.userId}`
+                          : profileDefault)
                       }
                       alt="프로필"
                       draggable={false}
