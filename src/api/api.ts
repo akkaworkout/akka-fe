@@ -1,5 +1,8 @@
 export const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://api.akkaworkout.store'
 
+export const API_BASE_URL =
+  'https://port-0-akka-workout-be-mkqkv57u21e615f4.sel3.cloudtype.app'
+
 export const getToken = () => localStorage.getItem('accessToken')
 
 export async function apiFetch(path: string, init: RequestInit = {}) {

@@ -119,7 +119,6 @@
 
 .day {
     position: relative;
-    border-radius: 12px;
     font-size: 12px;
     text-align: center;
     display: flex;
@@ -137,8 +136,8 @@
 }
 
 .activeDate {
-    color: #FF8F6B;
-    font-weight: 600;
+    color: #454DD7;
+    font-weight: 700;
 }
 
 .activeDateLine {
@@ -162,6 +161,17 @@
     font-size: 11px;
     text-align: center;
     color: #2c2c2c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.moreTag {
+    position: absolute;
+    left: 8px;
+    bottom: 5px;
+
 }
 
 .health {
@@ -345,10 +355,27 @@
     gap: 12px;
 }
 
+.dotContainer {
+    display: flex;
+    gap: 2px;
+    margin-top: 4px;
+    align-items: center;
+}
+
 .dot {
-    width: 34px;
-    height: 34px;
+    width: 13px;
+    height: 13px;
     border-radius: 50%;
+    cursor: pointer;
+}
+
+.moreDot {
+    font-size: 10px;
+    color: #666;
+}
+
+.activeDay {
+    background: #E9ECFF;
 }
 
 .status {
@@ -385,4 +412,41 @@
 
 .addBtn:hover {
     background-color: #E9ECFF;
+}
+
+.ticketWrapper {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    opacity: 0.7;
+}
+
+.ticketIcon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    cursor: pointer;
+}
+
+.ticketTooltip {
+    position: absolute;
+    bottom: 20px;
+    right: 0;
+    background: rgba(34, 34, 34);
+    color: white;
+    font-size: 11px;
+    padding: 4px 6px;
+    border-radius: 6px;
+
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+
+    transition: opacity 0.2s;
+}
+
+.ticketWrapper:hover .ticketTooltip {
+    opacity: 1;
 }

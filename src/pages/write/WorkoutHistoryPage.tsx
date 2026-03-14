@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { API_BASE_URL } from '../../api/write'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import WorkoutTabs from '../../components/write/WorkoutTabs'
 import DateSelect from '../../components/write/DateSelect'
@@ -34,6 +34,9 @@ const WorkoutHistoryPage = () => {
   const [remainingCount] = useState<number>(24)
   const [totalCount] = useState<number>(15)
   const [pricePerSession] = useState<number>(20000)
+
+  const [searchParams] = useSearchParams()
+  const recordId = searchParams.get('record_id')
 
   const navigate = useNavigate()
 
@@ -116,9 +119,52 @@ const WorkoutHistoryPage = () => {
     }
   }
 
+  const getRecord = async () => {
+    if (!recordId) return
+
+    try {
+      const token = localStorage.getItem('accessToken')
+      if (!token) return
+
+      const { data } = await axios.get(
+        `${API_BASE_URL}/exercise-record/${recordId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      const isSuccess = data.success === 1 || data.success === true
+
+      const exerciseDate = data.exercise_date
+        ? new Date(data.exercise_date)
+        : new Date()
+
+      setDate(exerciseDate)
+      setMemo(data.memo ?? '')
+      setResult(isSuccess ? '성공' : '실패')
+      setFailReason(data.fail_reason ?? '')
+
+      if (data.image_url) {
+        setPreviewUrl(`${API_BASE_URL}${data.image_url}`)
+        setImageFile(null)
+      } else {
+        setPreviewUrl(null)
+        setImageFile(null)
+      }
+
+    } catch (error) {
+      console.error('레코드 불러오기 실패:', error)
+    }
+  }
+
   useEffect(() => {
     getExercise()
   }, [])
+
+  useEffect(() => {
+    if (!recordId) return
+    getRecord()
+  }, [recordId])
 
   return (
     <div className={styles.wrap}>
