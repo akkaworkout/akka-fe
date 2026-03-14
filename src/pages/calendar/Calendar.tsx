@@ -1,11 +1,13 @@
 import styles from './Calendar.module.css'
 
 import arrowIcon from '../../assets/icons/chevron-left.png'
+import ticketIcon from '../../assets/icons/ticket.png'
 
 type Schedule = {
     date: string
     label: string
     color: string
+    type: string
 }
 
 type CalendarProps = {
@@ -65,41 +67,69 @@ const Calendar = ({
                 {days.map((day, i) => (
                     <div
                         key={i}
-                        className={styles.day}
+                        className={`${styles.day} ${day === selectedDate &&
+                            year === selectedYear &&
+                            month === selectedMonth
+                            ? styles.activeDay
+                            : ''
+                            }`}
                         onClick={() => day && onSelectDay(day)}
                     >
-                        {day && (
-                            <>
-                                {day === selectedDate &&
-                                    year === selectedYear &&
-                                    month === selectedMonth && (
-                                        <hr className={styles.activeDateLine} />
-                                    )}
-                                <span
-                                    className={`${styles.date} ${day === selectedDate &&
-                                        year === selectedYear &&
-                                        month === selectedMonth
-                                        ? styles.activeDate
-                                        : ''
-                                        }`}
-                                >
-                                    {String(day).padStart(2, '0')}
-                                </span>
+                        {day && (() => {
+                            const daySchedules = schedules.filter(
+                                s => new Date(s.date).getDate() === day
+                            )
 
-                                {schedules
-                                    .filter(s => s.date.startsWith(currentMonth))
-                                    .filter(s => Number(s.date.slice(-2)) === day)
-                                    .map(s => (
-                                        <div
-                                            key={s.label}
-                                            className={styles.tag}
-                                            style={{ backgroundColor: s.color }}
-                                        >
-                                            {s.label}
+                            const tickets = daySchedules.filter(s => s.type === 'ticket')
+                            const ticketTooltip = tickets.map(t => t.label).join(', ')
+
+                            const normalSchedules = daySchedules.filter(s => s.type !== 'ticket')
+                            const visibleDots = normalSchedules.slice(0, 3)
+                            const hiddenCount = normalSchedules.length - 3
+
+                            return (
+                                <>
+                                    {/* ticket badge */}
+                                    {tickets.length > 0 && (
+                                        <div className={styles.ticketWrapper}>
+                                            <img src={ticketIcon} className={styles.ticketIcon} />
+                                            <div className={styles.ticketTooltip}>
+                                                {ticketTooltip}
+                                            </div>
                                         </div>
-                                    ))}
-                            </>
-                        )}
+                                    )}
+
+                                    {/* 날짜 */}
+                                    <span
+                                        className={`${styles.date} ${day === selectedDate &&
+                                                year === selectedYear &&
+                                                month === selectedMonth
+                                                ? styles.activeDate
+                                                : ''
+                                            }`}
+                                    >
+                                        {String(day).padStart(2, '0')}
+                                    </span>
+
+                                    {/* 일정 dot */}
+                                    <div className={styles.dotContainer}>
+                                        {visibleDots.map((s, idx) => (
+                                            <span
+                                                key={`${s.date}-${idx}`}
+                                                className={styles.dot}
+                                                style={{ backgroundColor: s.color }}
+                                            />
+                                        ))}
+
+                                        {hiddenCount > 0 && (
+                                            <span className={styles.moreDot}>
+                                                +{hiddenCount}
+                                            </span>
+                                        )}
+                                    </div>
+                                </>
+                            )
+                        })()}
                     </div>
                 ))}
             </div>
