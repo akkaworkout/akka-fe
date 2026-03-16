@@ -22,6 +22,7 @@ type SummaryCardProps<T extends { id: number; label: string; color: string }> = 
   onChange: (item: T) => void
   showAddButton?: boolean
   addPath?: string
+  disabled?: boolean
 }
 
 export default function SummaryCard<
@@ -32,6 +33,7 @@ export default function SummaryCard<
   onChange,
   showAddButton = false,
   addPath = '/ticket',
+  disabled = false,
 }: SummaryCardProps<T>) {
   const [isOpen, setIsOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement | null>(null)
@@ -60,21 +62,27 @@ export default function SummaryCard<
       <button
         type="button"
         className={styles.select}
-        onClick={() => setIsOpen(prev => !prev)}
+        onClick={() => {
+          if (disabled) return
+          setIsOpen(prev => !prev)
+        }}
       >
         <span
           className={styles.dot}
           style={{ backgroundColor: selected.color }}
         />
         <span className={styles.text}>{selected.label}</span>
-        <img
-          className={`${styles.arrow} ${isOpen ? styles.open : ''}`}
-          src={arrow}
-          alt="arrow"
-        />
+
+        {!disabled && (
+          <img
+            className={`${styles.arrow} ${isOpen ? styles.open : ''}`}
+            src={arrow}
+            alt="arrow"
+          />
+        )}
       </button>
 
-      {isOpen && (
+      {!disabled && isOpen && (
         <div className={styles.dropdown}>
           {expenses
             .filter(item => item.id !== selected.id)
