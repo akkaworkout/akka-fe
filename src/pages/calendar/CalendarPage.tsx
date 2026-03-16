@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import styles from './Calendar.module.css'
@@ -9,40 +9,15 @@ import Calendar from './Calendar'
 import TodayItemModal from './TodayItemModal'
 import Spinner from '../../components/common/Spinner'
 
-import { apiFetch } from '../../api/api'
-import { CALENDAR_ENDPOINTS } from '../../api/calendar'
-import { EXERCISE_RECORD_ENDPOINTS } from '../../api/exercise'
-
 import { useCalendar } from '../../hooks/useCalendar'
 import { useGoals } from '../../hooks/useGoals'
 import { useSummary } from '../../hooks/useSummary'
-
-type TodayItem = {
-  id: number
-  date: string
-  name: string
-  status: '성공' | '실패' | '구매' | '이용권 등록'
-  color: string
-  amount: number
-  memo?: string
-  image_url?: string
-}
+import { useTodayItems } from '../../hooks/useTodayItems'
+import type { TodayItem } from '../../hooks/useTodayItems'
 
 const CalenderPage = () => {
   const now = new Date()
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(false)
-
-  const [selectedYear, setSelectedYear] = useState(now.getFullYear())
-  const [selectedMonth, setSelectedMonth] = useState(now.getMonth())
-  const [selectedDate, setSelectedDate] = useState(now.getDate())
-
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false)
-
-  const [selectedItem, setSelectedItem] = useState<TodayItem | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const [todayItems, setTodayItems] = useState<TodayItem[]>([])
 
   const {
     year,
@@ -51,7 +26,6 @@ const CalenderPage = () => {
     handlePrevMonth,
     handleNextMonth
   } = useCalendar()
-  console.log("calendar schedules:", schedules)
 
   const {
     goals,
@@ -59,128 +33,36 @@ const CalenderPage = () => {
     updateGoals
   } = useGoals(year, month)
 
+  const { summary } = useSummary(year, month)
+
   const {
-    summary
-  } = useSummary(year, month)
+    selectedDate,
+    selectedItem,
+    isModalOpen,
+    todayItems,
+    isLoading,
+    setSelectedDate,
+    handleSelectDay,
+    handleItemClick,
+    handleCloseModal
+  } = useTodayItems(navigate, year, month, now.getDate())
 
-  const handleSelectDay = async (day: number) => {
-    setSelectedYear(year)
-    setSelectedMonth(month)
-    setSelectedDate(day)
-
-    setIsLoading(true)
-
-    try {
-      const monthStr = String(month + 1).padStart(2, '0')
-      const dayStr = String(day).padStart(2, '0')
-      const date = `${year}-${monthStr}-${dayStr}`
-      console.log("clicked date:", date)
-
-      const res = await apiFetch(
-        CALENDAR_ENDPOINTS.DATE(date),
-        { method: 'GET' }
-      )
-
-      const records = res.data.records
-      console.log("records:", records)
-
-      const mappedItems: TodayItem[] = records.map((item: any) => {
-
-        if (item.type === 'exercise') {
-          return {
-            id: item.id,
-            date: item.date,
-            name: item.exercise_type,
-            status: item.success === 1 ? '성공' : '실패',
-            color: item.color,
-            amount: item.cost,
-            memo: item.memo
-          }
-        }
-
-        if (item.type === 'expense') {
-          return {
-            id: item.id,
-            date: item.date,
-            name: item.title,
-            status: '구매',
-            color: item.color,
-            amount: item.amount
-          }
-        }
-
-        if (item.type === 'ticket') {
-          return {
-            id: item.id,
-            date: item.date,
-            name: item.exercise_type,
-            status: '이용권 등록',
-            color: item.color,
-            amount: 0
-          }
-        }
-
-        return null
-      }).filter(Boolean) as TodayItem[]
-
-      setTodayItems(mappedItems)
-
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleItemClick = async (item: TodayItem) => {
-    if (item.status === '이용권 등록') {
-      navigate('/ticket')
-      return
-    }
-
-    try {
-      const res = await apiFetch(
-        EXERCISE_RECORD_ENDPOINTS.DETAIL(item.id),
-        { method: 'GET' }
-      )
-
-      const record = res
-
-      const modalItem: TodayItem = {
-        id: record.record_id,
-        date: record.exercise_date,
-        name: item.name,
-        status: record.success === 1 ? '성공' : '실패',
-        color: record.color,
-        amount: record.cost,
-        memo: record.memo,
-        image_url: record.image_url
-      }
-
-      setSelectedItem(modalItem)
-      setIsModalOpen(true)
-
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedItem(null)
-  }
+  // year, month 변경될 때 오늘 날짜 기준으로 fetch
+  useEffect(() => {
+    handleSelectDay(selectedDate, year, month)
+  }, [year, month])
 
   return (
     <>
       <div className={styles.wrap}>
         <SideNav
-          folded={isSidebarFolded}
-          onToggle={() => setIsSidebarFolded(prev => !prev)}
+          folded={false}
+          onToggle={() => {}}
         />
 
         <main
           className={styles.calendarPage}
-          style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
+          style={{ marginLeft: 220 }}
         >
           <div className={styles.calendarInner}>
             <div className={styles.title}>캘린더</div>
@@ -188,13 +70,13 @@ const CalenderPage = () => {
             <Calendar
               year={year}
               month={month}
-              selectedYear={selectedYear}
-              selectedMonth={selectedMonth}
+              selectedYear={year}
+              selectedMonth={month}
               selectedDate={selectedDate}
               schedules={schedules}
               onPrevMonth={handlePrevMonth}
               onNextMonth={handleNextMonth}
-              onSelectDay={handleSelectDay}
+              onSelectDay={(day) => handleSelectDay(day, year, month)}
             />
 
             <div className={styles.money}>
@@ -231,9 +113,7 @@ const CalenderPage = () => {
               <Card
                 title="이달의 목표"
                 buttonText="저장"
-                onButtonClick={() => {
-                  updateGoals()
-                }}
+                onButtonClick={updateGoals}
                 width={445}
                 height={223}
               >
@@ -254,7 +134,7 @@ const CalenderPage = () => {
 
             <div className={styles.today}>
               <Card
-                title={`${selectedYear}년 ${selectedMonth + 1}월 ${selectedDate}일`}
+                title={`${year}년 ${month + 1}월 ${selectedDate}일`}
                 width={445}
                 height={307}
                 backgroundColor="#ffffff"
@@ -267,7 +147,7 @@ const CalenderPage = () => {
                     ) : todayItems.length === 0 ? (
                       <div className={styles.empty}>아직 기록이 없어요</div>
                     ) : (
-                      todayItems.map(item => (
+                      todayItems.map((item: TodayItem) => (
                         <li
                           key={item.id}
                           className={`${styles.item} ${item.status === '이용권 등록' ? styles.ticketItem : ''}`}
