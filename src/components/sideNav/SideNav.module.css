@@ -126,6 +126,11 @@
     object-fit: cover;
 }
 
+.sidebarProfileDefaultImg {
+    height: 37px;
+    cursor: pointer;
+}
+
 .sidebarUser {
     color: #2C2C2C;
     font-size: 12px;
