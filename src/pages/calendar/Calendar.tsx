@@ -42,8 +42,6 @@ const Calendar = ({
         ...Array.from({ length: totalDays }, (_, i) => i + 1),
     ]
 
-    const currentMonth = `${year}-${displayMonth}`
-
     return (
         <div className={styles.calendar}>
             <div className={styles.header}>

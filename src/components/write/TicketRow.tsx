@@ -87,23 +87,23 @@ const TicketRow = ({
       </button>
 
       <div className={styles.colAction}>
-        {isActive && (
-          <div
-            className={styles.moreWrapper}
-            ref={openIndex === index ? dropdownRef : null}
+        <div
+          className={styles.moreWrapper}
+          ref={openIndex === index ? dropdownRef : null}
+        >
+          <button
+            type="button"
+            className={styles.moreButton}
+            onClick={() => onToggle(index)}
           >
-            <button
-              type="button"
-              className={styles.moreButton}
-              onClick={() => onToggle(index)}
-            >
-              <img src={MoreButton} alt="more_button_icon" />
-            </button>
+            <img src={MoreButton} alt="more_button_icon" />
+          </button>
 
-            {openIndex === index && (
-              <div className={styles.dropdown}>
+          {openIndex === index && (
+            <div className={styles.dropdown}>
+              {isActive && (
                 <div
-                  className={styles.dropdownItem}
+                  className={`${styles.dropdownItem} ${styles.edit}`}
                   onClick={() => onEnd(index)}
                 >
                   <img
@@ -113,22 +113,22 @@ const TicketRow = ({
                   />
                   이용권 종료
                 </div>
+              )}
 
-                <div
-                  className={`${styles.dropdownItem} ${styles.delete}`}
-                  onClick={() => onDelete(index)}
-                >
-                  <img
-                    src={DeleteIcon}
-                    alt="delete"
-                    className={styles.deleteIcon}
-                  />
-                  이용권 삭제
-                </div>
+              <div
+                className={`${styles.dropdownItem} ${styles.delete}`}
+                onClick={() => onDelete(index)}
+              >
+                <img
+                  src={DeleteIcon}
+                  alt="delete"
+                  className={styles.deleteIcon}
+                />
+                이용권 삭제
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
