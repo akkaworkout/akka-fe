@@ -23,7 +23,7 @@ import sidebarCalendarActiveIcon from '../../assets/icons/sidebar/sidebar_calend
 import sidebarSettingIcon from '../../assets/icons/sidebar/sidebar_setting.png'
 import sidebarSettingActiveIcon from '../../assets/icons/sidebar/sidebar_setting_active.png'
 
-import example from '../../assets/images/example.png'
+import default_profile from '../../assets/icons/sidebar/default_profile.png'
 
 type SideNavProps = {
   folded: boolean
@@ -116,9 +116,8 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
 
       <div className={styles.sidebarMenuWrapper}>
         <div
-          className={`${styles.sidebarMenu} ${
-            isActive(['/main']) ? styles.active : ''
-          }`}
+          className={`${styles.sidebarMenu} ${isActive(['/main']) ? styles.active : ''
+            }`}
           onClick={() => handleNavigate('/main')}
         >
           <img
@@ -134,9 +133,8 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${
-            isActive(['/write', '/expense', '/ticket']) ? styles.active : ''
-          }`}
+          className={`${styles.sidebarMenu} ${isActive(['/write', '/expense', '/ticket']) ? styles.active : ''
+            }`}
           onClick={() => handleNavigate('/write')}
         >
           <img
@@ -152,9 +150,8 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${
-            isActive(['/report']) ? styles.active : ''
-          }`}
+          className={`${styles.sidebarMenu} ${isActive(['/report']) ? styles.active : ''
+            }`}
           onClick={() => handleNavigate('/report')}
         >
           <img
@@ -170,9 +167,8 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${
-            isActive(['/calendar']) ? styles.active : ''
-          }`}
+          className={`${styles.sidebarMenu} ${isActive(['/calendar']) ? styles.active : ''
+            }`}
           onClick={() => handleNavigate('/calendar')}
         >
           <img
@@ -188,9 +184,8 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${
-            isActive(['/mypage']) ? styles.active : ''
-          }`}
+          className={`${styles.sidebarMenu} ${isActive(['/mypage']) ? styles.active : ''
+            }`}
           onClick={() => handleNavigate('/mypage')}
         >
           <img
@@ -206,36 +201,38 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         </div>
       </div>
 
-      {/* 로그인 했을 때만 프로필 표시 */}
-      {user && (
-        <div className={styles.sidebarProfileWrapper}>
+      <div className={styles.sidebarProfileWrapper}>
+        {user ? (
           <div
             className={styles.sidebarProfile}
             onClick={() => handleNavigate('/mypage')}
           >
             <img
-              src={
-                user?.profile
-                  ? `${API_BASE}${user.profile}`
-                  : example
-              }
+              src={user.profile ? `${API_BASE}${user.profile}` : default_profile}
               className={styles.sidebarProfileImg}
               alt="profile"
             />
           </div>
+        ) : (
+          <img
+            src={default_profile}
+            className={styles.sidebarProfileDefaultImg}
+            alt="default profile"
+            onClick={() => handleNavigate('/login')}
+          />
+        )}
 
-          {!folded && <div className={styles.sidebarUser}>{user.nickname}</div>}
+        {!folded && <div className={styles.sidebarUser}>{user?.nickname || '로그인'}</div>}
 
-          {!folded && (
-            <img
-              src={akkaLogout}
-              className={styles.sidebarLogout}
-              alt="logout"
-              onClick={handleLogout}
-            />
-          )}
-        </div>
-      )}
+        {user && !folded && (
+          <img
+            src={akkaLogout}
+            className={styles.sidebarLogout}
+            alt="logout"
+            onClick={handleLogout}
+          />
+        )}
+      </div>
     </aside>
   )
 }
