@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { API_BASE_URL } from '../../api/write'
+import { TICKET_ENDPOINTS } from '../../api/write'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import WorkoutTabs from '../../components/write/WorkoutTabs'
@@ -31,9 +32,9 @@ const WorkoutHistoryPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-  const [remainingCount] = useState<number>(24)
-  const [totalCount] = useState<number>(15)
-  const [pricePerSession] = useState<number>(20000)
+  const [remainingCount, setRemainingTime] = useState<number>(0)
+  const [usedCount, setUsedCount] = useState<number>(0)
+  const [pricePerSession, setPricePerSession] = useState<number>(0)
 
   const [searchParams] = useSearchParams()
   const recordId = searchParams.get('record_id')
@@ -193,9 +194,39 @@ const WorkoutHistoryPage = () => {
     }
   }
 
+  const getSummary = async (ticketId: number) => {
+    try {
+      const token = localStorage.getItem('accessToken')
+      if (!token) return
+
+      const { data } = await axios.get(
+        `${API_BASE_URL}${TICKET_ENDPOINTS.SUMMARY(ticketId)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      console.log("summary data:", data)
+      setRemainingTime(data.remainingCount);
+      setUsedCount(data.usedCount);
+      setPricePerSession(data.pricePerSession);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     getExercise()
   }, [])
+
+  useEffect(() => {
+    if (!selectedExercise.id) return
+
+    getSummary(selectedExercise.id)
+  }, [selectedExercise])
 
   useEffect(() => {
     if (!recordId || tickets.length === 0) return
@@ -447,7 +478,7 @@ const WorkoutHistoryPage = () => {
                   <span className={styles.checkIcon}>
                     <CheckIcon size={20} />
                   </span>
-                  <span>누적 운동 횟수: {totalCount}회</span>
+                  <span>누적 운동 횟수: {usedCount}회</span>
                 </li>
 
                 <li className={styles.recordItem}>
