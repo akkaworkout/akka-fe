@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { API_BASE_URL } from '../../api/write'
@@ -23,9 +23,9 @@ const ExpenseHistoryPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<Expense>(EXPENSES[0])
   const [category, setCategory] = useState('')
   const [price, setPrice] = useState('')
-  const [monthlyExpenseCount, setMonthlyExpenseCount] = useState(3)
-  const [monthlyTotalExpense, setMonthlyTotalExpense] = useState(75000)
-  const [topExpenseCategory, setTopExpenseCategory] = useState('운동 식품')
+  const [monthlyExpenseCount, setMonthlyExpenseCount] = useState(0)
+  const [monthlyTotalExpense, setMonthlyTotalExpense] = useState(0)
+  const [topExpenseCategory, setTopExpenseCategory] = useState('기록 없음')
   const isFormValid = category.trim() !== '' && price.trim() !== ''
   const navigate = useNavigate()
 
@@ -57,6 +57,34 @@ const ExpenseHistoryPage = () => {
       console.log(error)
     }
   }
+
+  const getExpenseSummary = async () => {
+    try {
+      const token = localStorage.getItem('accessToken')
+      if (!token) return
+
+      const data = await axios.get(
+        `${API_BASE_URL}/expense/stats`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      const stats = data.data.data;
+      setMonthlyExpenseCount(stats.expenseCount);
+      setMonthlyTotalExpense(stats.totalAmount);
+      setTopExpenseCategory(stats.topCategory);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getExpenseSummary()
+  }, [])
 
   return (
     <div className={styles.wrap}>

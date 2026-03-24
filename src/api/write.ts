@@ -8,4 +8,5 @@ export const TICKET_ENDPOINTS = {
   DETAIL: (id: number) => `/tickets/${id}`,
   DELETE: (id: number) => `/tickets/${id}`,
   END: (id: number) => `/tickets/${id}/end`,
+  SUMMARY: (id: number) => `/tickets/${id}/summary`,
 }
