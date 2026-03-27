@@ -12,13 +12,7 @@ type Summary = {
 
 export const useSummary = (year: number, month: number) => {
 
-  const [summary, setSummary] = useState<Summary>({
-    totalAmount: 0,
-    targetBudget: 0,
-    failAmount: 0,
-    exerciseCount: 0,
-    targetExerciseCount: 0
-  })
+  const [summary, setSummary] = useState<Summary | null>(null)
 
   const getSummary = async () => {
     try {

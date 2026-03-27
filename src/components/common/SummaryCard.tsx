@@ -57,6 +57,25 @@ export default function SummaryCard<
     }
   }, [isOpen])
 
+  if (expenses.length === 0) {
+    return (
+      <div className={styles.summaryCard}>
+        <button
+          className={styles.select}
+          onClick={() => {
+            const ok = window.confirm(
+              '작성 중인 내용이 사라집니다. 이동할까요?'
+            )
+            if (!ok) return
+            navigate(addPath)
+          }}
+        >
+          + 이용권 추가하기
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className={styles.summaryCard} ref={wrapperRef}>
       <button
@@ -107,6 +126,11 @@ export default function SummaryCard<
             <button
               className={styles.addButton}
               onClick={() => {
+                const ok = window.confirm(
+                  '작성 중인 내용이 사라집니다. 이동하시겠습니까?'
+                )
+                if (!ok) return
+
                 setIsOpen(false)
                 navigate(addPath)
               }}

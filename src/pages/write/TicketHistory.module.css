@@ -98,7 +98,14 @@
 .confirmText {
   font-size: 16px;
   font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.subText {
+  font-size: 14px;
   margin-bottom: 20px;
+  color: #676767;
+  padding: 0 15px;
 }
 
 .confirmButtons {

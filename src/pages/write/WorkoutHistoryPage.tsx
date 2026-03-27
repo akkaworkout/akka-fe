@@ -311,6 +311,7 @@ const WorkoutHistoryPage = () => {
                   expenses={mappedTickets}
                   selected={selectedExercise}
                   disabled={!!recordId}
+                  showAddButton={true}
                   onChange={(value) => {
                     if (recordId) return
                     setSelectedExercise(value)
@@ -460,7 +461,7 @@ const WorkoutHistoryPage = () => {
 
           <div className={styles.currentRecord}>
             <Card
-              title="이번 기록으로 이렇게 반영돼요"
+              title="현재 이용권 상태는 다음과 같아요"
               width={386}
               height={227}
               radius={20}
