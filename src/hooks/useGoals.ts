@@ -59,6 +59,7 @@ export const useGoals = (year: number, month: number) => {
         }
       )
 
+      alert("저장이 완료되었습니다.");
       return res
 
     } catch (error) {

@@ -34,7 +34,7 @@ const CalenderPage = () => {
   } = useGoals(year, month)
 
   const { summary } = useSummary(year, month)
-
+  
   const {
     selectedDate,
     selectedItem,
@@ -57,7 +57,7 @@ const CalenderPage = () => {
       <div className={styles.wrap}>
         <SideNav
           folded={false}
-          onToggle={() => {}}
+          onToggle={() => { }}
         />
 
         <main
@@ -80,33 +80,39 @@ const CalenderPage = () => {
             />
 
             <div className={styles.money}>
-              <Card
-                title={
-                  <div className={styles.moneyMain}>
-                    <span className={styles.label}>금액:</span>
-                    <span className={styles.current}>
-                      {Number(summary.totalAmount).toLocaleString()}
-                    </span>
-                    <span className={styles.total}>
-                      / {summary.targetBudget.toLocaleString()}원
-                    </span>
-                  </div>
-                }
-                width={445}
-                height={173}
-                backgroundColor="#ffffff"
-                radius={20}
-              >
-                <div className={styles.badges}>
-                  <div className={styles.badgeYellow}>
-                    이번달 날린 금액: <strong>{summary.failAmount.toLocaleString()}원</strong>
-                  </div>
+              {summary ? (
+                <Card
+                  title={
+                    <div className={styles.moneyMain}>
+                      <span className={styles.label}>금액:</span>
+                      <span className={styles.current}>
+                        {Number(summary.totalAmount).toLocaleString()}
+                      </span>
+                      <span className={styles.total}>
+                        &nbsp;/ {summary.targetBudget.toLocaleString()}원
+                      </span>
+                    </div>
+                  }
+                  width={445}
+                  height={173}
+                  backgroundColor="#ffffff"
+                  radius={20}
+                >
+                  <div className={styles.badges}>
+                    <div className={styles.badgeYellow}>
+                      이번달 날린 금액: <strong>{summary.failAmount.toLocaleString()}원</strong>
+                    </div>
 
-                  <div className={styles.badgeBlue}>
-                    운동 횟수: <strong>{summary.exerciseCount}</strong> / {summary.targetExerciseCount}회
+                    <div className={styles.badgeBlue}>
+                      운동 횟수: <strong>{summary.exerciseCount}</strong> / {summary.targetExerciseCount}회
+                    </div>
                   </div>
-                </div>
-              </Card>
+                </Card>
+              ) : (
+                <Card width={445} height={173}>
+                  <Spinner />
+                </Card>
+              )}
             </div>
 
             <div className={styles.goal}>

@@ -20,6 +20,7 @@ type CalendarProps = {
     onPrevMonth: () => void
     onNextMonth: () => void
     onSelectDay: (day: number) => void
+    isLoading?: boolean
 }
 
 const Calendar = ({
@@ -32,6 +33,7 @@ const Calendar = ({
     onPrevMonth,
     onNextMonth,
     onSelectDay,
+    isLoading = false,
 }: CalendarProps) => {
     const firstDay = new Date(year, month, 1).getDay()
     const totalDays = new Date(year, month + 1, 0).getDate()
@@ -71,7 +73,17 @@ const Calendar = ({
                             ? styles.activeDay
                             : ''
                             }`}
-                        onClick={() => day && onSelectDay(day)}
+                        onClick={() => {
+                            if (!day) return
+
+                            if (
+                                day === selectedDate &&
+                                year === selectedYear &&
+                                month === selectedMonth
+                            ) return
+
+                            onSelectDay(day)
+                        }}
                     >
                         {day && (() => {
                             const daySchedules = schedules.filter(
@@ -87,8 +99,7 @@ const Calendar = ({
 
                             return (
                                 <>
-                                    {/* ticket badge */}
-                                    {tickets.length > 0 && (
+                                    {!isLoading && tickets.length > 0 && (
                                         <div className={styles.ticketWrapper}>
                                             <img src={ticketIcon} className={styles.ticketIcon} />
                                             <div className={styles.ticketTooltip}>
@@ -97,32 +108,36 @@ const Calendar = ({
                                         </div>
                                     )}
 
-                                    {/* 날짜 */}
                                     <span
                                         className={`${styles.date} ${day === selectedDate &&
-                                                year === selectedYear &&
-                                                month === selectedMonth
-                                                ? styles.activeDate
-                                                : ''
+                                            year === selectedYear &&
+                                            month === selectedMonth
+                                            ? styles.activeDate
+                                            : ''
                                             }`}
                                     >
                                         {String(day).padStart(2, '0')}
                                     </span>
 
-                                    {/* 일정 dot */}
                                     <div className={styles.dotContainer}>
-                                        {visibleDots.map((s, idx) => (
-                                            <span
-                                                key={`${s.date}-${idx}`}
-                                                className={styles.dot}
-                                                style={{ backgroundColor: s.color }}
-                                            />
-                                        ))}
+                                        {isLoading ? (
+                                            <div className={styles.skeletonDots} />
+                                        ) : (
+                                            <>
+                                                {visibleDots.map((s, idx) => (
+                                                    <span
+                                                        key={`${s.date}-${idx}`}
+                                                        className={styles.dot}
+                                                        style={{ backgroundColor: s.color }}
+                                                    />
+                                                ))}
 
-                                        {hiddenCount > 0 && (
-                                            <span className={styles.moreDot}>
-                                                +{hiddenCount}
-                                            </span>
+                                                {hiddenCount > 0 && (
+                                                    <span className={styles.moreDot}>
+                                                        +{hiddenCount}
+                                                    </span>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 </>
