@@ -40,6 +40,7 @@ type Ticket = {
   start_date: string
   end_date: string
   status: string
+  refund_price?: number
 }
 
 const TicketHistoryPage = () => {
@@ -187,6 +188,7 @@ const TicketHistoryPage = () => {
             start_date: item.start_date.split('T')[0],
             end_date: item.end_date.split('T')[0],
             status: formattedStatus,
+            refund_price: item.refund_price,
           }
         })
       )
@@ -359,6 +361,7 @@ const TicketHistoryPage = () => {
           initialData={ticketList[viewIndex]}
           onClose={() => setViewIndex(null)}
           onConfirm={() => setViewIndex(null)}
+          isRefunded={ticketList[viewIndex].status === '환불'}
         />
       )}
 
