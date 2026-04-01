@@ -12,6 +12,7 @@ type Payload = {
   total_price: number
   start_date: string
   end_date: string
+  refund_price?: number
 }
 
 type Props = {
@@ -24,6 +25,8 @@ type Props = {
   onConfirm: (data: Payload) => void
   mode?: 'create' | 'view'
   initialData?: Payload
+  isRefunded?: boolean
+  refund_price?: number
 }
 
 const TicketAddModal = ({
@@ -36,6 +39,7 @@ const TicketAddModal = ({
   onConfirm,
   mode = 'create',
   initialData,
+  isRefunded = false,
 }: Props) => {
   const [step, setStep] = useState(1)
 
@@ -289,6 +293,28 @@ const TicketAddModal = ({
                 </div>
               </div>
             </div>
+
+            {mode === 'view' && isRefunded && (
+              <div className={styles.field}>
+                <label>환불 금액</label>
+                <div className={styles.priceInput}>
+                  <input
+                    className={styles.input}
+                    value={
+                      initialData?.refund_price !== undefined
+                        ? String(initialData.refund_price)
+                        : ''
+                    }
+                    disabled={mode === 'view'}
+                    placeholder="0"
+                    maxLength={8}
+                  />
+                  <span className={styles.unit}>
+                    원
+                  </span>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
