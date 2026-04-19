@@ -56,3 +56,42 @@
 .nextBtn:disabled:active {
   transform: none;
 }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 42px;
+}
+
+.field label {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2C2C2C;
+}
+
+.input {
+  width: 558px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid #D9D9D9;
+  font-size: 16px;
+  line-height: 40px;
+  box-sizing: border-box;
+}
+
+.priceInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priceInput .input {
+  width: 172px;
+}
+
+.alert {
+  color: #FF5858;
+  font-size: 14px;
+}

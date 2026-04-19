@@ -1,6 +1,6 @@
 import TicketModal from './TicketModal'
 import SummaryCard, { type Exercise } from '../../common/SummaryCard'
-import styles from '../../../pages/write/TicketHistory.module.css'
+import styles from './TicketModal.module.css'
 
 type Ticket = {
   id: number

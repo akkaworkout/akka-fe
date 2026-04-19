@@ -1,47 +1,68 @@
+// React / 외부 라이브러리
 import { useState, useRef, useEffect } from 'react'
-import axios from 'axios'
-import { API_BASE_URL } from '../../api/write'
-import { TICKET_ENDPOINTS } from '../../api/write'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+// API / 로직
+import api from '../../api/client'
+import { ticketApi } from '../../api/ticket'
+import { exerciseApi } from '../../api/exercise'
+
+// 컴포넌트
+import SideNav from '../../components/sideNav/SideNav'
 import WorkoutTabs from '../../components/write/WorkoutTabs'
 import DateSelect from '../../components/write/DateSelect'
 import SummaryCard, { type Exercise } from '../../components/common/SummaryCard'
 import Card from '../../components/common/Card'
 import CheckIcon from '../../components/common/icons/CheckIcon'
-import styles from './WorkoutHistory.module.css'
-import SideNav from '../../components/sideNav/SideNav'
+
+// 에셋
 import uploadIcon from '../../assets/icons/upload.png'
 
+// 스타일
+import styles from './WorkoutHistory.module.css'
+
+type Ticket = {
+  ticket_id: number
+  exercise_type: string
+  color: string
+}
+
 const WorkoutHistoryPage = () => {
+  // 라우팅 / 외부 값
+  const [searchParams] = useSearchParams()
+  const recordId = Number(searchParams.get('record_id'))
+  const navigate = useNavigate()
+
+  // UI 상태
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const [date, setDate] = useState<Date>(new Date())
-  const [result, setResult] = useState<'성공' | '실패'>('성공')
-  const [memo, setMemo] = useState('')
-  const [failReason, setFailReason] = useState('')
-
-  const [tickets, setTickets] = useState<any[]>([])
-  const [selectedExercise, setSelectedExercise] = useState<Exercise>({
-    id: 0,
-    label: '',
-    color: '',
+  // 3. 핵심 데이터 (form)
+  const [form, setForm] = useState({
+    date: new Date(),
+    workoutResult: '성공' as '성공' | '실패',
+    memo: '',
+    failReason: '',
+    exercise: {
+      id: 0,
+      label: '',
+      color: '',
+    },
+    imageFile: null as File | null,
   })
 
-  const [imageFile, setImageFile] = useState<File | null>(null)
+  // 서버 데이터
+  const [ticketList, setTicketList] = useState<Ticket[]>([])
+
+  // 파생 UI 상태
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
+  // 요약 데이터
   const [remainingCount, setRemainingTime] = useState<number>(0)
   const [usedCount, setUsedCount] = useState<number>(0)
   const [pricePerSession, setPricePerSession] = useState<number>(0)
 
-  const [searchParams] = useSearchParams()
-  const recordId = searchParams.get('record_id')
-
-  const navigate = useNavigate()
-
-  const mappedTickets: Exercise[] = tickets.map((ticket) => ({
+  const mappedTickets: Exercise[] = ticketList.map((ticket) => ({
     id: ticket.ticket_id,
     label: ticket.exercise_type,
     color: ticket.color,
@@ -50,32 +71,29 @@ const WorkoutHistoryPage = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    setImageFile(file)
+    setForm(prev => ({
+      ...prev,
+      imageFile: file
+    }))
     setPreviewUrl(URL.createObjectURL(file))
   }
 
   const getExercise = async () => {
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
 
-      const response = await axios.get(
-        `${API_BASE_URL}/tickets/active`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      const response = await api.get(`${ticketApi.BASE}/active`)
 
-      setTickets(response.data)
+      setTicketList(response.data)
 
       if (response.data.length > 0) {
-        setSelectedExercise({
-          id: response.data[0].ticket_id,
-          label: response.data[0].exercise_type,
-          color: response.data[0].color,
-        })
+        setForm(prev => ({
+          ...prev,
+          exercise: {
+            id: response.data[0].ticket_id,
+            label: response.data[0].exercise_type,
+            color: response.data[0].color,
+          }
+        }))
       }
     } catch (error) {
       console.log(error)
@@ -90,36 +108,16 @@ const WorkoutHistoryPage = () => {
     return `${year}-${month}-${day}`
   }
 
-  const handleBtnClick = async () => {
+  const handleSubmit = async () => {
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token || !selectedExercise) return
 
-      const formData = new FormData()
+      const formData = buildFormData()
 
-      formData.append('exercise_date', formatDate(date))
-      formData.append('success', result === '성공' ? 'true' : 'false')
-      formData.append('memo', memo)
-      formData.append('ticket_id', String(selectedExercise.id))
-
-      if (result === '실패') {
-        formData.append('fail_reason', failReason)
-      }
-
-      if (imageFile) {
-        formData.append('image', imageFile)
-      }
-
-      const response = await axios.post(
-        `${API_BASE_URL}/exercise-record`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      )
+      await api.post(exerciseApi.BASE, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
 
       alert('운동 기록이 완료되었습니다.')
       navigate('/calendar')
@@ -128,34 +126,37 @@ const WorkoutHistoryPage = () => {
     }
   }
 
+  const buildFormData = () => {
+    const formData = new FormData()
+
+    formData.append('exercise_date', formatDate(form.date))
+    formData.append('success', form.workoutResult === '성공' ? 'true' : 'false')
+    formData.append('memo', form.memo)
+    formData.append('ticket_id', String(form.exercise.id))
+
+    if (form.workoutResult === '실패') {
+      formData.append('fail_reason', form.failReason)
+    }
+
+    if (form.imageFile) {
+      formData.append('image', form.imageFile)
+    }
+
+    return formData
+  }
+
   const handleUpdate = async () => {
     if (!recordId) return
 
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
 
-      const formData = new FormData()
+      const formData = buildFormData()
 
-      formData.append('exercise_date', formatDate(date))
-      formData.append('success', result === '성공' ? 'true' : 'false')
-      formData.append('memo', memo)
-      formData.append('ticket_id', String(selectedExercise.id))
-
-      if (result === '실패') {
-        formData.append('fail_reason', failReason)
-      }
-
-      if (imageFile) {
-        formData.append('image', imageFile)
-      }
-
-      await axios.patch(
-        `${API_BASE_URL}/exercise-record/${recordId}`,
+      await api.patch(
+        exerciseApi.DETAIL(recordId),
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
         }
@@ -175,17 +176,7 @@ const WorkoutHistoryPage = () => {
     if (!ok) return
 
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
-
-      await axios.delete(
-        `${API_BASE_URL}/exercise-record/${recordId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      await api.delete(exerciseApi.DETAIL(recordId))
 
       alert('운동 기록이 삭제되었습니다.')
       navigate('/calendar')
@@ -196,16 +187,8 @@ const WorkoutHistoryPage = () => {
 
   const getSummary = async (ticketId: number) => {
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
-
-      const { data } = await axios.get(
-        `${API_BASE_URL}${TICKET_ENDPOINTS.SUMMARY(ticketId)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const { data } = await api.get(
+        ticketApi.SUMMARY(ticketId)
       )
 
       console.log("summary data:", data)
@@ -223,46 +206,54 @@ const WorkoutHistoryPage = () => {
   }, [])
 
   useEffect(() => {
-    if (!selectedExercise.id) return
-
-    getSummary(selectedExercise.id)
-  }, [selectedExercise])
+    if (!form.exercise.id) return
+    getSummary(form.exercise.id)
+  }, [form.exercise.id])
 
   useEffect(() => {
-    if (!recordId || tickets.length === 0) return
+    if (!recordId || ticketList.length === 0) return
 
     const getRecord = async () => {
       try {
-        const token = localStorage.getItem('accessToken')
-        if (!token) return
-
-        const { data } = await axios.get(`${API_BASE_URL}/exercise-record/${recordId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const { data } = await api.get(
+          exerciseApi.DETAIL(recordId)
+        )
 
         const isSuccess = data.success === 1 || data.success === true
         const exerciseDate = data.exercise_date ? new Date(data.exercise_date) : new Date()
 
-        setDate(exerciseDate)
-        setMemo(data.memo ?? '')
-        setResult(isSuccess ? '성공' : '실패')
-        setFailReason(data.fail_reason ?? '')
+        setForm(prev => ({
+          ...prev,
+          date: exerciseDate,
+          memo: data.memo ?? '',
+          workoutResult: isSuccess ? '성공' : '실패',
+          failReason: data.fail_reason ?? '',
+        }))
 
-        const ticket = tickets.find(t => t.ticket_id === data.ticket_id)
+        const ticket = ticketList.find(t => t.ticket_id === data.ticket_id)
         if (ticket) {
-          setSelectedExercise({
-            id: ticket.ticket_id,
-            label: ticket.exercise_type,
-            color: ticket.color,
-          })
+          setForm(prev => ({
+            ...prev,
+            exercise: {
+              id: ticket.ticket_id,
+              label: ticket.exercise_type,
+              color: ticket.color,
+            }
+          }))
         }
 
         if (data.image_url) {
-          setPreviewUrl(`${API_BASE_URL}${data.image_url}`)
-          setImageFile(null)
+          setPreviewUrl(`${import.meta.env.VITE_API_URL}${data.image_url}`)
+          setForm(prev => ({
+            ...prev,
+            imageFile: null
+          }))
         } else {
           setPreviewUrl(null)
-          setImageFile(null)
+          setForm(prev => ({
+            ...prev,
+            imageFile: null
+          }))
         }
 
       } catch (error) {
@@ -271,7 +262,13 @@ const WorkoutHistoryPage = () => {
     }
 
     getRecord()
-  }, [recordId, tickets])
+  }, [recordId, ticketList])
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl)
+    }
+  }, [previewUrl])
 
   return (
     <div className={styles.wrap}>
@@ -298,9 +295,12 @@ const WorkoutHistoryPage = () => {
               <div className={styles.field}>
                 <label>날짜*</label>
                 <DateSelect
-                  value={date}
+                  value={form.date}
                   onChange={(newDate) => {
-                    setDate(newDate)
+                    setForm(prev => ({
+                      ...prev,
+                      date: newDate
+                    }))
                   }}
                 />
               </div>
@@ -309,12 +309,15 @@ const WorkoutHistoryPage = () => {
                 <label>운동 종목*</label>
                 <SummaryCard<Exercise>
                   expenses={mappedTickets}
-                  selected={selectedExercise}
+                  selected={form.exercise}
                   disabled={!!recordId}
                   showAddButton={true}
                   onChange={(value) => {
                     if (recordId) return
-                    setSelectedExercise(value)
+                    setForm(prev => ({
+                      ...prev,
+                      exercise: value
+                    }))
                   }}
                 />
               </div>
@@ -325,18 +328,21 @@ const WorkoutHistoryPage = () => {
               <div className={styles.resultButtons}>
                 <button
                   type="button"
-                  className={`${styles.resultBtn} ${result === '성공' ? styles.success : ''}`}
+                  className={`${styles.resultBtn} ${form.workoutResult === '성공' ? styles.success : ''}`}
                   onClick={() => {
                     if (
-                      result === '실패' &&
-                      failReason.trim() !== ''
+                      form.workoutResult === '실패' &&
+                      form.failReason.trim() !== ''
                     ) {
                       const ok = window.confirm('작성 중인 실패 이유가 사라집니다. 계속하시겠습니까?')
                       if (!ok) return
                     }
 
-                    setResult('성공')
-                    setFailReason('')
+                    setForm(prev => ({
+                      ...prev,
+                      workoutResult: '성공',
+                      failReason: ''
+                    }))
                   }}
                 >
                   성공
@@ -344,9 +350,12 @@ const WorkoutHistoryPage = () => {
 
                 <button
                   type="button"
-                  className={`${styles.resultBtn} ${result === '실패' ? styles.fail : ''}`}
+                  className={`${styles.resultBtn} ${form.workoutResult === '실패' ? styles.fail : ''}`}
                   onClick={() => {
-                    setResult('실패')
+                    setForm(prev => ({
+                      ...prev,
+                      workoutResult: '실패'
+                    }))
                   }}
                 >
                   실패
@@ -385,7 +394,10 @@ const WorkoutHistoryPage = () => {
                     type="button"
                     className={styles.removeImageBtn}
                     onClick={() => {
-                      setImageFile(null)
+                      setForm(prev => ({
+                        ...prev,
+                        imageFile: null
+                      }))
                       setPreviewUrl(null)
                       if (fileInputRef.current) {
                         fileInputRef.current.value = ''
@@ -402,25 +414,31 @@ const WorkoutHistoryPage = () => {
               <label>메모</label>
               <input
                 className={styles.input}
-                value={memo}
+                value={form.memo}
                 onChange={e => {
-                  setMemo(e.target.value)
+                  setForm(prev => ({
+                    ...prev,
+                    memo: e.target.value
+                  }))
                 }}
                 placeholder="메모"
                 maxLength={30}
               />
             </div>
 
-            {result === '실패' && (
+            {form.workoutResult === '실패' && (
               <div className={styles.field}>
                 <label>
                   실패 이유 <span className={styles.limit}>(7자 이하)</span>
                 </label>
                 <input
                   className={styles.input}
-                  value={failReason}
+                  value={form.failReason}
                   onChange={e => {
-                    setFailReason(e.target.value)
+                    setForm(prev => ({
+                      ...prev,
+                      failReason: e.target.value
+                    }))
                   }}
                   placeholder="실패 이유"
                   maxLength={7}
@@ -436,7 +454,7 @@ const WorkoutHistoryPage = () => {
               {!recordId ? (
                 <button
                   className={styles.submitBtn}
-                  onClick={handleBtnClick}
+                  onClick={handleSubmit}
                 >
                   완료
                 </button>
