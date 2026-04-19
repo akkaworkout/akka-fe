@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { apiFetch } from '../api/api'
 import { CALENDAR_ENDPOINTS } from '../api/calendar'
-import { EXERCISE_RECORD_ENDPOINTS } from '../api/exercise'
+import { exerciseApi } from '../api/exercise'
 import { useNavigate } from 'react-router-dom'
 
 export type TodayItem = {
@@ -77,7 +77,7 @@ export const useTodayItems = (navigate: ReturnType<typeof useNavigate>, initialY
     }
 
     try {
-      const res = await apiFetch(EXERCISE_RECORD_ENDPOINTS.DETAIL(item.id), { method: 'GET' })
+      const res = await apiFetch(exerciseApi.DETAIL(item.id), { method: 'GET' })
       const record = res
 
       const modalItem: TodayItem = {

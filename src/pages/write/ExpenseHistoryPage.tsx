@@ -1,15 +1,21 @@
+// React / 외부 라이브러리
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { API_BASE_URL } from '../../api/write'
 
+//  API / 로직
+import api from '../../api/client'
+import { expenseApi } from '../../api/expense'
+
+// 컴포넌트 (UI)
+import SideNav from '../../components/sideNav/SideNav'
 import WorkoutTabs from '../../components/write/WorkoutTabs'
 import DateSelect from '../../components/write/DateSelect'
 import SummaryCard, { type Expense } from '../../components/common/SummaryCard'
 import Card from '../../components/common/Card'
 import CheckIcon from '../../components/common/icons/CheckIcon'
+
+// 스타일 
 import styles from './WorkoutHistory.module.css'
-import SideNav from '../../components/sideNav/SideNav'
 
 const EXPENSES = [
   { id: 1, value: '운동 용품', label: '운동 용품', color: '#fcd7ff' },
@@ -17,94 +23,101 @@ const EXPENSES = [
   { id: 3, value: '기타', label: '기타(교통비 등)', color: '#E0F0FF' },
 ]
 
+// 생성
+export const createExpense = (data: {
+  category: string
+  title: string
+  amount: number
+  expense_date: string
+}) => {
+  return api.post(expenseApi.BASE, data)
+}
+
+// 요약 조회
+export const getExpenseStats = () => {
+  return api.get(expenseApi.STATS)
+}
+
 const ExpenseHistoryPage = () => {
+  // 라우팅
+  const navigate = useNavigate()
+
+  // UI / 입력 상태
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
   const [date, setDate] = useState<Date>(new Date())
   const [selectedCategory, setSelectedCategory] = useState<Expense>(EXPENSES[0])
   const [category, setCategory] = useState('')
   const [price, setPrice] = useState('')
+
+  // 요약 데이터
   const [monthlyExpenseCount, setMonthlyExpenseCount] = useState(0)
   const [monthlyTotalExpense, setMonthlyTotalExpense] = useState(0)
   const [topExpenseCategory, setTopExpenseCategory] = useState('기록 없음')
+
   const isFormValid = category.trim() !== '' && price.trim() !== ''
-  const navigate = useNavigate()
 
-  const handelBtnClick = async () => {
+  const formatDate = (date: Date) =>
+    date.toISOString().split('T')[0]
+
+  const handleSubmit = async () => {
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
-
-      const response = await axios.post(
-        `${API_BASE_URL}/expense`,
-        {
-          category: selectedCategory.value,
-          title: category,
-          amount: Number(price),
-          expense_date: date.toISOString().split('T')[0],
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      console.log('운동지출 POST 성공:', response.data)
+      await createExpense({
+        category: selectedCategory.value,
+        title: category,
+        amount: Number(price),
+        expense_date: formatDate(date),
+      })
 
       alert('운동지출 기록이 완료되었습니다.')
       navigate('/calendar')
-
     } catch (error) {
       console.log(error)
     }
   }
 
-  const getExpenseSummary = async () => {
+  const fetchExpenseSummary = async () => {
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
+      const { data } = await getExpenseStats()
 
-      const data = await axios.get(
-        `${API_BASE_URL}/expense/stats`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-
-      const stats = data.data.data;
-      setMonthlyExpenseCount(stats.expenseCount);
-      setMonthlyTotalExpense(stats.totalAmount);
-      setTopExpenseCategory(stats.topCategory);
-
+      const stats = data.data
+      setMonthlyExpenseCount(stats.expenseCount)
+      setMonthlyTotalExpense(stats.totalAmount)
+      setTopExpenseCategory(stats.topCategory)
     } catch (error) {
       console.log(error)
     }
   }
 
   useEffect(() => {
-    getExpenseSummary()
+    fetchExpenseSummary()
   }, [])
 
   return (
     <div className={styles.wrap}>
+      {/* 사이드바 */}
       <SideNav
         folded={isSidebarFolded}
         onToggle={() => setIsSidebarFolded(prev => !prev)}
       />
 
+      {/* 메인 */}
       <main
         className={styles.writePage}
         style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
       >
         <div className={styles.writeInner}>
+
+          {/* 헤더 */}
           <div className={styles.title}>기타 지출</div>
 
           <div className={styles.tabContainer}>
             <WorkoutTabs />
           </div>
 
+          {/* 입력 영역 */}
           <div className={styles.write}>
+
+            {/* 날짜 + 분류 */}
             <div className={styles.row}>
               <div className={styles.field}>
                 <label>날짜*</label>
@@ -121,6 +134,7 @@ const ExpenseHistoryPage = () => {
               </div>
             </div>
 
+            {/* 항목 */}
             <div className={styles.field}>
               <label>항목*</label>
               <input
@@ -132,6 +146,7 @@ const ExpenseHistoryPage = () => {
               />
             </div>
 
+            {/* 금액 */}
             <div className={styles.field}>
               <label>금액*</label>
               <div className={styles.priceInput}>
@@ -148,13 +163,14 @@ const ExpenseHistoryPage = () => {
               </div>
             </div>
 
+            {/* 버튼 */}
             <div className={styles.footer}>
               <span className={styles.required}>
                 *는 필수 입력사항입니다.
               </span>
               <button
                 className={styles.submitBtn}
-                onClick={handelBtnClick}
+                onClick={handleSubmit}
                 disabled={!isFormValid}
               >
                 완료
@@ -162,6 +178,7 @@ const ExpenseHistoryPage = () => {
             </div>
           </div>
 
+          {/* 요약 카드 */}
           <div className={styles.currentRecord}>
             <Card
               title="이번 기록으로 이렇게 반영돼요"
@@ -197,6 +214,7 @@ const ExpenseHistoryPage = () => {
               </ul>
             </Card>
           </div>
+
         </div>
       </main>
     </div>

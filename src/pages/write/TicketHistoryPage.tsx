@@ -1,16 +1,23 @@
+// React / 외부 라이브러리
 import { useState, useRef, useEffect } from 'react'
-import axios from 'axios'
 
-import styles from './TicketHistory.module.css'
+// API / hooks / utils
+import api from '../../api/client'
+import { ticketApi } from '../../api/ticket'
 
+// 컴포넌트
 import SideNav from '../../components/sideNav/SideNav'
 import WorkoutTabs from '../../components/write/WorkoutTabs'
 import ConfirmModal from '../../components/write/modal/ConfirmModal'
 import TicketEndModal from '../../components/write/modal/TicketEndModal'
 import TicketAddModal from '../../components/write/modal/TicketAddModal'
 import TicketRow from '../../components/write/TicketRow'
-import SummaryCard, { type Exercise } from '../../components/common/SummaryCard'
-import { API_BASE_URL, TICKET_ENDPOINTS } from '../../api/write'
+
+// 타입
+import { type Exercise } from '../../components/common/SummaryCard'
+
+// 스타일 
+import styles from './TicketHistory.module.css'
 
 const END_TYPES: Exercise[] = [
   { id: 1, label: '완료', color: '#E0F0FF' },
@@ -44,46 +51,42 @@ type Ticket = {
 }
 
 const TicketHistoryPage = () => {
+  // UI
   const [isSidebarFolded, setIsSidebarFolded] = useState(false)
-  const [openIndex, setOpenIndex] = useState<number | null>(null)
-  const [confirmIndex, setConfirmIndex] = useState<number | null>(null)
-  const [endIndex, setEndIndex] = useState<number | null>(null)
+  const [activeDropdownIndex, setActiveDropdownIndex] = useState<number | null>(null)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
-  const [isAddOpen, setIsAddOpen] = useState(false)
+
+  // 모달 / 액션
+  const [deleteTargetIndex, setDeleteTargetIndex] = useState<number | null>(null)
+  const [endTargetIndex, setEndTargetIndex] = useState<number | null>(null)
+  const [viewTargetIndex, setViewTargetIndex] = useState<number | null>(null)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+
+  // 입력 상태
   const [ticketType, setTicketType] = useState<'횟수권' | '기간권'>('횟수권')
   const [selectedColor, setSelectedColor] = useState(COLOR_OPTIONS[0])
   const [selectedEndType, setSelectedEndType] = useState<Exercise>(END_TYPES[0])
-  const [price, setPrice] = useState('')
-  const [viewIndex, setViewIndex] = useState<number | null>(null)
+  const [refundPrice, setRefundPrice] = useState('')
+
+  // 데이터
   const [ticketList, setTicketList] = useState<Ticket[]>([])
 
   const handleToggle = (index: number) => {
-    setOpenIndex(prev => (prev === index ? null : index))
+    setActiveDropdownIndex(prev => (prev === index ? null : index))
   }
 
   const handleDelete = async () => {
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
+      const ticketId = ticketList[deleteTargetIndex!].id
 
-      const ticketId = ticketList[confirmIndex!].id
+      await api.delete(ticketApi.DETAIL(ticketId))
 
-      const response = await axios.delete(
-        `${API_BASE_URL}/tickets/${ticketId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-
-      if (confirmIndex === null) return
-      setTicketList(prev => prev.filter((_, i) => i !== confirmIndex))
-      setConfirmIndex(null)
+      if (deleteTargetIndex === null) return
+      setTicketList(prev => prev.filter((_, i) => i !== deleteTargetIndex))
+      setDeleteTargetIndex(null)
 
       alert('이용권이 정상적으로 삭제되었습니다.')
 
-      console.log('DELETE 성공', response)
     } catch (error) {
       console.log('DELETE 실패', error)
     }
@@ -91,109 +94,81 @@ const TicketHistoryPage = () => {
 
   const handleEnd = async () => {
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
+      const ticketId = ticketList[endTargetIndex!].id
 
-      const ticketId = ticketList[endIndex!].id
-
-      await axios.patch(
-        `${API_BASE_URL}/tickets/${ticketId}/end`,
+      await api.patch(
+        ticketApi.END(ticketId),
         {
-          end_reason: selectedEndType.label === '완료'
-            ? 'COMPLETED'
-            : selectedEndType.label === '기간만료'
-              ? 'EXPIRED'
-              : selectedEndType.label === '환불'
-                ? 'REFUNDED'
-                : 'ETC',
+          end_reason:
+            selectedEndType.label === '완료'
+              ? 'COMPLETED'
+              : selectedEndType.label === '기간만료'
+                ? 'EXPIRED'
+                : selectedEndType.label === '환불'
+                  ? 'REFUNDED'
+                  : 'ETC',
           refund_price:
             selectedEndType.label === '환불'
-              ? Number(price)
+              ? Number(refundPrice)
               : null,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       )
 
       alert('이용권이 정상적으로 종료되었습니다.')
 
-      setEndIndex(null)
+      setEndTargetIndex(null)
       setSelectedEndType(END_TYPES[0])
-      setPrice('')
+      setRefundPrice('')
       fetchTickets()
-
     } catch (error) {
       console.log('PATCH 실패', error)
     }
   }
 
   const handleAddClose = () => {
-    setIsAddOpen(false)
+    setIsAddModalOpen(false)
 
     setTicketType('횟수권')
     setSelectedColor(COLOR_OPTIONS[0])
   }
 
   const handleEndClose = () => {
-    setEndIndex(null)
+    setEndTargetIndex(null)
 
     setSelectedEndType(END_TYPES[0])
-    setPrice('')
+    setRefundPrice('')
+  }
+
+  const mapTicket = (item: any): Ticket => {
+    const statusMap: Record<string, string> = {
+      COMPLETED: '완료',
+      EXPIRED: '기간만료',
+      REFUNDED: '환불',
+    }
+
+    const formattedStatus =
+      item.status === 'ENDED'
+        ? statusMap[item.end_reason] ?? '기타'
+        : '진행 중'
+
+    return {
+      id: item.ticket_id,
+      exercise_type: item.exercise_type,
+      color: item.color,
+      ticket_type: item.ticket_type,
+      target_count: item.target_count,
+      total_price: item.total_price,
+      start_date: item.start_date.split('T')[0],
+      end_date: item.end_date.split('T')[0],
+      status: formattedStatus,
+      refund_price: item.refund_price,
+    }
   }
 
   const fetchTickets = async () => {
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
-
-      const response = await axios.get(
-        `${API_BASE_URL}${TICKET_ENDPOINTS.LIST}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-
-      setTicketList(
-        response.data.map((item: any) => {
-          let formattedStatus = '진행 중'
-
-          if (item.status === 'ENDED') {
-            switch (item.end_reason) {
-              case 'COMPLETED':
-                formattedStatus = '완료'
-                break
-              case 'EXPIRED':
-                formattedStatus = '기간만료'
-                break
-              case 'REFUNDED':
-                formattedStatus = '환불'
-                break
-              default:
-                formattedStatus = '기타'
-            }
-          }
-
-          return {
-            id: item.ticket_id,
-            exercise_type: item.exercise_type,
-            color: item.color,
-            ticket_type: item.ticket_type,
-            target_count: item.target_count,
-            total_price: item.total_price,
-            start_date: item.start_date.split('T')[0],
-            end_date: item.end_date.split('T')[0],
-            status: formattedStatus,
-            refund_price: item.refund_price,
-          }
-        })
-      )
-
-      console.log('GET 성공', response.data)
+      const { data } = await api.get(ticketApi.BASE)
+      setTicketList(data.map(mapTicket))
     } catch (error) {
       console.log('GET 실패', error)
     }
@@ -201,32 +176,20 @@ const TicketHistoryPage = () => {
 
   const createTicket = async (data: any) => {
     try {
-      const token = localStorage.getItem('accessToken')
-      if (!token) return
+      await api.post(ticketApi.BASE, {
+        exercise_type: data.exercise_type,
+        color: data.color,
+        ticket_type: data.ticket_type,
+        target_count: data.target_count,
+        total_price: data.total_price,
+        start_date: data.start_date,
+        end_date: data.end_date,
+      })
 
-      const response = await axios.post(
-        `${API_BASE_URL}${TICKET_ENDPOINTS.CREATE}`,
-        {
-          exercise_type: data.exercise_type,
-          color: data.color,
-          ticket_type: data.ticket_type,
-          target_count: data.target_count,
-          total_price: data.total_price,
-          start_date: data.start_date,
-          end_date: data.end_date,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-
-      console.log('POST 성공:', response.data)
       alert('이용권 등록이 완료되었습니다.')
 
       await fetchTickets()
-      setIsAddOpen(false)
+      setIsAddModalOpen(false)
     } catch (error) {
       console.log('POST 실패:', error)
     }
@@ -238,7 +201,7 @@ const TicketHistoryPage = () => {
         dropdownRef.current &&
         !dropdownRef.current.contains(e.target as Node)
       ) {
-        setOpenIndex(null)
+        setActiveDropdownIndex(null)
       }
     }
 
@@ -285,18 +248,18 @@ const TicketHistoryPage = () => {
                     ticket={ticket}
                     index={index}
                     isActive={isActive}
-                    openIndex={openIndex}
+                    openIndex={activeDropdownIndex}
                     onToggle={handleToggle}
                     onEnd={(i) => {
-                      setEndIndex(i)
-                      setOpenIndex(null)
+                      setEndTargetIndex(i)
+                      setActiveDropdownIndex(null)
                     }}
                     onDelete={(i) => {
-                      setConfirmIndex(i)
-                      setOpenIndex(null)
+                      setDeleteTargetIndex(i)
+                      setActiveDropdownIndex(null)
                     }}
                     onView={(i) => {
-                      setViewIndex(i)
+                      setViewTargetIndex(i)
                     }}
                     dropdownRef={dropdownRef}
                   />
@@ -306,7 +269,7 @@ const TicketHistoryPage = () => {
 
             <div
               className={styles.addBtn}
-              onClick={() => setIsAddOpen(true)}
+              onClick={() => setIsAddModalOpen(true)}
             >
               +
             </div>
@@ -314,27 +277,27 @@ const TicketHistoryPage = () => {
         </div>
       </main>
 
-      {confirmIndex !== null && (
+      {deleteTargetIndex !== null && (
         <ConfirmModal
-          onCancel={() => setConfirmIndex(null)}
+          onCancel={() => setDeleteTargetIndex(null)}
           onConfirm={handleDelete}
         />
       )}
 
-      {endIndex !== null && (
+      {endTargetIndex !== null && (
         <TicketEndModal
-          ticket={ticketList[endIndex]}
+          ticket={ticketList[endTargetIndex]}
           selectedEndType={selectedEndType}
           setSelectedEndType={setSelectedEndType}
-          price={price}
-          setPrice={setPrice}
+          price={refundPrice}
+          setPrice={setRefundPrice}
           END_TYPES={END_TYPES}
           onClose={handleEndClose}
           onConfirm={handleEnd}
         />
       )}
 
-      {isAddOpen && (
+      {isAddModalOpen && (
         <TicketAddModal
           ticketType={ticketType}
           setTicketType={setTicketType}
@@ -346,22 +309,22 @@ const TicketHistoryPage = () => {
         />
       )}
 
-      {viewIndex !== null && (
+      {viewTargetIndex !== null && (
         <TicketAddModal
           mode="view"
           ticketType={
-            ticketList[viewIndex].ticket_type === 'COUNT'
+            ticketList[viewTargetIndex].ticket_type === 'COUNT'
               ? '횟수권'
               : '기간권'
           }
           setTicketType={setTicketType}
-          selectedColor={ticketList[viewIndex].color}
+          selectedColor={ticketList[viewTargetIndex].color}
           setSelectedColor={setSelectedColor}
           COLOR_OPTIONS={COLOR_OPTIONS}
-          initialData={ticketList[viewIndex]}
-          onClose={() => setViewIndex(null)}
-          onConfirm={() => setViewIndex(null)}
-          isRefunded={ticketList[viewIndex].status === '환불'}
+          initialData={ticketList[viewTargetIndex]}
+          onClose={() => setViewTargetIndex(null)}
+          onConfirm={() => setViewTargetIndex(null)}
+          isRefunded={ticketList[viewTargetIndex].status === '환불'}
         />
       )}
 
