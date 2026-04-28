@@ -1,7 +1,12 @@
+// React / 외부 라이브러리
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styles from './SummaryCard.module.css'
+
+// 이미지
 import arrow from '../../assets/icons/arrow-down.png'
+
+// 스타일
+import styles from './SummaryCard.module.css'
 
 export interface Expense {
   id: number

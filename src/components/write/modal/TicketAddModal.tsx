@@ -5,7 +5,7 @@ import styles from '../../../pages/write/TicketHistory.module.css'
 import CheckIcon from '../../../assets/icons/check.png'
 
 type Payload = {
-  exercise_type: string
+  exerciseType: string
   color: string
   ticket_type: 'COUNT' | 'PERIOD'
   target_count: number
@@ -18,7 +18,7 @@ type Payload = {
 type Props = {
   ticketType: '횟수권' | '기간권'
   setTicketType: (value: '횟수권' | '기간권') => void
-  selectedColor: string
+  colorCode: string
   setSelectedColor: (value: string) => void
   COLOR_OPTIONS: string[]
   onClose: () => void
@@ -32,7 +32,7 @@ type Props = {
 const TicketAddModal = ({
   ticketType,
   setTicketType,
-  selectedColor,
+  colorCode,
   setSelectedColor,
   COLOR_OPTIONS,
   onClose,
@@ -43,31 +43,31 @@ const TicketAddModal = ({
 }: Props) => {
   const [step, setStep] = useState(1)
 
-  const [exercise_type, setExerciseType] = useState('')
-  const [start_date, setStartDate] = useState(new Date())
-  const [end_date, setEndDate] = useState(new Date())
-  const [target_count, setTargetCount] = useState('')
-  const [total_price, setTotalPrice] = useState('')
+  const [exerciseType, setExerciseType] = useState('')
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
+  const [targetCount, setTargetCount] = useState('')
+  const [totalAmount, setTotalPrice] = useState('')
   const isDirty =
     mode !== 'view' &&
     (
-      exercise_type.trim() !== '' ||
-      target_count.trim() !== '' ||
-      total_price.trim() !== ''
+      exerciseType.trim() !== '' ||
+      targetCount.trim() !== '' ||
+      totalAmount.trim() !== ''
     )
 
   const formatDate = (date: Date) => {
     return date.toISOString().split('T')[0]
   }
 
-  const isStep1Valid = exercise_type.trim() !== ''
+  const isStep1Valid = exerciseType.trim() !== ''
 
   const isStep2Valid =
-    target_count.trim() !== '' &&
-    total_price.trim() !== '' &&
-    Number(target_count) > 0 &&
-    Number(total_price) > 0 &&
-    start_date <= end_date
+    targetCount.trim() !== '' &&
+    totalAmount.trim() !== '' &&
+    Number(targetCount) > 0 &&
+    Number(totalAmount) > 0 &&
+    startDate <= endDate
 
   const handleNext = () => {
     if (step === 1) {
@@ -84,14 +84,13 @@ const TicketAddModal = ({
     if (!isStep2Valid) return
 
     onConfirm({
-      exercise_type,
-      color: selectedColor,
-      ticket_type:
-        ticketType === '횟수권' ? 'COUNT' : 'PERIOD',
-      target_count: Number(target_count),
-      total_price: Number(total_price),
-      start_date: formatDate(start_date),
-      end_date: formatDate(end_date),
+      exerciseType,
+      color: colorCode,
+      ticket_type: ticketType === '횟수권' ? 'COUNT' : 'PERIOD',
+      target_count: Number(targetCount),
+      total_price: Number(totalAmount),
+      start_date: formatDate(startDate),
+      end_date: formatDate(endDate),
     })
   }
 
@@ -115,7 +114,7 @@ const TicketAddModal = ({
 
   useEffect(() => {
     if (mode === 'view' && initialData) {
-      setExerciseType(initialData.exercise_type)
+      setExerciseType(initialData.exerciseType)
       setTargetCount(String(initialData.target_count))
       setTotalPrice(String(initialData.total_price))
       setStartDate(new Date(initialData.start_date))
@@ -145,7 +144,7 @@ const TicketAddModal = ({
                 <label>운동 종목</label>
                 <input
                   className={styles.input}
-                  value={exercise_type}
+                  value={exerciseType}
                   disabled={mode === 'view'}
                   onChange={(e) =>
                     setExerciseType(e.target.value)
@@ -196,7 +195,7 @@ const TicketAddModal = ({
                     key={color}
                     type="button"
                     disabled={mode === 'view'}
-                    className={`${styles.colorCircle} ${selectedColor === color
+                    className={`${styles.colorCircle} ${colorCode === color
                       ? styles.selected
                       : ''
                       }`}
@@ -205,7 +204,7 @@ const TicketAddModal = ({
                       setSelectedColor(color)
                     }
                   >
-                    {selectedColor === color && (
+                    {colorCode === color && (
                       <img
                         src={CheckIcon}
                         alt="selected"
@@ -225,7 +224,7 @@ const TicketAddModal = ({
               <label>목표 기간</label>
               <div className={styles.periodRow}>
                 <DateSelect
-                  value={start_date}
+                  value={startDate}
                   onChange={(date) =>
                     setStartDate(date)
                   }
@@ -235,7 +234,7 @@ const TicketAddModal = ({
                   ~
                 </span>
                 <DateSelect
-                  value={end_date}
+                  value={endDate}
                   onChange={(date) =>
                     setEndDate(date)
                   }
@@ -250,7 +249,7 @@ const TicketAddModal = ({
                 <div className={styles.priceInput}>
                   <input
                     className={styles.input}
-                    value={target_count}
+                    value={targetCount}
                     disabled={mode === 'view'}
                     onChange={(e) =>
                       setTargetCount(
@@ -274,7 +273,7 @@ const TicketAddModal = ({
                 <div className={styles.priceInput}>
                   <input
                     className={styles.input}
-                    value={total_price}
+                    value={totalAmount}
                     disabled={mode === 'view'}
                     onChange={(e) =>
                       setTotalPrice(

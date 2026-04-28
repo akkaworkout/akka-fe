@@ -1,7 +1,10 @@
-import styles from './Calendar.module.css'
-
+// 이미지
 import arrowIcon from '../../assets/icons/chevron-left.png'
 import ticketIcon from '../../assets/icons/ticket.png'
+
+// 스타일
+import styles from './Calendar.module.css'
+
 
 type Schedule = {
     date: string
@@ -90,10 +93,18 @@ const Calendar = ({
                                 s => new Date(s.date).getDate() === day
                             )
 
-                            const tickets = daySchedules.filter(s => s.type === 'ticket')
-                            const ticketTooltip = tickets.map(t => t.label).join(', ')
+                            const tickets: Schedule[] = []
+                            const normalSchedules: Schedule[] = []
 
-                            const normalSchedules = daySchedules.filter(s => s.type !== 'ticket')
+                            daySchedules.forEach(s => {
+                                if (s.type === 'ticket') {
+                                    tickets.push(s)
+                                } else {
+                                    normalSchedules.push(s)
+                                }
+                            })
+
+                            const ticketTooltip = tickets.map(t => t.label).join(', ')
                             const visibleDots = normalSchedules.slice(0, 3)
                             const hiddenCount = normalSchedules.length - 3
 
