@@ -65,8 +65,9 @@ export default function ReportPage() {
     return typeof v === 'string' && v.length ? v.replace(/\/$/, '') : 'http://localhost:3000'
   }, [])
 
-  const [year, setYear] = useState(2026)
-  const [month, setMonth] = useState(2)
+  const today = new Date()
+  const [year, setYear] = useState(today.getFullYear())
+  const [month, setMonth] = useState(today.getMonth() + 1)
 
   const handlePrevMonth = () => {
     setMonth(prev => {
@@ -199,7 +200,7 @@ export default function ReportPage() {
       ? reportData!.charts!.exerciseByDow!
       : EMPTY_WEEK
 
-  const days = ['월', '화', '수', '목', '금', '토', '일']
+  const days = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
 
   const maxValue = Math.max(...exerciseByDow)
 
