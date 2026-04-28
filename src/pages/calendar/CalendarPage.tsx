@@ -1,19 +1,25 @@
+// React / 외부 라이브러리
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import styles from './Calendar.module.css'
-
-import SideNav from '../../components/sideNav/SideNav'
-import Card from '../../components/common/Card'
-import Calendar from './Calendar'
-import TodayItemModal from './TodayItemModal'
-import Spinner from '../../components/common/Spinner'
-
+// API / hooks / utils
 import { useCalendar } from '../../hooks/useCalendar'
 import { useGoals } from '../../hooks/useGoals'
 import { useSummary } from '../../hooks/useSummary'
 import { useTodayItems } from '../../hooks/useTodayItems'
 import type { TodayItem } from '../../hooks/useTodayItems'
+
+// 컴포넌트
+import Calendar from './Calendar'
+import TodayItemModal from './TodayItemModal'
+
+import SideNav from '../../components/sideNav/SideNav'
+import Card from '../../components/common/Card'
+import Spinner from '../../components/common/Spinner'
+
+// 스타일 
+import styles from './Calendar.module.css'
+
 
 const CalenderPage = () => {
   const now = new Date()
@@ -41,13 +47,11 @@ const CalenderPage = () => {
     isModalOpen,
     todayItems,
     isLoading,
-    setSelectedDate,
     handleSelectDay,
     handleItemClick,
     handleCloseModal
   } = useTodayItems(navigate, year, month, now.getDate())
 
-  // year, month 변경될 때 오늘 날짜 기준으로 fetch
   useEffect(() => {
     handleSelectDay(selectedDate, year, month)
   }, [year, month])

@@ -43,18 +43,18 @@ const ExpenseHistoryPage = () => {
   const navigate = useNavigate()
 
   // UI / 입력 상태
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false)
-  const [date, setDate] = useState<Date>(new Date())
-  const [selectedCategory, setSelectedCategory] = useState<Expense>(EXPENSES[0])
-  const [category, setCategory] = useState('')
-  const [price, setPrice] = useState('')
+  const [isSidebarFolded, setIsSidebarFolded] = useState(false) // 사이드바 상태
+  const [date, setDate] = useState<Date>(new Date()) // 날짜 (생성일)
+  const [selectedCategory, setSelectedCategory] = useState<Expense>(EXPENSES[0]) // 선택된 카테고리
+  const [item, setItem] = useState('') // 기타 지출 아이템
+  const [amount, setAmount] = useState('') // 금액
 
   // 요약 데이터
   const [monthlyExpenseCount, setMonthlyExpenseCount] = useState(0)
   const [monthlyTotalExpense, setMonthlyTotalExpense] = useState(0)
   const [topExpenseCategory, setTopExpenseCategory] = useState('기록 없음')
 
-  const isFormValid = category.trim() !== '' && price.trim() !== ''
+  const isFormValid = item.trim() !== '' && amount.trim() !== ''
 
   const formatDate = (date: Date) =>
     date.toISOString().split('T')[0]
@@ -63,8 +63,8 @@ const ExpenseHistoryPage = () => {
     try {
       await createExpense({
         category: selectedCategory.value,
-        title: category,
-        amount: Number(price),
+        title: item,
+        amount: Number(amount),
         expense_date: formatDate(date),
       })
 
@@ -139,8 +139,8 @@ const ExpenseHistoryPage = () => {
               <label>항목*</label>
               <input
                 className={styles.input}
-                value={category}
-                onChange={e => setCategory(e.target.value)}
+                value={item}
+                onChange={e => setItem(e.target.value)}
                 placeholder="단백질 쉐이크"
                 maxLength={30}
               />
@@ -152,9 +152,9 @@ const ExpenseHistoryPage = () => {
               <div className={styles.priceInput}>
                 <input
                   className={styles.input}
-                  value={price}
+                  value={amount}
                   onChange={e =>
-                    setPrice(e.target.value.replace(/[^0-9]/g, ''))
+                    setAmount(e.target.value.replace(/[^0-9]/g, ''))
                   }
                   placeholder="23,000"
                   maxLength={8}

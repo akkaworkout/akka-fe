@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import BaseModal from '../../common/BaseModal'
 import styles from './TicketModal.module.css'
 

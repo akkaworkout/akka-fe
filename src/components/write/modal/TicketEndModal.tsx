@@ -16,10 +16,10 @@ type Ticket = {
 
 type Props = {
   ticket: Ticket
-  selectedEndType: Exercise
-  setSelectedEndType: (value: Exercise) => void
-  price: string
-  setPrice: (value: string) => void
+  endReason: Exercise
+  setEndReason: (value: Exercise) => void
+  refundAmount: string
+  setRefundAmount: (value: string) => void
   onClose: () => void
   onConfirm: () => void
   END_TYPES: Exercise[]
@@ -27,21 +27,21 @@ type Props = {
 
 const TicketEndModal = ({
   ticket,
-  selectedEndType,
-  setSelectedEndType,
-  price,
-  setPrice,
+  endReason,
+  setEndReason,
+  refundAmount,
+  setRefundAmount,
   onClose,
   onConfirm,
   END_TYPES,
 }: Props) => {
   const isValid =
-    selectedEndType.label !== '환불' ||
-    (price.trim() !== '' && Number(price) > 0)
+    endReason.label !== '환불' ||
+    (refundAmount.trim() !== '' && Number(refundAmount) > 0)
 
   const isModified =
-    selectedEndType.label !== '' ||
-    price.trim() !== ''
+    endReason.label !== '' ||
+    refundAmount.trim() !== ''
 
   const handleClose = () => {
     if (isModified) {
@@ -72,20 +72,20 @@ const TicketEndModal = ({
         <label>사유*</label>
         <SummaryCard
           expenses={END_TYPES}
-          selected={selectedEndType}
-          onChange={setSelectedEndType}
+          selected={endReason}
+          onChange={setEndReason}
         />
       </div>
 
-      {selectedEndType.label === '환불' && (
+      {endReason.label === '환불' && (
         <div className={styles.field}>
           <label>환불 금액*</label>
           <div className={styles.priceInput}>
             <input
               className={styles.input}
-              value={price}
+              value={refundAmount}
               onChange={e =>
-                setPrice(e.target.value.replace(/[^0-9]/g, ''))
+                setRefundAmount(e.target.value.replace(/[^0-9]/g, ''))
               }
               placeholder="23000"
               maxLength={8}

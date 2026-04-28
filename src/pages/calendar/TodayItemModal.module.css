@@ -20,19 +20,16 @@
   font-weight: 700;
 }
 
-/* 실패 */
 .fail {
   background: rgba(255, 88, 88, 0.07);
   color: #FF5858;
 }
 
-/* 성공 */
 .success {
   background: rgba(0, 170, 33, 0.07);
   color: #00AA21;
 }
 
-/* 구매 */
 .purchase {
   background: rgba(229, 181, 59, 0.07);
   color: #E5B53B;

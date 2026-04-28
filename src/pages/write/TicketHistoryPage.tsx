@@ -52,7 +52,7 @@ type Ticket = {
 
 const TicketHistoryPage = () => {
   // UI
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false)
+  const [isSidebarFolded, setIsSidebarFolded] = useState(false) // 사이드바 상태
   const [activeDropdownIndex, setActiveDropdownIndex] = useState<number | null>(null)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
@@ -64,9 +64,9 @@ const TicketHistoryPage = () => {
 
   // 입력 상태
   const [ticketType, setTicketType] = useState<'횟수권' | '기간권'>('횟수권')
-  const [selectedColor, setSelectedColor] = useState(COLOR_OPTIONS[0])
-  const [selectedEndType, setSelectedEndType] = useState<Exercise>(END_TYPES[0])
-  const [refundPrice, setRefundPrice] = useState('')
+  const [colorCode, setColorCode] = useState(COLOR_OPTIONS[0])
+  const [endReason, setEndReason] = useState<Exercise>(END_TYPES[0])
+  const [refundAmount, setRefundAmount] = useState('')
 
   // 데이터
   const [ticketList, setTicketList] = useState<Ticket[]>([])
@@ -100,16 +100,16 @@ const TicketHistoryPage = () => {
         ticketApi.END(ticketId),
         {
           end_reason:
-            selectedEndType.label === '완료'
+            endReason.label === '완료'
               ? 'COMPLETED'
-              : selectedEndType.label === '기간만료'
+              : endReason.label === '기간만료'
                 ? 'EXPIRED'
-                : selectedEndType.label === '환불'
+                : endReason.label === '환불'
                   ? 'REFUNDED'
                   : 'ETC',
           refund_price:
-            selectedEndType.label === '환불'
-              ? Number(refundPrice)
+            endReason.label === '환불'
+              ? Number(refundAmount)
               : null,
         }
       )
@@ -117,8 +117,8 @@ const TicketHistoryPage = () => {
       alert('이용권이 정상적으로 종료되었습니다.')
 
       setEndTargetIndex(null)
-      setSelectedEndType(END_TYPES[0])
-      setRefundPrice('')
+      setEndReason(END_TYPES[0])
+      setRefundAmount('')
       fetchTickets()
     } catch (error) {
       console.log('PATCH 실패', error)
@@ -129,14 +129,14 @@ const TicketHistoryPage = () => {
     setIsAddModalOpen(false)
 
     setTicketType('횟수권')
-    setSelectedColor(COLOR_OPTIONS[0])
+    setColorCode(COLOR_OPTIONS[0])
   }
 
   const handleEndClose = () => {
     setEndTargetIndex(null)
 
-    setSelectedEndType(END_TYPES[0])
-    setRefundPrice('')
+    setEndReason(END_TYPES[0])
+    setRefundAmount('')
   }
 
   const mapTicket = (item: any): Ticket => {
@@ -153,7 +153,7 @@ const TicketHistoryPage = () => {
 
     return {
       id: item.ticket_id,
-      exercise_type: item.exercise_type,
+      exercise_type: item.exerciseType,
       color: item.color,
       ticket_type: item.ticket_type,
       target_count: item.target_count,
@@ -177,7 +177,7 @@ const TicketHistoryPage = () => {
   const createTicket = async (data: any) => {
     try {
       await api.post(ticketApi.BASE, {
-        exercise_type: data.exercise_type,
+        exerciseType: data.exercise_type,
         color: data.color,
         ticket_type: data.ticket_type,
         target_count: data.target_count,
@@ -287,10 +287,10 @@ const TicketHistoryPage = () => {
       {endTargetIndex !== null && (
         <TicketEndModal
           ticket={ticketList[endTargetIndex]}
-          selectedEndType={selectedEndType}
-          setSelectedEndType={setSelectedEndType}
-          price={refundPrice}
-          setPrice={setRefundPrice}
+          endReason={endReason}
+          setEndReason={setEndReason}
+          refundAmount={refundAmount}
+          setRefundAmount={setRefundAmount}
           END_TYPES={END_TYPES}
           onClose={handleEndClose}
           onConfirm={handleEnd}
@@ -301,8 +301,8 @@ const TicketHistoryPage = () => {
         <TicketAddModal
           ticketType={ticketType}
           setTicketType={setTicketType}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
+          colorCode={colorCode}
+          setSelectedColor={setColorCode}
           COLOR_OPTIONS={COLOR_OPTIONS}
           onClose={handleAddClose}
           onConfirm={createTicket}
@@ -318,10 +318,19 @@ const TicketHistoryPage = () => {
               : '기간권'
           }
           setTicketType={setTicketType}
-          selectedColor={ticketList[viewTargetIndex].color}
-          setSelectedColor={setSelectedColor}
+          colorCode={ticketList[viewTargetIndex].color}
+          setSelectedColor={setColorCode}
           COLOR_OPTIONS={COLOR_OPTIONS}
-          initialData={ticketList[viewTargetIndex]}
+          initialData={{
+            exerciseType: ticketList[viewTargetIndex].exercise_type ?? '', // ⭐ 핵심
+            color: ticketList[viewTargetIndex].color,
+            ticket_type: ticketList[viewTargetIndex].ticket_type,
+            target_count: ticketList[viewTargetIndex].target_count,
+            total_price: ticketList[viewTargetIndex].total_price,
+            start_date: ticketList[viewTargetIndex].start_date,
+            end_date: ticketList[viewTargetIndex].end_date,
+            refund_price: ticketList[viewTargetIndex].refund_price,
+          }}
           onClose={() => setViewTargetIndex(null)}
           onConfirm={() => setViewTargetIndex(null)}
           isRefunded={ticketList[viewTargetIndex].status === '환불'}
