@@ -89,6 +89,8 @@ export default function LoginPage() {
       localStorage.setItem('accessToken', token)
       console.log('Saved token:', token)
 
+      alert("로그인이 완료되었습니다")
+
       nav('/main')
     } catch (err) {
       console.error('LOGIN fetch error:', err)
