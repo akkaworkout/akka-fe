@@ -11,6 +11,7 @@ import TotalNoShowCard from '../../components/report/card/TotalNoShowCard/TotalN
 import RingChart from '../../components/report/charts/RingChart'
 import styles from './Report.module.css'
 import MemoDetailModal from '../report/modals/MemoDetailModal'
+import Spinner from '../../components/common/Spinner'
 
 
 const EXERCISES: Exercise[] = [
@@ -57,6 +58,7 @@ export default function ReportPage() {
   const [ringPercent, setRingPercent] = useState(0)
   const [reportData, setReportData] = useState<ReportsResponse['data'] | null>(null)
   const [openMemo, setOpenMemo] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const API_BASE = useMemo(() => {
     const v = import.meta.env.VITE_API_URL
@@ -128,6 +130,9 @@ export default function ReportPage() {
         }
       } catch (err) {
         console.error(err)
+        setRingPercent(0)
+        setReportData(null)
+        setLoading(false)
       }
     }
 
@@ -137,10 +142,12 @@ export default function ReportPage() {
   useEffect(() => {
     const fetchReport = async () => {
       try {
+        setLoading(true)
         const token = localStorage.getItem('accessToken')
         if (!token) {
           setRingPercent(0)
           setReportData(null)
+          setLoading(false)
           return
         }
 
@@ -168,10 +175,12 @@ export default function ReportPage() {
 
         const percent = Number(data?.goal?.exerciseAchievementRate ?? 0)
         setRingPercent(Number.isFinite(percent) ? percent : 0)
+        setLoading(false)
       } catch (err) {
         console.error(err)
         setRingPercent(0)
         setReportData(null)
+        setLoading(false)
       }
     }
 
@@ -224,6 +233,19 @@ export default function ReportPage() {
       })) ?? []
     )
   }, [reportData])
+
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+      }}>
+        <Spinner size={50} />
+      </div>
+    )
+  }
 
 
   return (
