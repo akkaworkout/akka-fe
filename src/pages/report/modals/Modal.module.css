@@ -58,21 +58,21 @@
 
 .closeBtn::before {
   content: "×";
-  font-size: 32px;     /* 약간 크게 */
+  font-size: 32px;    
   font-weight: 300;  
-  line-height: 1;  /* 얇게 */
-  transform: translateY(-2px); /* 살짝 위로 */
+  line-height: 1;  
+  transform: translateY(-2px); 
 }
 
-/* 기존 버튼 안에 × 텍스트는 숨김 (TSX 그대로 둬도 됨) */
+/* 기존 버튼 안에 × 텍스트는 숨김 */
 .closeBtn {
   font-size: 0;
 }
 
 
-/* ===== Optional Header (title 있을 때만) ===== */
+/* ===== Optional Header ===== */
 .header {
-  padding: 22px 66px 0 22px; /* 닫기 버튼 영역 확보 */
+  padding: 22px 66px 0 22px; 
   font-size: 14px;
   font-weight: 700;
   color: #2C2C2C;

@@ -1,109 +1,112 @@
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import styles from './LoginPage.module.css'
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "./LoginPage.module.css";
 
-import SideNav from '../../components/sideNav/SideNav'
-import Form from '../../components/common/form/Form'
+import SideNav from "../../components/sideNav/SideNav";
+import Form from "../../components/common/form/Form";
 
 type FieldErrors = Partial<{
-  email: string
-  password: string
-}>
+  email: string;
+  password: string;
+}>;
 
-const isEmailValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
-const hasSpecialChar = (v: string) => /[^A-Za-z0-9]/.test(v)
-const isPasswordValid = (v: string) => v.length >= 8 && hasSpecialChar(v)
+const isEmailValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+const hasSpecialChar = (v: string) => /[^A-Za-z0-9]/.test(v);
+const isPasswordValid = (v: string) => v.length >= 8 && hasSpecialChar(v);
 
-// ✅ 환경변수 있으면 그거 쓰고, 없으면 배포 도메인 fallback
+// 환경변수 있으면 그거 쓰고, 없으면 배포 도메인 fallback
 const API_BASE =
-  (import.meta as any).env?.VITE_API_BASE?.trim() || 'https://api.akkaworkout.store'
+  import.meta.env.VITE_API_BASE?.trim() || "https://api.akkaworkout.store";
 
 export default function LoginPage() {
-  const nav = useNavigate()
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false)
+  const nav = useNavigate();
+  const [isSidebarFolded, setIsSidebarFolded] = useState(false);
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<FieldErrors>({})
-
-  const [showPw, setShowPw] = useState(false)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   const canSubmit = useMemo(() => {
-    return email.trim() !== '' && password.trim() !== ''
-  }, [email, password])
+    return email.trim() !== "" && password.trim() !== "";
+  }, [email, password]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const next: FieldErrors = {}
+    const next: FieldErrors = {};
 
     if (email.trim() && !isEmailValid(email)) {
-      next.email = '올바른 이메일 형식이 아닙니다'
+      next.email = "올바른 이메일 형식이 아닙니다";
     }
 
     if (!isPasswordValid(password)) {
-      next.password = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
+      next.password = "비밀번호는 특수문자 포함 8자 이상이어야 합니다.";
     }
 
-    setErrors(next)
-    if (Object.keys(next).length > 0) return
+    setErrors(next);
+    if (Object.keys(next).length > 0) return;
 
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           email: email.trim(),
           password,
         }),
-      })
+      });
 
-      const data = await res.json().catch(() => ({}))
+      const data = await res.json().catch(() => ({}));
 
-      console.log('LOGIN status:', res.status)
-      console.log('LOGIN response:', data)
+      console.log("LOGIN status:", res.status);
+      console.log("LOGIN response:", data);
 
       if (!res.ok) {
         const msg =
           data?.message ||
-          (res.status === 401 ? '이메일 또는 비밀번호가 올바르지 않습니다.' : '로그인 실패')
-        setErrors(prev => ({
+          (res.status === 401
+            ? "이메일 또는 비밀번호가 올바르지 않습니다."
+            : "로그인 실패");
+        setErrors((prev) => ({
           ...prev,
           email: msg,
           password: msg,
-        }))
-        return
+        }));
+        return;
       }
 
-      const token = data?.data?.token
+      const token = data?.data?.token;
 
       if (!token) {
-        setErrors(prev => ({
+        setErrors((prev) => ({
           ...prev,
-          email: '토큰이 없습니다. 서버 응답을 확인해주세요.',
-        }))
-        return
+          email: "토큰이 없습니다. 서버 응답을 확인해주세요.",
+        }));
+        return;
       }
 
-      localStorage.setItem('accessToken', token)
-      console.log('Saved token:', token)
+      localStorage.setItem("accessToken", token);
+      console.log("Saved token:", token);
 
-      alert("로그인이 완료되었습니다")
+      alert("로그인이 완료되었습니다");
 
-      nav('/main')
+      nav("/main");
     } catch (err) {
-      console.error('LOGIN fetch error:', err)
-      setErrors(prev => ({
+      console.error("LOGIN fetch error:", err);
+      setErrors((prev) => ({
         ...prev,
-        email: '네트워크 오류가 발생했습니다. 서버/주소를 확인해주세요.',
-      }))
+        email: "네트워크 오류가 발생했습니다. 서버/주소를 확인해주세요.",
+      }));
     }
-  }
+  };
 
   return (
     <div className={styles.wrap}>
-      <SideNav folded={isSidebarFolded} onToggle={() => setIsSidebarFolded(p => !p)} />
+      <SideNav
+        folded={isSidebarFolded}
+        onToggle={() => setIsSidebarFolded((p) => !p)}
+      />
 
       <main className={styles.main}>
         <div className={styles.mainInner}>
@@ -116,13 +119,16 @@ export default function LoginPage() {
               <Form
                 label="이메일"
                 value={email}
-                onChange={e => {
-                  const v = e.target.value
-                  setEmail(v)
-                  setErrors(prev => ({
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setEmail(v);
+                  setErrors((prev) => ({
                     ...prev,
-                    email: v && !isEmailValid(v) ? '올바른 이메일 형식이 아닙니다' : undefined,
-                  }))
+                    email:
+                      v && !isEmailValid(v)
+                        ? "올바른 이메일 형식이 아닙니다"
+                        : undefined,
+                  }));
                 }}
                 placeholder="이메일"
                 errorText={errors.email}
@@ -131,12 +137,12 @@ export default function LoginPage() {
               <div className={styles.passwordBlock}>
                 <Form
                   label="비밀번호"
-                  type={showPw ? 'text' : 'password'}
+                  type="password"
                   value={password}
-                  onChange={e => {
-                    const v = e.target.value
-                    setPassword(v)
-                    setErrors(prev => ({ ...prev, password: undefined }))
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setPassword(v);
+                    setErrors((prev) => ({ ...prev, password: undefined }));
                   }}
                   placeholder="비밀번호 (특수문자 포함, 8자 이상)"
                   autoComplete="current-password"
@@ -162,8 +168,11 @@ export default function LoginPage() {
             </form>
 
             <p className={styles.signupGuide}>
-              아직 회원이 아니신가요?{' '}
-              <span className={styles.signupLink} onClick={() => nav('/signup')}>
+              아직 회원이 아니신가요?{" "}
+              <span
+                className={styles.signupLink}
+                onClick={() => nav("/signup")}
+              >
                 회원가입
               </span>
             </p>
@@ -171,5 +180,5 @@ export default function LoginPage() {
         </div>
       </main>
     </div>
-  )
+  );
 }
