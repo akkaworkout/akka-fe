@@ -254,7 +254,9 @@ export default function SignUpPage() {
       }
 
       alert("회원가입 성공!");
-      nav("/signup/success");
+      nav("/signup/success", {
+        state: { nickname },
+      });
     } catch (err) {
       console.error(err);
       alert("서버 연결 실패");
@@ -272,7 +274,7 @@ export default function SignUpPage() {
     if (!file.type.startsWith("image/")) {
       setErrors((prev) => ({
         ...prev,
-        profile: "이미지 파일만 업로드할 수 있습니다.",
+        profile: "이미지 파일만 업로드할. 수 있습니다.",
       }));
       return;
     }

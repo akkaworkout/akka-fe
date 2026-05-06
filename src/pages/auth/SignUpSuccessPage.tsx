@@ -1,19 +1,22 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import styles from './SignUpSuccessPage.module.css'
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import styles from "./SignUpSuccessPage.module.css";
 
-import SideNav from '../../components/sideNav/SideNav'
-import signupSuccessImg from '../../assets/images/signup-success.png'
+import SideNav from "../../components/sideNav/SideNav";
+import signupSuccessImg from "../../assets/images/signup-success.png";
 
 export default function SignUpSuccessPage() {
-  const nav = useNavigate()
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false)
+  const nav = useNavigate();
+  const [isSidebarFolded, setIsSidebarFolded] = useState(false);
+
+  const location = useLocation();
+  const nickname = location.state?.nickname ?? "회원";
 
   return (
     <div className={styles.wrap}>
       <SideNav
         folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded(prev => !prev)}
+        onToggle={() => setIsSidebarFolded((prev) => !prev)}
       />
 
       <main
@@ -36,20 +39,17 @@ export default function SignUpSuccessPage() {
             />
 
             <p className={styles.desc}>
-              ㅇㅇㅇ님의 회원가입이
+              {nickname}님의 회원가입이
               <br />
               성공적으로 완료되었습니다.
             </p>
 
-            <button
-              className={styles.ctaBtn}
-              onClick={() => nav('/login')}
-            >
+            <button className={styles.ctaBtn} onClick={() => nav("/login")}>
               로그인 하러가기
             </button>
           </section>
         </div>
       </main>
     </div>
-  )
+  );
 }
