@@ -1,74 +1,74 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-import styles from './SideNav.module.css'
-import akkaLogo from '../../assets/images/akka_logo.png'
-import akkaLogoSvg from '../../assets/images/akka_logo_svg.png'
-import akkaLogout from '../../assets/icons/akka_logout.png'
+import styles from "./SideNav.module.css";
+import akkaLogo from "../../assets/images/akka_logo.png";
+import akkaLogoSvg from "../../assets/images/akka_logo_svg.png";
+import akkaLogout from "../../assets/icons/akka_logout.png";
 
-import sidebarToggleIcon from '../../assets/icons/sidebar/sidebar_toggle.png'
+import sidebarToggleIcon from "../../assets/icons/sidebar/sidebar_toggle.png";
 
-import sidebarMenuIcon from '../../assets/icons/sidebar/sidebar_menu.png'
-import sidebarMenuActiveIcon from '../../assets/icons/sidebar/sidebar_menu_active.png'
+import sidebarMenuIcon from "../../assets/icons/sidebar/sidebar_menu.png";
+import sidebarMenuActiveIcon from "../../assets/icons/sidebar/sidebar_menu_active.png";
 
-import sidebarWriteIcon from '../../assets/icons/sidebar/sidebar_write.png'
-import sidebarWriteActiveIcon from '../../assets/icons/sidebar/sidebar_write_active.png'
+import sidebarWriteIcon from "../../assets/icons/sidebar/sidebar_write.png";
+import sidebarWriteActiveIcon from "../../assets/icons/sidebar/sidebar_write_active.png";
 
-import sidebarReportIcon from '../../assets/icons/sidebar/sidebar_report.png'
-import sidebarReportActiveIcon from '../../assets/icons/sidebar/sidebar_report_active.png'
+import sidebarReportIcon from "../../assets/icons/sidebar/sidebar_report.png";
+import sidebarReportActiveIcon from "../../assets/icons/sidebar/sidebar_report_active.png";
 
-import sidebarCalendarIcon from '../../assets/icons/sidebar/sidebar_calendar.png'
-import sidebarCalendarActiveIcon from '../../assets/icons/sidebar/sidebar_calendar_active.png'
+import sidebarCalendarIcon from "../../assets/icons/sidebar/sidebar_calendar.png";
+import sidebarCalendarActiveIcon from "../../assets/icons/sidebar/sidebar_calendar_active.png";
 
-import sidebarSettingIcon from '../../assets/icons/sidebar/sidebar_setting.png'
-import sidebarSettingActiveIcon from '../../assets/icons/sidebar/sidebar_setting_active.png'
+import sidebarSettingIcon from "../../assets/icons/sidebar/sidebar_setting.png";
+import sidebarSettingActiveIcon from "../../assets/icons/sidebar/sidebar_setting_active.png";
 
-import default_profile from '../../assets/icons/sidebar/default_profile.png'
+import default_profile from "../../assets/icons/sidebar/default_profile.png";
 
 type SideNavProps = {
-  folded: boolean
-  onToggle: () => void
-}
+  folded: boolean;
+  onToggle: () => void;
+};
 
 const SideNav = ({ folded, onToggle }: SideNavProps) => {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false)
-  const [user, setUser] = useState<any>(null)
+  const [isSidebarFolded, setIsSidebarFolded] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
-  const API_BASE = import.meta.env.VITE_API_URL
+  const API_BASE = import.meta.env.VITE_API_URL;
 
   const handleNavigate = (path: string) => {
-    navigate(path)
-  }
+    navigate(path);
+  };
 
   const isActive = (paths: string[]) => {
-    return paths.some(path => location.pathname.startsWith(path))
-  }
+    return paths.some((path) => location.pathname.startsWith(path));
+  };
 
   /* 사이드바 반응형 */
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1200) {
-        setIsSidebarFolded(true)
+        setIsSidebarFolded(true);
       } else {
-        setIsSidebarFolded(false)
+        setIsSidebarFolded(false);
       }
-    }
+    };
 
-    handleResize()
-    window.addEventListener('resize', handleResize)
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   /* 로그인 유저 가져오기 */
   useEffect(() => {
-    const token = localStorage.getItem('accessToken')
-    if (!token) return
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
 
     const fetchUser = async () => {
       try {
@@ -76,26 +76,28 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
+        });
 
-        const json = await res.json()
-        setUser(json.data)
+        const json = await res.json();
+        setUser(json.data);
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
-    }
+    };
 
-    fetchUser()
-  }, [API_BASE])
+    fetchUser();
+  }, [API_BASE]);
 
   /* 로그아웃 */
   const handleLogout = () => {
-    localStorage.removeItem('accessToken')
-    navigate('/login')
-  }
+    localStorage.removeItem("accessToken");
+    navigate("/login");
+  };
 
   return (
-    <aside className={`${styles.sideNav} ${folded ? styles.sideNavFolded : ''}`}>
+    <aside
+      className={`${styles.sideNav} ${folded ? styles.sideNavFolded : ""}`}
+    >
       <div className={styles.sidebarToggleWrapper} onClick={onToggle}>
         <img
           src={sidebarToggleIcon}
@@ -116,88 +118,89 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
 
       <div className={styles.sidebarMenuWrapper}>
         <div
-          className={`${styles.sidebarMenu} ${isActive(['/main']) ? styles.active : ''
-            }`}
-          onClick={() => handleNavigate('/main')}
+          className={`${styles.sidebarMenu} ${
+            isActive(["/main"]) ? styles.active : ""
+          }`}
+          onClick={() => handleNavigate("/main")}
         >
           <img
-            src={
-              isActive(['/main'])
-                ? sidebarMenuActiveIcon
-                : sidebarMenuIcon
-            }
+            src={isActive(["/main"]) ? sidebarMenuActiveIcon : sidebarMenuIcon}
             className={styles.sidebarMenuIcon}
             alt="main"
           />
-          {!folded && '메인'}
+          {!folded && "메인"}
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${isActive(['/write', '/expense', '/ticket']) ? styles.active : ''
-            }`}
-          onClick={() => handleNavigate('/write')}
+          className={`${styles.sidebarMenu} ${
+            isActive(["/write", "/expense", "/ticket"]) ? styles.active : ""
+          }`}
+          onClick={() => handleNavigate("/write")}
         >
           <img
             src={
-              isActive(['/write', '/expense', '/ticket'])
+              isActive(["/write", "/expense", "/ticket"])
                 ? sidebarWriteActiveIcon
                 : sidebarWriteIcon
             }
             className={styles.sidebarMenuIcon}
             alt="write"
           />
-          {!folded && '운동 기록'}
+          {!folded && "운동 기록"}
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${isActive(['/report']) ? styles.active : ''
-            }`}
-          onClick={() => handleNavigate('/report')}
+          className={`${styles.sidebarMenu} ${
+            isActive(["/report"]) ? styles.active : ""
+          }`}
+          onClick={() => handleNavigate("/report")}
         >
           <img
             src={
-              isActive(['/report'])
+              isActive(["/report"])
                 ? sidebarReportActiveIcon
                 : sidebarReportIcon
             }
             className={styles.sidebarMenuIcon}
             alt="report"
           />
-          {!folded && '분석/리포트'}
+          {!folded && "분석/리포트"}
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${isActive(['/calendar']) ? styles.active : ''
-            }`}
-          onClick={() => handleNavigate('/calendar')}
+          className={`${styles.sidebarMenu} ${
+            isActive(["/calendar"]) ? styles.active : ""
+          }`}
+          onClick={() => handleNavigate("/calendar")}
         >
           <img
             src={
-              isActive(['/calendar'])
+              isActive(["/calendar"])
                 ? sidebarCalendarActiveIcon
                 : sidebarCalendarIcon
             }
             className={styles.sidebarMenuIcon}
             alt="calendar"
           />
-          {!folded && '캘린더'}
+          {!folded && "캘린더"}
         </div>
 
         <div
-          className={`${styles.sidebarMenu} ${isActive(['/mypage']) ? styles.active : ''
-            }`}
-          onClick={() => handleNavigate('/mypage')}
+          className={`${styles.sidebarMenu} ${
+            isActive(["/mypage"]) ? styles.active : ""
+          }`}
+          onClick={() => handleNavigate("/mypage")}
         >
           <img
             src={
-              isActive(['/mypage'])
+              isActive(["/mypage"])
                 ? sidebarSettingActiveIcon
                 : sidebarSettingIcon
             }
             className={styles.sidebarMenuIcon}
             alt="mypage"
           />
-          {!folded && '마이페이지'}
+          {!folded && "마이페이지"}
         </div>
       </div>
 
@@ -205,10 +208,14 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         {user ? (
           <div
             className={styles.sidebarProfile}
-            onClick={() => handleNavigate('/mypage')}
+            onClick={() => handleNavigate("/mypage")}
           >
             <img
-              src={user.profile ? `${API_BASE}${user.profile}` : default_profile}
+              src={
+                user.profile_image_url
+                  ? `${API_BASE}${user.profile_image_url}`
+                  : default_profile
+              }
               className={styles.sidebarProfileImg}
               alt="profile"
             />
@@ -218,11 +225,13 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
             src={default_profile}
             className={styles.sidebarProfileDefaultImg}
             alt="default profile"
-            onClick={() => handleNavigate('/login')}
+            onClick={() => handleNavigate("/login")}
           />
         )}
 
-        {!folded && <div className={styles.sidebarUser}>{user?.nickname || '로그인'}</div>}
+        {!folded && (
+          <div className={styles.sidebarUser}>{user?.nickname || "로그인"}</div>
+        )}
 
         {user && !folded && (
           <img
@@ -234,7 +243,7 @@ const SideNav = ({ folded, onToggle }: SideNavProps) => {
         )}
       </div>
     </aside>
-  )
-}
+  );
+};
 
-export default SideNav
+export default SideNav;
