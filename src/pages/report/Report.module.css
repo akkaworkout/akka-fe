@@ -113,9 +113,8 @@
     background-color: #000;
 }
 
-/* ====== 카드 하단 '나머지 N개 항목 보기' 링크 ====== */
+
 .moreLink {
-  /* button 기본 스타일 제거 */
   background: none;
   border: 0;
   padding: 0;
@@ -128,7 +127,6 @@
   font-weight: 700;
   color: #2C2C2C;
 
-  /* 피그마 밑줄(line) */
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-thickness: 1px;
