@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import type { ReportData } from './useReportData'
 
 export type ReportMetrics = {
   totalExerciseCount: number
@@ -12,7 +13,7 @@ export type ReportMetrics = {
   expenseItems: { label: string; amount: number }[]
 }
 
-export const useReportMetrics = (reportData: any) => {
+export const useReportMetrics = (reportData: ReportData | null) => {
   return useMemo(() => {
     const totalExerciseCount = reportData?.kpi?.totalExerciseCount ?? 0
     const totalExpenseAmount = reportData?.kpi?.totalExpenseAmount ?? 0
@@ -25,7 +26,7 @@ export const useReportMetrics = (reportData: any) => {
     const expenseItems = reportData?.breakdown?.expense ?? []
 
     const failMemoRows =
-      reportData?.breakdown?.failMemo?.map((m: any) => ({
+      reportData?.breakdown?.failMemo?.map((m) => ({
         date: m.date,
         label: m.category,
         reason: m.reason,

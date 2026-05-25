@@ -11,28 +11,24 @@ type Summary = {
 }
 
 export const useSummary = (year: number, month: number) => {
-
   const [summary, setSummary] = useState<Summary | null>(null)
 
-  const getSummary = async () => {
-    try {
-
-      const res = await apiFetch(
-        `${CALENDAR_ENDPOINTS.SUMMARY}?year=${year}&month=${month + 1}`
-      )
-
-      setSummary(res.data)
-
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   useEffect(() => {
-    getSummary()
+    const getSummary = async () => {
+      try {
+        const res = await apiFetch(
+          `${CALENDAR_ENDPOINTS.SUMMARY}?year=${year}&month=${month + 1}`
+        )
+        setSummary(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    getSummary()  
   }, [year, month])
 
   return {
-    summary
+    summary,
   }
 }
