@@ -183,7 +183,7 @@ const CalenderPage = () => {
                                   : styles.purchase
                             }
                           >
-                            {item.amount.toLocaleString()}원
+                            {(item.amount ?? 0).toLocaleString()}원
                           </span>
                         </li>
                       ))

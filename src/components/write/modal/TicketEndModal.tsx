@@ -5,13 +5,14 @@ import styles from './TicketModal.module.css'
 type Ticket = {
   id: number
   exercise_type: string
-  color: string
+  color_code: string
   ticket_type: 'COUNT' | 'PERIOD'
   target_count: number
-  total_price: number
+  total_amount: number
   start_date: string
   end_date: string
   status: string
+  refund_amount?: number
 }
 
 type Props = {

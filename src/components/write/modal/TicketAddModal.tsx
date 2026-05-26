@@ -6,13 +6,13 @@ import CheckIcon from '../../../assets/icons/check.png'
 
 type Payload = {
   exerciseType: string
-  color: string
-  ticket_type: 'COUNT' | 'PERIOD'
-  target_count: number
-  total_price: number
-  start_date: string
-  end_date: string
-  refund_price?: number
+  colorCode: string
+  ticketType: 'COUNT' | 'PERIOD'
+  targetCount: number
+  totalAmount: number
+  startDate: string
+  endDate: string
+  refundAmount?: number
 }
 
 type Props = {
@@ -82,15 +82,15 @@ const TicketAddModal = ({
     }
 
     if (!isStep2Valid) return
-
+    
     onConfirm({
       exerciseType,
-      color: colorCode,
-      ticket_type: ticketType === '횟수권' ? 'COUNT' : 'PERIOD',
-      target_count: Number(targetCount),
-      total_price: Number(totalAmount),
-      start_date: formatDate(startDate),
-      end_date: formatDate(endDate),
+      colorCode,
+      ticketType: ticketType === '횟수권' ? 'COUNT' : 'PERIOD',
+      targetCount: Number(targetCount),
+      totalAmount: Number(totalAmount),
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
     })
   }
 
@@ -115,10 +115,10 @@ const TicketAddModal = ({
   useEffect(() => {
     if (mode === 'view' && initialData) {
       setExerciseType(initialData.exerciseType)
-      setTargetCount(String(initialData.target_count))
-      setTotalPrice(String(initialData.total_price))
-      setStartDate(new Date(initialData.start_date))
-      setEndDate(new Date(initialData.end_date))
+      setTargetCount(String(initialData.targetCount))
+      setTotalPrice(String(initialData.totalAmount))
+      setStartDate(new Date(initialData.startDate))
+      setEndDate(new Date(initialData.endDate))
     }
   }, [mode, initialData])
 
@@ -300,8 +300,8 @@ const TicketAddModal = ({
                   <input
                     className={styles.input}
                     value={
-                      initialData?.refund_price !== undefined
-                        ? String(initialData.refund_price)
+                      initialData?.refundAmount !== undefined
+                        ? String(initialData.refundAmount)
                         : ''
                     }
                     disabled={mode === 'view'}
