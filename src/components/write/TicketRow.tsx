@@ -9,13 +9,14 @@ import DeleteIcon from '../../assets/icons/delete.png'
 type Ticket = {
   id: number
   exercise_type: string
-  color: string
+  color_code: string
   ticket_type: 'COUNT' | 'PERIOD'
   target_count: number
-  total_price: number
+  total_amount: number
   start_date: string
   end_date: string
   status: string
+  refund_amount?: number
 }
 
 type TicketRowProps = {
@@ -61,7 +62,7 @@ const TicketRow = ({
       <div className={styles.colName}>
         <div
           className={styles.dot}
-          style={{ backgroundColor: ticket.color }}
+          style={{ backgroundColor: ticket.color_code }}
         />
         <span className={styles.exercise}>
           {ticket.exercise_type}

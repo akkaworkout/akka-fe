@@ -22,9 +22,9 @@ import uploadIcon from '../../assets/icons/upload.png'
 import styles from './WorkoutHistory.module.css'
 
 type Ticket = {
-  ticket_id: number
+  id: number
   exercise_type: string
-  color: string
+  color_code: string
 }
 
 const WorkoutHistoryPage = () => {
@@ -63,9 +63,9 @@ const WorkoutHistoryPage = () => {
   const [pricePerSession, setPricePerSession] = useState<number>(0)
 
   const mappedTickets: Exercise[] = ticketList.map((ticket) => ({
-    id: ticket.ticket_id,
+    id: ticket.id,
     label: ticket.exercise_type,
-    color: ticket.color,
+    color: ticket.color_code,
   }))
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,9 +89,9 @@ const WorkoutHistoryPage = () => {
         setForm(prev => ({
           ...prev,
           exercise: {
-            id: response.data[0].ticket_id,
+            id: response.data[0].id,
             label: response.data[0].exercise_type,
-            color: response.data[0].color,
+            color: response.data[0].color_code,
           }
         }))
       }
@@ -194,7 +194,7 @@ const WorkoutHistoryPage = () => {
       console.log("summary data:", data)
       setRemainingTime(data.remainingCount);
       setUsedCount(data.usedCount);
-      setPricePerSession(data.pricePerSession);
+      setPricePerSession(data.amountPerSession ?? 0);
 
     } catch (error) {
       console.log(error)
@@ -230,14 +230,14 @@ const WorkoutHistoryPage = () => {
           failReason: data.fail_reason ?? '',
         }))
 
-        const ticket = ticketList.find(t => t.ticket_id === data.ticket_id)
+        const ticket = ticketList.find(t => t.id === data.ticket_id)
         if (ticket) {
           setForm(prev => ({
             ...prev,
             exercise: {
-              id: ticket.ticket_id,
+              id: ticket.id,
               label: ticket.exercise_type,
-              color: ticket.color,
+              color: ticket.color_code,
             }
           }))
         }

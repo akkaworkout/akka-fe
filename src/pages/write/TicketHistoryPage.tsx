@@ -40,14 +40,14 @@ const COLOR_OPTIONS = [
 type Ticket = {
   id: number
   exercise_type: string
-  color: string
+  color_code: string
   ticket_type: 'COUNT' | 'PERIOD'
   target_count: number
-  total_price: number
+  total_amount: number
   start_date: string
   end_date: string
   status: string
-  refund_price?: number
+  refund_amount?: number
 }
 
 const TicketHistoryPage = () => {
@@ -76,17 +76,20 @@ const TicketHistoryPage = () => {
   }
 
   const handleDelete = async () => {
+    console.log("삭제 버튼 클릭");
+    console.log(deleteTargetIndex);
     try {
-      const ticketId = ticketList[deleteTargetIndex!].id
-
-      await api.delete(ticketApi.DETAIL(ticketId))
-
       if (deleteTargetIndex === null) return
-      setTicketList(prev => prev.filter((_, i) => i !== deleteTargetIndex))
+
+      await api.delete(ticketApi.DETAIL(deleteTargetIndex))
+
+      setTicketList(prev =>
+        prev.filter(t => t.id !== deleteTargetIndex)
+      )
+
       setDeleteTargetIndex(null)
 
       alert('이용권이 정상적으로 삭제되었습니다.')
-
     } catch (error) {
       console.log('DELETE 실패', error)
     }
@@ -152,22 +155,25 @@ const TicketHistoryPage = () => {
         : '진행 중'
 
     return {
-      id: item.ticket_id,
-      exercise_type: item.exerciseType,
-      color: item.color,
+      id: item.id,
+      exercise_type: item.exercise_type,
+      color_code: item.color_code,
       ticket_type: item.ticket_type,
       target_count: item.target_count,
-      total_price: item.total_price,
+      total_amount: item.total_amount,
       start_date: item.start_date.split('T')[0],
       end_date: item.end_date.split('T')[0],
       status: formattedStatus,
-      refund_price: item.refund_price,
+      refund_amount: item.refund_amount,
     }
   }
 
   const fetchTickets = async () => {
     try {
       const { data } = await api.get(ticketApi.BASE)
+
+      console.log(data);
+
       setTicketList(data.map(mapTicket))
     } catch (error) {
       console.log('GET 실패', error)
@@ -177,13 +183,13 @@ const TicketHistoryPage = () => {
   const createTicket = async (data: any) => {
     try {
       await api.post(ticketApi.BASE, {
-        exerciseType: data.exercise_type,
-        color: data.color,
-        ticket_type: data.ticket_type,
-        target_count: data.target_count,
-        total_price: data.total_price,
-        start_date: data.start_date,
-        end_date: data.end_date,
+        exercise_type: data.exerciseType,
+        color_code: data.colorCode,
+        ticket_type: data.ticketType,
+        target_count: data.targetCount,
+        total_amount: data.totalAmount,
+        start_date: data.startDate,
+        end_date: data.endDate,
       })
 
       alert('이용권 등록이 완료되었습니다.')
@@ -254,8 +260,8 @@ const TicketHistoryPage = () => {
                       setEndTargetIndex(i)
                       setActiveDropdownIndex(null)
                     }}
-                    onDelete={(i) => {
-                      setDeleteTargetIndex(i)
+                    onDelete={() => {
+                      setDeleteTargetIndex(ticket.id)
                       setActiveDropdownIndex(null)
                     }}
                     onView={(i) => {
@@ -318,18 +324,18 @@ const TicketHistoryPage = () => {
               : '기간권'
           }
           setTicketType={setTicketType}
-          colorCode={ticketList[viewTargetIndex].color}
+          colorCode={ticketList[viewTargetIndex].color_code}
           setSelectedColor={setColorCode}
           COLOR_OPTIONS={COLOR_OPTIONS}
           initialData={{
-            exerciseType: ticketList[viewTargetIndex].exercise_type ?? '', // ⭐ 핵심
-            color: ticketList[viewTargetIndex].color,
-            ticket_type: ticketList[viewTargetIndex].ticket_type,
-            target_count: ticketList[viewTargetIndex].target_count,
-            total_price: ticketList[viewTargetIndex].total_price,
-            start_date: ticketList[viewTargetIndex].start_date,
-            end_date: ticketList[viewTargetIndex].end_date,
-            refund_price: ticketList[viewTargetIndex].refund_price,
+            exerciseType: ticketList[viewTargetIndex].exercise_type ?? '',
+            colorCode: ticketList[viewTargetIndex].color_code,
+            ticketType: ticketList[viewTargetIndex].ticket_type,
+            targetCount: ticketList[viewTargetIndex].target_count,
+            totalAmount: ticketList[viewTargetIndex].total_amount,
+            startDate: ticketList[viewTargetIndex].start_date,
+            endDate: ticketList[viewTargetIndex].end_date,
+            refundAmount: ticketList[viewTargetIndex].refund_amount,
           }}
           onClose={() => setViewTargetIndex(null)}
           onConfirm={() => setViewTargetIndex(null)}
