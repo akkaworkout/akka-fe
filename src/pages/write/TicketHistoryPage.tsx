@@ -6,7 +6,6 @@ import api from '../../api/client'
 import { ticketApi } from '../../api/ticket'
 
 // 컴포넌트
-import SideNav from '../../components/sideNav/SideNav'
 import WorkoutTabs from '../../components/write/WorkoutTabs'
 import ConfirmModal from '../../components/write/modal/ConfirmModal'
 import TicketEndModal from '../../components/write/modal/TicketEndModal'
@@ -52,7 +51,6 @@ type Ticket = {
 
 const TicketHistoryPage = () => {
   // UI
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false) // 사이드바 상태
   const [activeDropdownIndex, setActiveDropdownIndex] = useState<number | null>(null)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
@@ -223,15 +221,7 @@ const TicketHistoryPage = () => {
 
   return (
     <div className={styles.wrap}>
-      <SideNav
-        folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded(prev => !prev)}
-      />
-
-      <main
-        className={styles.writePage}
-        style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
-      >
+      <main className={styles.writePage}>
         <div className={styles.writeInner}>
           <div className={styles.title}>이용권 관리</div>
 

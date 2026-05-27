@@ -1,28 +1,17 @@
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./SignUpSuccessPage.module.css";
 
-import SideNav from "../../components/sideNav/SideNav";
 import signupSuccessImg from "../../assets/images/signup-success.png";
 
 export default function SignUpSuccessPage() {
   const nav = useNavigate();
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false);
 
   const location = useLocation();
   const nickname = location.state?.nickname ?? "회원";
 
   return (
     <div className={styles.wrap}>
-      <SideNav
-        folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded((prev) => !prev)}
-      />
-
-      <main
-        className={styles.main}
-        style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
-      >
+      <main className={styles.main}>
         <div className={styles.mainInner}>
           <section className={styles.card}>
             <h1 className={styles.title}>회원가입 완료!</h1>

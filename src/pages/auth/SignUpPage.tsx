@@ -6,7 +6,6 @@ import styles from "./SignUpPage.module.css";
 import profileDefault from "../../assets/icons/profile-default.png";
 import editAvatar from "../../assets/icons/edit-avatar.png";
 
-import SideNav from "../../components/sideNav/SideNav";
 import Form from "../../components/common/form/Form";
 
 import { API_BASE } from "../../api/api";
@@ -49,9 +48,6 @@ export default function SignUpPage() {
   const [nickname, setNickname] = useState("");
   const [budget, setBudget] = useState("");
   const [exerciseGoal, setExerciseGoal] = useState("");
-
-  // ui
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false);
 
   // errors
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -310,15 +306,7 @@ export default function SignUpPage() {
 
   return (
     <div className={styles.wrap}>
-      <SideNav
-        folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded((prev) => !prev)}
-      />
-
-      <main
-        className={styles.main}
-        style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
-      >
+      <main className={styles.main}>
         <div className={styles.mainInner}>
           <section className={styles.card}>
             <header className={styles.headerArea}>

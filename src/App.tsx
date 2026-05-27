@@ -1,4 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+
+import { useSidebarStore } from './stores/useSidebarStore'
+
+import SideNav from './components/sideNav/SideNav'
+
 import Main from './pages/main/Main'
 
 import WorkoutHistoryPage from './pages/write/WorkoutHistoryPage'
@@ -14,25 +19,39 @@ import SignUpSuccessPage from './pages/auth/SignUpSuccessPage'
 
 import MyPage from './pages/mypage/MyPage'
 
+import styles from './App.module.css'
+
 function App() {
+  const { folded } = useSidebarStore()
+
   return (
-    <Routes>
-      <Route path="/main" element={<Main />} />
-      <Route path="/" element={<Navigate to="/main" replace />} />
+    <div className={styles.layout}>
+      <SideNav />
 
-      <Route path="/write" element={<WorkoutHistoryPage />} />
-      <Route path="/expense" element={<ExpenseHistoryPage />} />
-      <Route path="/ticket" element={<TicketHistoryPage />} />
+      <main
+        className={`${styles.main} ${
+          folded ? styles.mainFolded : ''
+        }`}
+      >
+        <Routes>
+          <Route path="/main" element={<Main />} />
+          <Route path="/" element={<Navigate to="/main" replace />} />
 
-      <Route path="/report" element={<ReportPage />} />
-      <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/write" element={<WorkoutHistoryPage />} />
+          <Route path="/expense" element={<ExpenseHistoryPage />} />
+          <Route path="/ticket" element={<TicketHistoryPage />} />
 
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup/success" element={<SignUpSuccessPage />} />
+          <Route path="/report" element={<ReportPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
 
-      <Route path="/mypage" element={<MyPage />} />
-    </Routes>
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup/success" element={<SignUpSuccessPage />} />
+
+          <Route path="/mypage" element={<MyPage />} />
+        </Routes>
+      </main>
+    </div>
   )
 }
 

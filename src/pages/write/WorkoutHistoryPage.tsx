@@ -8,7 +8,6 @@ import { ticketApi } from '../../api/ticket'
 import { exerciseApi } from '../../api/exercise'
 
 // 컴포넌트
-import SideNav from '../../components/sideNav/SideNav'
 import WorkoutTabs from '../../components/write/WorkoutTabs'
 import DateSelect from '../../components/write/DateSelect'
 import SummaryCard, { type Exercise } from '../../components/common/SummaryCard'
@@ -34,10 +33,9 @@ const WorkoutHistoryPage = () => {
   const navigate = useNavigate()
 
   // UI 상태
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  // 3. 핵심 데이터 (form)
+  // 핵심 데이터 (form)
   const [form, setForm] = useState({
     date: new Date(),
     workoutResult: '성공' as '성공' | '실패',
@@ -272,17 +270,7 @@ const WorkoutHistoryPage = () => {
 
   return (
     <div className={styles.wrap}>
-      <SideNav
-        folded={isSidebarFolded}
-        onToggle={() => {
-          setIsSidebarFolded(prev => !prev)
-        }}
-      />
-
-      <main
-        className={styles.writePage}
-        style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
-      >
+      <main className={styles.writePage}>
         <div className={styles.writeInner}>
           <div className={styles.title}>운동 기록</div>
 

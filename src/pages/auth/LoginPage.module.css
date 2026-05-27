@@ -1,32 +1,23 @@
 .wrap {
-    display: flex;
-    min-height: 100vh;
-    min-width: 1280px;
-}
-
-
-.wrap {
-  display: grid;
-  grid-template-columns: 224px 1fr; /* 사이드바 폭 */
-  width: 100%;
+  display: flex;
   min-height: 100vh;
 }
 
-.main {
-  grid-column: 2;
+.mainPage {
+  flex: 1;
   display: flex;
   justify-content: center;
-  background: #fafafb;
-  min-height: 900px;
+  background-color: #FAFAFB;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
 }
 
-
-
 .mainInner {
-    position: relative;
-    width: 100%;
-    max-width: 1008px;
-    margin-top: 94px;
+  position: relative;
+  width: 100%;
+  max-width: 1008px;
+  padding: 100px 24px 60px;
+  box-sizing: border-box;
 }
 
 .card {

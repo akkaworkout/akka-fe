@@ -1,6 +1,5 @@
 import { useState } from "react";
 import ReportHeader from "./ReportHeader";
-import SideNav from "../../components/sideNav/SideNav";
 import SummaryCard, {
   type Exercise,
 } from "../../components/common/SummaryCard";
@@ -28,7 +27,6 @@ const EXERCISES: Exercise[] = [
 ];
 
 export default function ReportPage() {
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<Exercise>(
     EXERCISES[0],
   );
@@ -98,15 +96,7 @@ export default function ReportPage() {
 
   return (
     <div className={styles.wrap}>
-      <SideNav
-        folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded((prev) => !prev)}
-      />
-
-      <main
-        className={styles.reportPage}
-        style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
-      >
+      <main className={styles.reportPage}>
         <div className={styles.reportInner}>
           <ReportHeader
             year={year}

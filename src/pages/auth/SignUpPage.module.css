@@ -1,7 +1,7 @@
 .wrap {
   display: flex;
   min-height: 100vh;
-  min-width: 1280px;
+  min-width: 700px;
 }
 
 .main {
@@ -9,7 +9,6 @@
   display: flex;
   justify-content: center;
   background-color: #FAFAFB;
-  margin-left: 220px;
   min-height: 900px;
 }
 

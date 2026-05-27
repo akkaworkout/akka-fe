@@ -27,15 +27,30 @@
     width: 34px;
     height: 34px;
     border-radius: 10px;
-    background: #E9ECFF;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: 0.2s all;
+}
+
+.sidebarToggleWrapper:hover {
+    background: #E9ECFF;
 }
 
 .sidebarToggleIcon {
     width: 22px;
     height: 22px;
+}
+
+.sideNavLogo,
+.sideNavLogoSvg {
+    cursor: pointer;
+    transition: opacity 0.4s ease;
+}
+
+.sideNavLogo:hover,
+.sideNavLogoSvg:hover {
+    opacity: 0.75;
 }
 
 .sideNavLogo {
@@ -76,6 +91,9 @@
     cursor: pointer;
     gap: 16px;
     padding-left: 20px;
+    transition: 0.2s all;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .sideNavFolded .sidebarMenu {
@@ -127,8 +145,14 @@
 }
 
 .sidebarProfileDefaultImg {
+    transition: box-shadow 0.2s ease;
     height: 37px;
     cursor: pointer;
+    border-radius: 12px;
+}
+
+.sidebarProfileDefaultImg:hover {
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
 }
 
 .sidebarUser {
