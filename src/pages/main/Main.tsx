@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import styles from './Main.module.css'
-import SideNav from '../../components/sideNav/SideNav'
 
 import mainAkka from '../../assets/images/mainakka.png'
 import mainWorkout from '../../assets/images/mainworkout.png'
@@ -10,17 +8,10 @@ import '../../chartDefaults'
 
 
 export default function MainPage() {
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false)
-
   return (
     <div className={styles.wrap}>
-      <SideNav
-        folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded((prev) => !prev)}
-      />
-
-      <main className={styles.main}>
-        <div className={styles.inner}>
+      <main className={styles.mainPage}>
+        <div className={styles.mainInner}>
           <section className={styles.hero}>
             {/* 왼쪽 텍스트 */}
             <div className={styles.copy}>

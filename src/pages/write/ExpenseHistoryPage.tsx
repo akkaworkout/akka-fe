@@ -7,7 +7,6 @@ import api from "../../api/client";
 import { expenseApi } from "../../api/expense";
 
 // 컴포넌트 (UI)
-import SideNav from "../../components/sideNav/SideNav";
 import WorkoutTabs from "../../components/write/WorkoutTabs";
 import DateSelect from "../../components/write/DateSelect";
 import SummaryCard, { type Expense } from "../../components/common/SummaryCard";
@@ -43,7 +42,6 @@ const ExpenseHistoryPage = () => {
   const navigate = useNavigate();
 
   // UI / 입력 상태
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false); // 사이드바 상태
   const [date, setDate] = useState<Date>(new Date()); // 날짜 (생성일)
   const [selectedCategory, setSelectedCategory] = useState<Expense>(
     EXPENSES[0],
@@ -112,17 +110,8 @@ const ExpenseHistoryPage = () => {
 
   return (
     <div className={styles.wrap}>
-      {/* 사이드바 */}
-      <SideNav
-        folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded((prev) => !prev)}
-      />
-
       {/* 메인 */}
-      <main
-        className={styles.writePage}
-        style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
-      >
+      <main className={styles.writePage}>
         <div className={styles.writeInner}>
           {/* 헤더 */}
           <div className={styles.title}>기타 지출</div>

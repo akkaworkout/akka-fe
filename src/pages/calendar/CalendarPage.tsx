@@ -13,7 +13,6 @@ import type { TodayItem } from '../../hooks/useTodayItems'
 import Calendar from './Calendar'
 import TodayItemModal from './TodayItemModal'
 
-import SideNav from '../../components/sideNav/SideNav'
 import Card from '../../components/common/Card'
 import Spinner from '../../components/common/Spinner'
 
@@ -59,15 +58,7 @@ const CalenderPage = () => {
   return (
     <>
       <div className={styles.wrap}>
-        <SideNav
-          folded={false}
-          onToggle={() => { }}
-        />
-
-        <main
-          className={styles.calendarPage}
-          style={{ marginLeft: 220 }}
-        >
+        <main className={styles.calendarPage}>
           <div className={styles.calendarInner}>
             <div className={styles.title}>캘린더</div>
 

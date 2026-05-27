@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./LoginPage.module.css";
 
-import SideNav from "../../components/sideNav/SideNav";
+import { useSidebarStore } from "../../stores/useSidebarStore";
+
 import Form from "../../components/common/form/Form";
 
 type FieldErrors = Partial<{
@@ -20,7 +21,7 @@ const API_BASE =
 
 export default function LoginPage() {
   const nav = useNavigate();
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false);
+  const { login } = useSidebarStore();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -87,6 +88,8 @@ export default function LoginPage() {
       }
 
       localStorage.setItem("accessToken", token);
+      login(token);
+
       console.log("Saved token:", token);
 
       alert("로그인이 완료되었습니다");
@@ -103,12 +106,7 @@ export default function LoginPage() {
 
   return (
     <div className={styles.wrap}>
-      <SideNav
-        folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded((p) => !p)}
-      />
-
-      <main className={styles.main}>
+      <main className={styles.mainPage}>
         <div className={styles.mainInner}>
           <section className={styles.card}>
             <header className={styles.headerArea}>
@@ -157,9 +155,8 @@ export default function LoginPage() {
                   <button
                     type="submit"
                     disabled={!canSubmit}
-                    className={`${styles.submitBtn} ${
-                      !canSubmit ? styles.submitDisabled : styles.submitActive
-                    }`}
+                    className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
+                      }`}
                   >
                     로그인
                   </button>
