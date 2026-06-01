@@ -77,7 +77,7 @@ export default function LoginPage() {
         return;
       }
 
-      const token = data?.data?.token;
+      const token = data?.data?.accessToken;
 
       if (!token) {
         setErrors((prev) => ({
