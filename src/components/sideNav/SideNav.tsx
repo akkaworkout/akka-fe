@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import { useSidebarStore } from "@/stores/useSidebarStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 import styles from "./SideNav.module.css";
 
@@ -36,10 +37,14 @@ const SideNav = () => {
     folded,
     toggleFolded,
     setFolded,
+  } = useSidebarStore();
+
+
+  const {
     logout,
     token,
     isLoggedIn,
-  } = useSidebarStore();
+  } = useAuthStore();
 
   const [user, setUser] = useState<any>(null);
 
@@ -95,7 +100,7 @@ const SideNav = () => {
   const handleMenuClick = (path: string) => {
     const publicPaths = ["/main"];
 
-    if (!user && !publicPaths.includes(path)) {
+    if (!isLoggedIn && !publicPaths.includes(path)) {
       alert("로그인이 필요한 서비스입니다.");
       navigate("/login");
       return;

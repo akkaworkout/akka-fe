@@ -21,7 +21,7 @@
 
 .title {
   position: absolute;
-  color: #2C2C2C;
+  color: var(--black);
   top: 37px;
   font-size: 24px;
   font-weight: 700;
@@ -60,7 +60,7 @@
 .field label {
   font-size: 20px;
   font-weight: 700;
-  color: #2C2C2C;
+  color: var(--black);
 }
 
 .limit {
@@ -82,7 +82,7 @@
 
 .selectBox span {
   font-size: 14px;
-  color: #2C2C2C;
+  color: var(--black);
 }
 
 .arrow {
@@ -200,7 +200,7 @@
   height: 50px;
   border: none;
   border-radius: 10px;
-  background: #454DD7;
+  background: var(--primary);
   color: #FFFFFF;
   font-size: 20px;
   font-weight: 600;
@@ -252,13 +252,13 @@
   align-items: center;
   gap: 7px;
   font-size: 16px;
-  color: #2c2c2c;
+  color: var(--black);
 }
 
 .checkIcon {
   display: flex;
   align-items: center;
-  color: #454DD7;
+  color: var(--primary);
 }
 
 .priceInput {
@@ -273,5 +273,5 @@
 
 .unit {
   font-size: 20px !important;
-  color: #2C2C2C;
+  color: var(--black);
 }

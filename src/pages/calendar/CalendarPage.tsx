@@ -10,11 +10,12 @@ import { useTodayItems } from "@/hooks/useTodayItems";
 import type { TodayItem } from "@/hooks/useTodayItems";
 
 // 컴포넌트
-import Calendar from "./Calendar";
-import TodayItemModal from "./TodayItemModal";
+import Calendar from "./components/Calendar";
+import Card from "@/components/card/Card";
+import Spinner from "@/components/spinner/Spinner";
 
-import Card from "@/components/common/Card";
-import Spinner from "@/components/common/Spinner";
+// 모달
+import TodayItemModal from "./modal/TodayItemModal";
 
 // 스타일 
 import styles from './Calendar.module.css'

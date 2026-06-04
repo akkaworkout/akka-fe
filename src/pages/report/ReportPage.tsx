@@ -1,23 +1,24 @@
 import { useState } from "react";
-import ReportHeader from "./ReportHeader";
+import ReportHeader from "./components/ReportHeader";
 
 import SummaryCard, {
   type Exercise,
-} from "@/components/common/SummaryCard";
+} from "@/components/summaryCard/SummaryCard";
 
-import InsightCard from "@/components/report/InsightCard";
-import Card from "@/components/common/Card";
-import BarChart from "@/components/report/charts/BarChart";
-import TotalExpenseCard from "@/components/report/card/TotalExpenseCard/TotalExpenseCard";
-import TotalExerciseCard from "@/components/report/card/TotalExerciseCard/TotalExerciseCard";
-import TotalNoShowCard from "@/components/report/card/TotalNoShowCard/TotalNoShowCard";
-import RingChart from "@/components/report/charts/RingChart";
+import BarChart from "./components/charts/BarChart";
+import RingChart from "./components/charts/RingChart";
+
+import InsightCard from "./components/card/InsightCard";
+import Card from "@/components/card/Card";
+import TotalExpenseCard from "./components/card/TotalExpenseCard/TotalExpenseCard";
+import TotalExerciseCard from "./components/card/TotalExerciseCard/TotalExerciseCard";
+import TotalNoShowCard from "./components/card/TotalNoShowCard/TotalNoShowCard";
 
 import styles from "@/pages/report/Report.module.css";
 
 import MemoDetailModal from "@/pages/report/modals/MemoDetailModal";
 
-import Spinner from "@/components/common/Spinner";
+import Spinner from "@/components/spinner/Spinner";
 
 import { useTickets } from "@/hooks/useTickets";
 import { useReportData } from "@/hooks/useReportData";

@@ -45,7 +45,7 @@
   border-radius: 999px;
 
   border: 0;
-  background: #454DD7;
+  background: var(--primary);
   color: #fff;
 
 
@@ -75,7 +75,7 @@
   padding: 22px 66px 0 22px; 
   font-size: 14px;
   font-weight: 700;
-  color: #2C2C2C;
+  color: var(--black);
 }
 
 /* ===== Body (기본) ===== */

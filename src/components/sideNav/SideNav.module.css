@@ -105,7 +105,7 @@
 
 .active {
     background-color: #E9ECFF;
-    color: #454DD7;
+    color: var(--primary);
     font-weight: 700;
 }
 
@@ -156,7 +156,7 @@
 }
 
 .sidebarUser {
-    color: #2C2C2C;
+    color: var(--black);
     font-size: 12px;
     font-weight: 600;
     font-family: 'Roboto', sans-serif;
