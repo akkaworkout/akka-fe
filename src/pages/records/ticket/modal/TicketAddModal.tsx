@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
-import TicketModal from './TicketModal'
-import DateSelect from '../../write/DateSelect'
-import styles from '../../../pages/write/TicketHistory.module.css'
-import CheckIcon from '../../../assets/icons/check.png'
+import { useState, useEffect } from "react";
+import TicketModal from "./TicketModal";
+import DateSelect from "@/components/records/DateSelect";
+import styles from "@/pages/records/ticket/Ticket.module.css";
+import CheckIcon from "@/assets/icons/check.png";
 
 type Payload = {
   exerciseType: string

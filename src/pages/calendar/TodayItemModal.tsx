@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import BaseModal from '../../components/common/BaseModal'
+import BaseModal from '@/components/common/BaseModal'
+
 import styles from './TodayItemModal.module.css'
 
 type Status = '성공' | '실패' | '구매' | '이용권 등록'

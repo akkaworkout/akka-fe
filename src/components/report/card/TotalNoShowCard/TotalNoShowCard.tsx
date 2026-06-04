@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import './TotalNoShowCard.css'
-import CheckIcon from '../../../common/icons/CheckIcon'
-import Card from '../../../common/Card'
-import DetailModal from '../../../../pages/report/modals/DetailModal'
+import CheckIcon from '@/components/common/icons/CheckIcon'
+import Card from '@/components/common/Card'
+import DetailModal from '@/pages/report/modals/DetailModal'
 
 type Item = {
   label: string

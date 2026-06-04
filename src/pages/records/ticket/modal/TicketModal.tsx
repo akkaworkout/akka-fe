@@ -1,4 +1,4 @@
-import BaseModal from '../../common/BaseModal'
+import BaseModal from '@/components/common/BaseModal'
 import styles from './TicketModal.module.css'
 
 type Props = {

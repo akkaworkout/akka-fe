@@ -1,19 +1,19 @@
 import { useState, type FormEvent } from "react";
 import styles from "./MyPage.module.css";
 
-import Card from "../../components/common/Card";
+import Card from "@/components/common/Card";
 
-import profileDefault from "../../assets/icons/profile-default.png";
-import editAvatar from "../../assets/icons/edit-avatar.png";
-import eyeOn from "../../assets/icons/icon-eye-on.png";
-import eyeOff from "../../assets/icons/icon-eye-off.png";
-import premiumCard from "../../assets/images/premium-card.png";
+import profileDefault from "@/assets/icons/profile-default.png";
+import editAvatar from "@/assets/icons/edit-avatar.png";
+import eyeOn from "@/assets/icons/icon-eye-on.png";
+import eyeOff from "@/assets/icons/icon-eye-off.png";
+import premiumCard from "@/assets/images/premium-card.png";
 
-import { apiFetch } from "../../api/api";
-import { useMyPageForm, type InitialData } from "../../hooks/useMyPageForm";
-import { useProfileImage } from "../../hooks/useProfileImage";
-import { useUserData } from "../../hooks/useUserData";
-import { useFormValidation } from "../../hooks/useFormValidation";
+import { apiFetch } from "@/api/api";
+import { useMyPageForm, type InitialData } from "@/hooks/useMyPageForm";
+import { useProfileImage } from "@/hooks/useProfileImage";
+import { useUserData } from "@/hooks/useUserData";
+import { useFormValidation } from "@/hooks/useFormValidation";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 

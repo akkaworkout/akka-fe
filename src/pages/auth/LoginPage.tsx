@@ -2,9 +2,9 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./LoginPage.module.css";
 
-import { useSidebarStore } from "../../stores/useSidebarStore";
+import { useSidebarStore } from "@/stores/useSidebarStore";
 
-import Form from "../../components/common/form/Form";
+import Form from "@/components/common/form/Form";
 
 type FieldErrors = Partial<{
   email: string;

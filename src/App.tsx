@@ -1,25 +1,25 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
-import { useSidebarStore } from './stores/useSidebarStore'
+import { useSidebarStore } from '@/stores/useSidebarStore'
 
-import SideNav from './components/sideNav/SideNav'
+import SideNav from '@/components/sideNav/SideNav'
 
-import Main from './pages/main/Main'
+import Main from '@/pages/main/Main'
 
-import WorkoutHistoryPage from './pages/write/WorkoutHistoryPage'
-import ExpenseHistoryPage from './pages/write/ExpenseHistoryPage'
-import TicketHistoryPage from './pages/write/TicketHistoryPage'
+import WorkoutPage from '@/pages/records/workout/WorkoutPage'
+import ExpensePage from './pages/records/expense/ExpensePage'
+import TicketPage from '@/pages/records/ticket/TicketPage'
 
-import ReportPage from './pages/report/ReportPage'
-import CalendarPage from './pages/calendar/CalendarPage'
+import ReportPage from '@/pages/report/ReportPage'
+import CalendarPage from '@/pages/calendar/CalendarPage'
 
-import SignUpPage from './pages/auth/SignUpPage'
-import LoginPage from './pages/auth/LoginPage'
-import SignUpSuccessPage from './pages/auth/SignUpSuccessPage'
+import SignUpPage from '@/pages/auth/SignUpPage'
+import LoginPage from '@/pages/auth/LoginPage'
+import SignUpSuccessPage from '@/pages/auth/SignUpSuccessPage'
 
-import MyPage from './pages/mypage/MyPage'
+import MyPage from '@/pages/mypage/MyPage'
 
-import styles from './App.module.css'
+import styles from '@/App.module.css'
 
 function App() {
   const { folded } = useSidebarStore()
@@ -37,9 +37,9 @@ function App() {
           <Route path="/main" element={<Main />} />
           <Route path="/" element={<Navigate to="/main" replace />} />
 
-          <Route path="/write" element={<WorkoutHistoryPage />} />
-          <Route path="/expense" element={<ExpenseHistoryPage />} />
-          <Route path="/ticket" element={<TicketHistoryPage />} />
+          <Route path="/write" element={<WorkoutPage />} />
+          <Route path="/expense" element={<ExpensePage />} />
+          <Route path="/ticket" element={<TicketPage />} />
 
           <Route path="/report" element={<ReportPage />} />
           <Route path="/calendar" element={<CalendarPage />} />

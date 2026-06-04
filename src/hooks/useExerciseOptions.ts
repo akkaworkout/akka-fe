@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { Exercise } from '../../components/common/SummaryCard'
+import type { Exercise } from '@/components/common/SummaryCard'
 import type { TicketItem } from './useTickets'
 
 const EXERCISES: Exercise[] = [

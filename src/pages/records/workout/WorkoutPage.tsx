@@ -3,22 +3,22 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 // API / 로직
-import api from '../../api/client'
-import { ticketApi } from '../../api/ticket'
-import { exerciseApi } from '../../api/exercise'
+import api from '@/api/client'
+import { ticketApi } from '@/api/ticket'
+import { exerciseApi } from '@/api/exercise'
 
 // 컴포넌트
-import WorkoutTabs from '../../components/write/WorkoutTabs'
-import DateSelect from '../../components/write/DateSelect'
-import SummaryCard, { type Exercise } from '../../components/common/SummaryCard'
-import Card from '../../components/common/Card'
-import CheckIcon from '../../components/common/icons/CheckIcon'
+import WorkoutTabs from '@/components/records/WorkoutTabs'
+import DateSelect from '@/components/records/DateSelect'
+import SummaryCard, { type Exercise } from '@/components/common/SummaryCard'
+import Card from '@/components/common/Card'
+import CheckIcon from '@/components/common/icons/CheckIcon'
 
 // 에셋
-import uploadIcon from '../../assets/icons/upload.png'
+import uploadIcon from '@/assets/icons/upload.png'
 
 // 스타일
-import styles from './WorkoutHistory.module.css'
+import styles from './Workout.module.css'
 
 type Ticket = {
   id: number
@@ -26,7 +26,7 @@ type Ticket = {
   color_code: string
 }
 
-const WorkoutHistoryPage = () => {
+const WorkoutPage = () => {
   // 라우팅 / 외부 값
   const [searchParams] = useSearchParams()
   const recordId = Number(searchParams.get('record_id'))
@@ -505,4 +505,4 @@ const WorkoutHistoryPage = () => {
   )
 }
 
-export default WorkoutHistoryPage
+export default WorkoutPage

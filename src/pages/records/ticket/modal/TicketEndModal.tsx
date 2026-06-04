@@ -1,5 +1,5 @@
 import TicketModal from './TicketModal'
-import SummaryCard, { type Exercise } from '../../common/SummaryCard'
+import SummaryCard, { type Exercise } from '@/components/common/SummaryCard'
 import styles from './TicketModal.module.css'
 
 type Ticket = {

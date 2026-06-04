@@ -1,4 +1,4 @@
-import leftIcon from '../../assets/icons/chevron-left.png'
+import leftIcon from '@/assets/icons/chevron-left.png'
 import styles from './Report.module.css'
 
 type Props = {

@@ -1,10 +1,10 @@
 import styles from './TicketRow.module.css'
 
-import CalendarIcon from '../../assets/icons/sidebar/sidebar_calendar_active.png'
-import Goal from '../../assets/icons/goal.png'
-import MoreButton from '../../assets/icons/moreButton.png'
-import EditIcon from '../../assets/icons/edit.png'
-import DeleteIcon from '../../assets/icons/delete.png'
+import CalendarIcon from '@/assets/icons/sidebar/sidebar_calendar_active.png'
+import Goal from '@/assets/icons/goal.png'
+import MoreButton from '@/assets/icons/moreButton.png'
+import EditIcon from '@/assets/icons/edit.png'
+import DeleteIcon from '@/assets/icons/delete.png'
 
 type Ticket = {
   id: number

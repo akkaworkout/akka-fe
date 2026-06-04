@@ -1,14 +1,15 @@
 import React, { useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
+
 import styles from "./SignUpPage.module.css";
 
-import profileDefault from "../../assets/icons/profile-default.png";
-import editAvatar from "../../assets/icons/edit-avatar.png";
+import profileDefault from "@/assets/icons/profile-default.png";
+import editAvatar from "@/assets/icons/edit-avatar.png";
 
-import Form from "../../components/common/form/Form";
+import Form from "@/components/common/form/Form";
 
-import { API_BASE } from "../../api/api";
+import { API_BASE } from "@/api/api";
 
 type FieldErrors = Partial<{
   email: string;

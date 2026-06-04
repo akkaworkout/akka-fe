@@ -2,8 +2,8 @@ import { useState } from 'react'
 import type { ChangeEvent } from 'react'
 import styles from './Form.module.css'
 
-import eyeOn from '../../../assets/icons/icon-eye-on.png'
-import eyeOff from '../../../assets/icons/icon-eye-off.png'
+import eyeOn from '@/assets/icons/icon-eye-on.png'
+import eyeOff from '@/assets/icons/icon-eye-off.png'
 
 type RightButton = {
   label: string

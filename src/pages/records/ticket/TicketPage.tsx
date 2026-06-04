@@ -2,21 +2,23 @@
 import { useState, useRef, useEffect } from 'react'
 
 // API / hooks / utils
-import api from '../../api/client'
-import { ticketApi } from '../../api/ticket'
+import api from '@/api/client'
+import { ticketApi } from '@/api/ticket'
 
 // 컴포넌트
-import WorkoutTabs from '../../components/write/WorkoutTabs'
-import ConfirmModal from '../../components/write/modal/ConfirmModal'
-import TicketEndModal from '../../components/write/modal/TicketEndModal'
-import TicketAddModal from '../../components/write/modal/TicketAddModal'
-import TicketRow from '../../components/write/TicketRow'
+import WorkoutTabs from '@/components/records/WorkoutTabs'
+import TicketRow from '@/components/records/TicketRow'
+
+// 모달
+import ConfirmModal from './modal/ConfirmModal'
+import TicketEndModal from './modal/TicketEndModal'
+import TicketAddModal from './modal/TicketAddModal'
 
 // 타입
-import { type Exercise } from '../../components/common/SummaryCard'
+import { type Exercise } from '@/components/common/SummaryCard'
 
 // 스타일 
-import styles from './TicketHistory.module.css'
+import styles from './Ticket.module.css'
 
 const END_TYPES: Exercise[] = [
   { id: 1, label: '완료', color: '#E0F0FF' },
@@ -49,7 +51,7 @@ type Ticket = {
   refund_amount?: number
 }
 
-const TicketHistoryPage = () => {
+const TicketPage = () => {
   // UI
   const [activeDropdownIndex, setActiveDropdownIndex] = useState<number | null>(null)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
@@ -337,4 +339,4 @@ const TicketHistoryPage = () => {
   )
 }
 
-export default TicketHistoryPage
+export default TicketPage
