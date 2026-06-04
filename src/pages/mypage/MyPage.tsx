@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import styles from "./MyPage.module.css";
 
-import Card from "@/components/common/Card";
+import Card from "@/components/card/Card";
 
 import profileDefault from "@/assets/icons/profile-default.png";
 import editAvatar from "@/assets/icons/edit-avatar.png";

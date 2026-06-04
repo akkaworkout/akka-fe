@@ -1,4 +1,4 @@
-import BaseModal from '@/components/common/BaseModal'
+import Modal from '@/components/modal/Modal'
 import styles from './TicketModal.module.css'
 
 type Props = {
@@ -19,7 +19,7 @@ const TicketModal = ({
   nextDisabled,
 }: Props) => {
   return (
-    <BaseModal
+    <Modal
       title={title}
       onClose={onClose}
     >
@@ -39,7 +39,7 @@ const TicketModal = ({
           {buttonText}
         </button>
       </div>
-    </BaseModal>
+    </Modal>
   )
 }
 

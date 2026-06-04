@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import TicketModal from "./TicketModal";
-import DateSelect from "@/components/records/DateSelect";
+import DateSelect from "@/components/dateSelect/DateSelect";
 import styles from "@/pages/records/ticket/Ticket.module.css";
 import CheckIcon from "@/assets/icons/check.png";
 

@@ -4,18 +4,18 @@ import { useSidebarStore } from '@/stores/useSidebarStore'
 
 import SideNav from '@/components/sideNav/SideNav'
 
-import Main from '@/pages/main/Main'
+import Main from '@/pages/main/MainPage'
 
 import WorkoutPage from '@/pages/records/workout/WorkoutPage'
-import ExpensePage from './pages/records/expense/ExpensePage'
+import ExpensePage from '@/pages/records/expense/ExpensePage'
 import TicketPage from '@/pages/records/ticket/TicketPage'
 
 import ReportPage from '@/pages/report/ReportPage'
 import CalendarPage from '@/pages/calendar/CalendarPage'
 
-import SignUpPage from '@/pages/auth/SignUpPage'
-import LoginPage from '@/pages/auth/LoginPage'
-import SignUpSuccessPage from '@/pages/auth/SignUpSuccessPage'
+import LoginPage from '@/pages/auth/login/LoginPage'
+import SignUpPage from '@/pages/auth/signup/SignUpPage'
+import SignUpSuccessPage from '@/pages/auth/signup/SignUpSuccessPage'
 
 import MyPage from '@/pages/mypage/MyPage'
 
@@ -29,9 +29,7 @@ function App() {
       <SideNav />
 
       <main
-        className={`${styles.main} ${
-          folded ? styles.mainFolded : ''
-        }`}
+        className={`${styles.main} ${folded ? styles.mainFolded : ''}`}
       >
         <Routes>
           <Route path="/main" element={<Main />} />
@@ -44,8 +42,8 @@ function App() {
           <Route path="/report" element={<ReportPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
 
-          <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
           <Route path="/signup/success" element={<SignUpSuccessPage />} />
 
           <Route path="/mypage" element={<MyPage />} />

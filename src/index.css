@@ -1,3 +1,21 @@
+:root {
+  --primary: #454DD7;
+  --primary-light: #88A6F1;
+  --primary-soft: #E9ECFF;
+  --primary-dark: #38359D;
+
+  --secondary: #FFC227;
+  --secondary-light: #FFE7AA;
+  --secondary-soft: #FFF8E6;
+  --secondary-dark: #E5B53B;
+
+  --black: #2C2C2C;
+  --white: #FFFFFF;
+
+  --success: #00AA21;
+  --error: #FF5858;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -10,7 +28,7 @@ body {
 
   min-height: 100%;
   background-color: #FAFAFB;
-  color: #2C2C2C;
+  color: var(--black);
 
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -23,7 +41,6 @@ select,
 textarea {
   font-family: inherit;
 }
-
 
 body.modal-open {
   overflow: hidden;

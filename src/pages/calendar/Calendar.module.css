@@ -21,7 +21,7 @@
 
 .title {
     position: absolute;
-    color: #2C2C2C;
+    color: var(--black);
     top: 37px;
     font-size: 24px;
     font-weight: 700;
@@ -46,7 +46,7 @@
     position: relative;
     top: 16px;
     left: 23px;
-    color: #2C2C2C;
+    color: var(--black);
     font-size: 20px;
     font-weight: 700;
 }
@@ -77,7 +77,7 @@
     text-align: center;
     line-height: 78px;
     font-size: 12px;
-    color: #2C2C2C;
+    color: var(--black);
     font-weight: 500;
     background: #F2F2F4;
 }
@@ -128,14 +128,14 @@
 
 .date {
     font-size: 12px;
-    color: #2C2C2C;
+    color: var(--black);
     cursor: pointer;
     position: relative;
     z-index: 2;
 }
 
 .activeDate {
-    color: #454DD7;
+    color: var(--primary);
     font-weight: 700;
 }
 
@@ -159,7 +159,7 @@
     border-radius: 2px;
     font-size: 11px;
     text-align: center;
-    color: #2c2c2c;
+    color: var(--black);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -201,7 +201,7 @@
 .moneyMain {
     font-size: 20px;
     font-weight: 700;
-    color: #2c2c2c;
+    color: var(--black);
 }
 
 .label {
@@ -213,7 +213,7 @@
 }
 
 .total {
-    color: #2c2c2c;
+    color: var(--black);
 }
 
 .badges {
@@ -227,7 +227,7 @@
     padding: 9.5px 15px;
     border-radius: 10px;
     font-size: 14px;
-    color: #2C2C2C;
+    color: var(--black);
     width: fit-content;
 }
 
@@ -236,7 +236,7 @@
     padding: 9.5px 15px;
     border-radius: 10px;
     font-size: 14px;
-    color: #2C2C2C;
+    color: var(--black);
     width: fit-content;
 }
 
@@ -276,7 +276,7 @@
 }
 
 .goalItem:has(input:not(:placeholder-shown)) span {
-    color: #2C2C2C;
+    color: var(--black);
 }
 
 .goalItem input {
@@ -287,7 +287,7 @@
     height: 100%;
     line-height: 38px;
     padding: 0;
-    color: #2C2C2C;
+    color: var(--black);
 }
 
 

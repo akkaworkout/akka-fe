@@ -11,7 +11,7 @@
   margin: 0; 
   font-size: 14px;
   font-weight: 400;
-  color: #2C2C2C;
+  color: var(--black);
 }
 
 
@@ -46,7 +46,7 @@
 .detailLabel {
   font-size: 16px;
   font-weight: 500;
-  color: #2C2C2C;
+  color: var(--black);
 }
 
 
@@ -54,5 +54,5 @@
 .detailCount {
   font-size: 14px;
   font-weight: 500;
-  color: #2C2C2C;
+  color: var(--black);
 }

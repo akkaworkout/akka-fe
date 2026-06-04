@@ -3,19 +3,22 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 // API / 로직
-import api from '@/api/client'
-import { ticketApi } from '@/api/ticket'
-import { exerciseApi } from '@/api/exercise'
+import {
+  getActiveTickets,
+  getExerciseSummary,
+  createExercise,
+  updateExercise,
+  deleteExercise,
+  getExerciseDetail,
+} from '@/api/exerciseApi'
 
 // 컴포넌트
-import WorkoutTabs from '@/components/records/WorkoutTabs'
-import DateSelect from '@/components/records/DateSelect'
-import SummaryCard, { type Exercise } from '@/components/common/SummaryCard'
-import Card from '@/components/common/Card'
-import CheckIcon from '@/components/common/icons/CheckIcon'
-
-// 에셋
-import uploadIcon from '@/assets/icons/upload.png'
+import WorkoutTabs from "@/components/recordTabs/RecordTabs";
+import DateSelect from "@/components/dateSelect/DateSelect";
+import SummaryCard, { type Exercise } from '@/components/summaryCard/SummaryCard'
+import RecordSummaryCard from '../components/RecordSummaryCard'
+import WorkoutResultField from './components/WorkoutResultField'
+import WorkoutImageField from './components/WorkoutImageField'
 
 // 스타일
 import styles from './Workout.module.css'
@@ -78,18 +81,17 @@ const WorkoutPage = () => {
 
   const getExercise = async () => {
     try {
+      const tickets = await getActiveTickets()
 
-      const response = await api.get(`${ticketApi.BASE}/active`)
+      setTicketList(tickets)
 
-      setTicketList(response.data)
-
-      if (response.data.length > 0) {
+      if (tickets.length > 0) {
         setForm(prev => ({
           ...prev,
           exercise: {
-            id: response.data[0].id,
-            label: response.data[0].exercise_type,
-            color: response.data[0].color_code,
+            id: tickets[0].id,
+            label: tickets[0].exercise_type,
+            color: tickets[0].color_code,
           }
         }))
       }
@@ -98,69 +100,26 @@ const WorkoutPage = () => {
     }
   }
 
-  const formatDate = (date: Date) => {
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-
-    return `${year}-${month}-${day}`
-  }
-
   const handleSubmit = async () => {
     try {
-
-      const formData = buildFormData()
-
-      await api.post(exerciseApi.BASE, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      await createExercise(form)
 
       alert('운동 기록이 완료되었습니다.')
+
       navigate('/calendar')
     } catch (error) {
       console.log(error)
     }
   }
 
-  const buildFormData = () => {
-    const formData = new FormData()
-
-    formData.append('exercise_date', formatDate(form.date))
-    formData.append('success', form.workoutResult === '성공' ? 'true' : 'false')
-    formData.append('memo', form.memo)
-    formData.append('ticket_id', String(form.exercise.id))
-
-    if (form.workoutResult === '실패') {
-      formData.append('fail_reason', form.failReason)
-    }
-
-    if (form.imageFile) {
-      formData.append('image', form.imageFile)
-    }
-
-    return formData
-  }
-
   const handleUpdate = async () => {
     if (!recordId) return
 
     try {
-
-      const formData = buildFormData()
-
-      await api.patch(
-        exerciseApi.DETAIL(recordId),
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      )
+      await updateExercise(recordId, form)
 
       alert('운동 기록이 수정되었습니다.')
+
       navigate('/calendar')
     } catch (error) {
       console.log(error)
@@ -170,13 +129,17 @@ const WorkoutPage = () => {
   const handleDelete = async () => {
     if (!recordId) return
 
-    const ok = window.confirm('정말 삭제하시겠습니까?')
+    const ok = window.confirm(
+      '정말 삭제하시겠습니까?'
+    )
+
     if (!ok) return
 
     try {
-      await api.delete(exerciseApi.DETAIL(recordId))
+      await deleteExercise(recordId)
 
       alert('운동 기록이 삭제되었습니다.')
+
       navigate('/calendar')
     } catch (error) {
       console.log(error)
@@ -185,15 +148,13 @@ const WorkoutPage = () => {
 
   const getSummary = async (ticketId: number) => {
     try {
-      const { data } = await api.get(
-        ticketApi.SUMMARY(ticketId)
-      )
+      const data = await getExerciseSummary(ticketId)
 
-      console.log("summary data:", data)
-      setRemainingTime(data.remainingCount);
-      setUsedCount(data.usedCount);
-      setPricePerSession(data.amountPerSession ?? 0);
+      console.log('summary data:', data)
 
+      setRemainingTime(data.remainingCount)
+      setUsedCount(data.usedCount)
+      setPricePerSession(data.amountPerSession ?? 0)
     } catch (error) {
       console.log(error)
     }
@@ -213,12 +174,15 @@ const WorkoutPage = () => {
 
     const getRecord = async () => {
       try {
-        const { data } = await api.get(
-          exerciseApi.DETAIL(recordId)
-        )
+        const data = await getExerciseDetail(recordId)
 
-        const isSuccess = data.success === 1 || data.success === true
-        const exerciseDate = data.exercise_date ? new Date(data.exercise_date) : new Date()
+        const isSuccess =
+          data.success === 1 ||
+          data.success === true
+
+        const exerciseDate = data.exercise_date
+          ? new Date(data.exercise_date)
+          : new Date()
 
         setForm(prev => ({
           ...prev,
@@ -228,7 +192,10 @@ const WorkoutPage = () => {
           failReason: data.fail_reason ?? '',
         }))
 
-        const ticket = ticketList.find(t => t.id === data.ticket_id)
+        const ticket = ticketList.find(
+          t => t.id === data.ticket_id
+        )
+
         if (ticket) {
           setForm(prev => ({
             ...prev,
@@ -241,13 +208,17 @@ const WorkoutPage = () => {
         }
 
         if (data.image_url) {
-          setPreviewUrl(`${import.meta.env.VITE_API_URL}${data.image_url}`)
+          setPreviewUrl(
+            `${import.meta.env.VITE_API_URL}${data.image_url}`
+          )
+
           setForm(prev => ({
             ...prev,
             imageFile: null
           }))
         } else {
           setPreviewUrl(null)
+
           setForm(prev => ({
             ...prev,
             imageFile: null
@@ -311,92 +282,19 @@ const WorkoutPage = () => {
               </div>
             </div>
 
-            <div className={styles.field}>
-              <label>결과*</label>
-              <div className={styles.resultButtons}>
-                <button
-                  type="button"
-                  className={`${styles.resultBtn} ${form.workoutResult === '성공' ? styles.success : ''}`}
-                  onClick={() => {
-                    if (
-                      form.workoutResult === '실패' &&
-                      form.failReason.trim() !== ''
-                    ) {
-                      const ok = window.confirm('작성 중인 실패 이유가 사라집니다. 계속하시겠습니까?')
-                      if (!ok) return
-                    }
+            <WorkoutResultField
+              workoutResult={form.workoutResult}
+              failReason={form.failReason}
+              setForm={setForm}
+            />
 
-                    setForm(prev => ({
-                      ...prev,
-                      workoutResult: '성공',
-                      failReason: ''
-                    }))
-                  }}
-                >
-                  성공
-                </button>
-
-                <button
-                  type="button"
-                  className={`${styles.resultBtn} ${form.workoutResult === '실패' ? styles.fail : ''}`}
-                  onClick={() => {
-                    setForm(prev => ({
-                      ...prev,
-                      workoutResult: '실패'
-                    }))
-                  }}
-                >
-                  실패
-                </button>
-              </div>
-            </div>
-
-            <div className={styles.field}>
-              <label>사진 첨부</label>
-
-              <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-              />
-
-              {!previewUrl ? (
-                <button
-                  type="button"
-                  className={styles.uploadBox}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <img src={uploadIcon} alt="upload_icon" />
-                  파일 업로드
-                </button>
-              ) : (
-                <div className={styles.imagePreviewBox}>
-                  <img
-                    src={previewUrl}
-                    alt="preview"
-                    className={styles.previewImage}
-                  />
-                  <button
-                    type="button"
-                    className={styles.removeImageBtn}
-                    onClick={() => {
-                      setForm(prev => ({
-                        ...prev,
-                        imageFile: null
-                      }))
-                      setPreviewUrl(null)
-                      if (fileInputRef.current) {
-                        fileInputRef.current.value = ''
-                      }
-                    }}
-                  >
-                    ✕
-                  </button>
-                </div>
-              )}
-            </div>
+            <WorkoutImageField
+              previewUrl={previewUrl}
+              fileInputRef={fileInputRef}
+              handleFileChange={handleFileChange}
+              setPreviewUrl={setPreviewUrl}
+              setForm={setForm}
+            />
 
             <div className={styles.field}>
               <label>메모</label>
@@ -465,40 +363,14 @@ const WorkoutPage = () => {
             </div>
           </div>
 
-          <div className={styles.currentRecord}>
-            <Card
-              title="현재 이용권 상태는 다음과 같아요"
-              width={386}
-              height={227}
-              radius={20}
-              backgroundColor="#ffffff"
-            >
-              <ul className={styles.recordPreview}>
-                <li className={styles.recordItem}>
-                  <span className={styles.checkIcon}>
-                    <CheckIcon size={20} />
-                  </span>
-                  <span>목표 잔여 횟수: {remainingCount}회 남음</span>
-                </li>
-
-                <li className={styles.recordItem}>
-                  <span className={styles.checkIcon}>
-                    <CheckIcon size={20} />
-                  </span>
-                  <span>누적 운동 횟수: {usedCount}회</span>
-                </li>
-
-                <li className={styles.recordItem}>
-                  <span className={styles.checkIcon}>
-                    <CheckIcon size={20} />
-                  </span>
-                  <span>
-                    회당 금액: {pricePerSession.toLocaleString()}원
-                  </span>
-                </li>
-              </ul>
-            </Card>
-          </div>
+          <RecordSummaryCard
+            title="현재 이용권 상태는 다음과 같아요"
+            items={[
+              `목표 잔여 횟수: ${remainingCount}회 남음`,
+              `누적 운동 횟수: ${usedCount}회`,
+              `회당 금액: ${pricePerSession.toLocaleString()}원`,
+            ]}
+          />
         </div>
       </main>
     </div>

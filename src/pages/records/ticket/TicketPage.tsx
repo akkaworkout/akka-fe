@@ -2,12 +2,16 @@
 import { useState, useRef, useEffect } from 'react'
 
 // API / hooks / utils
-import api from '@/api/client'
-import { ticketApi } from '@/api/ticket'
+import {
+  getTickets,
+  createTicket,
+  deleteTicket,
+  endTicket,
+} from '@/api/ticketApi'
 
 // 컴포넌트
-import WorkoutTabs from '@/components/records/WorkoutTabs'
-import TicketRow from '@/components/records/TicketRow'
+import WorkoutTabs from "@/components/recordTabs/RecordTabs";
+import TicketRow from './components/ticketRow/TicketRow'
 
 // 모달
 import ConfirmModal from './modal/ConfirmModal'
@@ -15,7 +19,7 @@ import TicketEndModal from './modal/TicketEndModal'
 import TicketAddModal from './modal/TicketAddModal'
 
 // 타입
-import { type Exercise } from '@/components/common/SummaryCard'
+import { type Exercise } from '@/components/summaryCard/SummaryCard'
 
 // 스타일 
 import styles from './Ticket.module.css'
@@ -76,12 +80,10 @@ const TicketPage = () => {
   }
 
   const handleDelete = async () => {
-    console.log("삭제 버튼 클릭");
-    console.log(deleteTargetIndex);
     try {
       if (deleteTargetIndex === null) return
 
-      await api.delete(ticketApi.DETAIL(deleteTargetIndex))
+      await deleteTicket(deleteTargetIndex)
 
       setTicketList(prev =>
         prev.filter(t => t.id !== deleteTargetIndex)
@@ -99,22 +101,10 @@ const TicketPage = () => {
     try {
       const ticketId = ticketList[endTargetIndex!].id
 
-      await api.patch(
-        ticketApi.END(ticketId),
-        {
-          end_reason:
-            endReason.label === '완료'
-              ? 'COMPLETED'
-              : endReason.label === '기간만료'
-                ? 'EXPIRED'
-                : endReason.label === '환불'
-                  ? 'REFUNDED'
-                  : 'ETC',
-          refund_price:
-            endReason.label === '환불'
-              ? Number(refundAmount)
-              : null,
-        }
+      await endTicket(
+        ticketId,
+        endReason,
+        refundAmount
       )
 
       alert('이용권이 정상적으로 종료되었습니다.')
@@ -122,6 +112,7 @@ const TicketPage = () => {
       setEndTargetIndex(null)
       setEndReason(END_TYPES[0])
       setRefundAmount('')
+
       fetchTickets()
     } catch (error) {
       console.log('PATCH 실패', error)
@@ -142,59 +133,24 @@ const TicketPage = () => {
     setRefundAmount('')
   }
 
-  const mapTicket = (item: any): Ticket => {
-    const statusMap: Record<string, string> = {
-      COMPLETED: '완료',
-      EXPIRED: '기간만료',
-      REFUNDED: '환불',
-    }
-
-    const formattedStatus =
-      item.status === 'ENDED'
-        ? statusMap[item.end_reason] ?? '기타'
-        : '진행 중'
-
-    return {
-      id: item.id,
-      exercise_type: item.exercise_type,
-      color_code: item.color_code,
-      ticket_type: item.ticket_type,
-      target_count: item.target_count,
-      total_amount: item.total_amount,
-      start_date: item.start_date.split('T')[0],
-      end_date: item.end_date.split('T')[0],
-      status: formattedStatus,
-      refund_amount: item.refund_amount,
-    }
-  }
-
   const fetchTickets = async () => {
     try {
-      const { data } = await api.get(ticketApi.BASE)
+      const tickets = await getTickets()
 
-      console.log(data);
-
-      setTicketList(data.map(mapTicket))
+      setTicketList(tickets)
     } catch (error) {
-      console.log('GET 실패', error)
+      console.log(error)
     }
   }
 
-  const createTicket = async (data: any) => {
+  const handleCreateTicket = async (data: any) => {
     try {
-      await api.post(ticketApi.BASE, {
-        exercise_type: data.exerciseType,
-        color_code: data.colorCode,
-        ticket_type: data.ticketType,
-        target_count: data.targetCount,
-        total_amount: data.totalAmount,
-        start_date: data.startDate,
-        end_date: data.endDate,
-      })
+      await createTicket(data)
 
       alert('이용권 등록이 완료되었습니다.')
 
       await fetchTickets()
+
       setIsAddModalOpen(false)
     } catch (error) {
       console.log('POST 실패:', error)
@@ -303,7 +259,7 @@ const TicketPage = () => {
           setSelectedColor={setColorCode}
           COLOR_OPTIONS={COLOR_OPTIONS}
           onClose={handleAddClose}
-          onConfirm={createTicket}
+          onConfirm={handleCreateTicket}
         />
       )}
 

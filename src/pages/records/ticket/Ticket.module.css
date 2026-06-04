@@ -2,7 +2,7 @@
   display: flex;
   min-height: 100vh;
   min-width: 1280px;
-  color: #2C2C2C;
+  color: var(--black);
 }
 
 .writePage {
@@ -151,7 +151,7 @@
 .field label {
   font-size: 20px;
   font-weight: 700;
-  color: #2C2C2C;
+  color: var(--black);
 }
 
 .input {
@@ -202,7 +202,7 @@
 
 .ticketTypeButton.active {
   background: #FFDD86;
-  color: #2C2C2C;
+  color: var(--black);
 }
 
 .colorPalette {
@@ -229,7 +229,7 @@
 
 .unit {
   font-size: 20px !important;
-  color: #2C2C2C;
+  color: var(--black);
 }
 
 .periodRow {
@@ -240,7 +240,7 @@
 
 .periodText {
   font-size: 18px;
-  color: #2C2C2C;
+  color: var(--black);
   font-weight: 500;
 }
 

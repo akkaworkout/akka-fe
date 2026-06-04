@@ -1,0 +1,184 @@
+.wrap {
+  display: flex;
+  min-height: 100vh;
+  min-width: 700px;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  background-color: #FAFAFB;
+  min-height: 900px;
+}
+
+.mainInner {
+  position: relative;
+  width: 100%;
+  max-width: 1008px;
+
+  margin-top: 94px;
+}
+
+
+.headerArea {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--black);
+}
+
+/* 페이지 */
+.page {
+  font-family: Nunito, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--black);
+  width: 100%;
+}
+
+/* 카드 */
+.cardWrap {
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  border-radius: 16px;
+  padding: 0;
+}
+
+/* 프로필 */
+.profileArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.avatar {
+  position: relative;
+  width: 84px;
+  height: 84px;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.15);
+}
+
+.editAvatarBtn {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 36.5px;
+  height: 36.5px;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.editAvatarBtn img {
+  width: 36.5px;
+  height: 36.5px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+}
+
+.fileInput {
+  display: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 33px;
+  width: 619px;
+  margin: auto;
+}
+
+.inputWithIcon {
+  position: relative;
+  width: 333px;
+}
+
+.inputWithIcon input {
+  padding-right: 54px;
+}
+
+.iconBtn {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.iconBtn img {
+  width: 24px;
+  height: 24px;
+  opacity: 0.9;
+}
+
+.errorText {
+  position: absolute;
+  left: 0;
+  top: calc(46px + 4px);
+  margin: 0;
+
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+
+  color: #ff5858;
+}
+
+.submitArea {
+  position: absolute;
+  top: 690px; 
+  left: 394px;
+}
+
+.submitBtn {
+  width: 333px;
+  height: 46px;
+  border-radius: 10px;
+  border: 0;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submitDisabled {
+  background: #bdbdbd;
+  color: var(--white);
+  cursor: not-allowed;
+}
+
+.submitActive {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.submitBtn:disabled {
+  color: var(--white) !important;
+}

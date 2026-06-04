@@ -7,11 +7,10 @@ import api from "@/api/client";
 import { expenseApi } from "@/api/expense";
 
 // 컴포넌트 (UI)
-import WorkoutTabs from "@/components/records/WorkoutTabs";
-import DateSelect from "@/components/records/DateSelect";
-import SummaryCard, { type Expense } from "@/components/common/SummaryCard";
-import Card from "@/components/common/Card";
-import CheckIcon from "@/components/common/icons/CheckIcon";
+import WorkoutTabs from "@/components/recordTabs/RecordTabs";
+import DateSelect from "@/components/dateSelect/DateSelect";
+import SummaryCard, { type Expense } from "@/components/summaryCard/SummaryCard";
+import RecordSummaryCard from '../components/RecordSummaryCard'
 
 // 스타일
 import styles from "../workout/Workout.module.css";
@@ -182,41 +181,14 @@ const ExpensePage = () => {
           </div>
 
           {/* 요약 카드 */}
-          <div className={styles.currentRecord}>
-            <Card
-              title="이번 기록으로 이렇게 반영돼요"
-              width={386}
-              height={227}
-              radius={20}
-              backgroundColor="#ffffff"
-            >
-              <ul className={styles.recordPreview}>
-                <li className={styles.recordItem}>
-                  <span className={styles.checkIcon}>
-                    <CheckIcon size={20} />
-                  </span>
-                  <span>이번 달 지출: {monthlyExpenseCount}회</span>
-                </li>
-
-                <li className={styles.recordItem}>
-                  <span className={styles.checkIcon}>
-                    <CheckIcon size={20} />
-                  </span>
-                  <span>
-                    이번 달 누적 지출금: {monthlyTotalExpense.toLocaleString()}
-                    원
-                  </span>
-                </li>
-
-                <li className={styles.recordItem}>
-                  <span className={styles.checkIcon}>
-                    <CheckIcon size={20} />
-                  </span>
-                  <span>가장 많이 쓴 항목: {topExpenseCategory}</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
+          <RecordSummaryCard
+            title="이번 기록으로 이렇게 반영돼요"
+            items={[
+              `이번 달 지출: ${monthlyExpenseCount}회`,
+              `이번 달 누적 지출금: ${monthlyTotalExpense.toLocaleString()}원`,
+              `가장 많이 쓴 항목: ${topExpenseCategory}`,
+            ]}
+          />
         </div>
       </main>
     </div>

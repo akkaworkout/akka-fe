@@ -29,7 +29,7 @@
   margin: 0;
   font-size: 24px;
   font-weight: 400;
-  color: #2c2c2c;
+  color: var(--black);
 }
 
 .ment {
@@ -37,7 +37,7 @@
   margin-top: 8px;
   font-size: 12px;
   font-weight: 400;
-  color: #2c2c2c;
+  color: var(--black);
 }
 
 .total {
@@ -74,7 +74,7 @@
 }
 
 .tabLabelActive {
-  color: #2c2c2c;
+  color: var(--black);
 }
 
 .tabLabelInactive {
@@ -85,7 +85,7 @@
   margin-top: 6px;
   font-size: 14px;
   font-weight: 400;
-  color: #2c2c2c;
+  color: var(--black);
 }
 
 
@@ -97,7 +97,7 @@
 }
 
 .tabBarActive {
-  background: #454dd7;
+  background: var(--primary);
 }
 
 .tabBarInactive {
@@ -141,7 +141,7 @@
 
   font-size: 14px;
   font-weight: 400;
-  color: #2c2c2c;
+  color: var(--black);
 
 
   margin-bottom: 16px;
