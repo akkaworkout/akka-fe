@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './TotalExpenseCard.css'
-import Card from '../../../common/Card'
-import ExpenseDetailModal from '../../../../pages/report/modals/ExpenseDetailModal'
+import Card from '@/components/common/Card'
+import ExpenseDetailModal from '@/pages/report/modals/ExpenseDetailModal'
 
 type Item = {
   label: string

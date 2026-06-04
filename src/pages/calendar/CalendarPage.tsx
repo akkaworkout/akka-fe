@@ -1,20 +1,20 @@
 // React / 외부 라이브러리
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // API / hooks / utils
-import { useCalendar } from '../../hooks/useCalendar'
-import { useGoals } from '../../hooks/useGoals'
-import { useSummary } from '../../hooks/useSummary'
-import { useTodayItems } from '../../hooks/useTodayItems'
-import type { TodayItem } from '../../hooks/useTodayItems'
+import { useCalendar } from "@/hooks/useCalendar";
+import { useGoals } from "@/hooks/useGoals";
+import { useSummary } from "@/hooks/useSummary";
+import { useTodayItems } from "@/hooks/useTodayItems";
+import type { TodayItem } from "@/hooks/useTodayItems";
 
 // 컴포넌트
-import Calendar from './Calendar'
-import TodayItemModal from './TodayItemModal'
+import Calendar from "./Calendar";
+import TodayItemModal from "./TodayItemModal";
 
-import Card from '../../components/common/Card'
-import Spinner from '../../components/common/Spinner'
+import Card from "@/components/common/Card";
+import Spinner from "@/components/common/Spinner";
 
 // 스타일 
 import styles from './Calendar.module.css'

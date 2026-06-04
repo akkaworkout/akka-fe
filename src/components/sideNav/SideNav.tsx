@@ -1,32 +1,32 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { useSidebarStore } from "../../stores/useSidebarStore";
+import { useSidebarStore } from "@/stores/useSidebarStore";
 
 import styles from "./SideNav.module.css";
 
-import akkaLogo from "../../assets/images/akka_logo.png";
-import akkaLogoSvg from "../../assets/images/akka_logo_svg.png";
-import akkaLogout from "../../assets/icons/akka_logout.png";
+import akkaLogo from "@/assets/images/akka_logo.png";
+import akkaLogoSvg from "@/assets/images/akka_logo_svg.png";
+import akkaLogout from "@/assets/icons/akka_logout.png";
 
-import sidebarToggleIcon from "../../assets/icons/sidebar/sidebar_toggle.png";
+import sidebarToggleIcon from "@/assets/icons/sidebar/sidebar_toggle.png";
 
-import sidebarMenuIcon from "../../assets/icons/sidebar/sidebar_menu.png";
-import sidebarMenuActiveIcon from "../../assets/icons/sidebar/sidebar_menu_active.png";
+import sidebarMenuIcon from "@/assets/icons/sidebar/sidebar_menu.png";
+import sidebarMenuActiveIcon from "@/assets/icons/sidebar/sidebar_menu_active.png";
 
-import sidebarWriteIcon from "../../assets/icons/sidebar/sidebar_write.png";
-import sidebarWriteActiveIcon from "../../assets/icons/sidebar/sidebar_write_active.png";
+import sidebarWriteIcon from "@/assets/icons/sidebar/sidebar_write.png";
+import sidebarWriteActiveIcon from "@/assets/icons/sidebar/sidebar_write_active.png";
 
-import sidebarReportIcon from "../../assets/icons/sidebar/sidebar_report.png";
-import sidebarReportActiveIcon from "../../assets/icons/sidebar/sidebar_report_active.png";
+import sidebarReportIcon from "@/assets/icons/sidebar/sidebar_report.png";
+import sidebarReportActiveIcon from "@/assets/icons/sidebar/sidebar_report_active.png";
 
-import sidebarCalendarIcon from "../../assets/icons/sidebar/sidebar_calendar.png";
-import sidebarCalendarActiveIcon from "../../assets/icons/sidebar/sidebar_calendar_active.png";
+import sidebarCalendarIcon from "@/assets/icons/sidebar/sidebar_calendar.png";
+import sidebarCalendarActiveIcon from "@/assets/icons/sidebar/sidebar_calendar_active.png";
 
-import sidebarSettingIcon from "../../assets/icons/sidebar/sidebar_setting.png";
-import sidebarSettingActiveIcon from "../../assets/icons/sidebar/sidebar_setting_active.png";
+import sidebarSettingIcon from "@/assets/icons/sidebar/sidebar_setting.png";
+import sidebarSettingActiveIcon from "@/assets/icons/sidebar/sidebar_setting_active.png";
 
-import default_profile from "../../assets/icons/sidebar/default_profile.png";
+import default_profile from "@/assets/icons/sidebar/default_profile.png";
 
 const SideNav = () => {
   const navigate = useNavigate();

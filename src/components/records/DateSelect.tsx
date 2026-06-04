@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 
-import calendarIcon from '../../assets/icons/calendar.png'
-import arrow from '../../assets/icons/arrow-down.png'
+import calendarIcon from '@/assets/icons/calendar.png'
+import arrow from '@/assets/icons/arrow-down.png'
 import styles from './DateSelect.module.css'
 
 type DateSelectProps = {

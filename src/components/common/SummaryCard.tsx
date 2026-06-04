@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // 이미지
-import arrow from '../../assets/icons/arrow-down.png'
+import arrow from '@/assets/icons/arrow-down.png'
 
 // 스타일
 import styles from './SummaryCard.module.css'

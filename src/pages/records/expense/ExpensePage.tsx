@@ -3,18 +3,18 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 //  API / 로직
-import api from "../../api/client";
-import { expenseApi } from "../../api/expense";
+import api from "@/api/client";
+import { expenseApi } from "@/api/expense";
 
 // 컴포넌트 (UI)
-import WorkoutTabs from "../../components/write/WorkoutTabs";
-import DateSelect from "../../components/write/DateSelect";
-import SummaryCard, { type Expense } from "../../components/common/SummaryCard";
-import Card from "../../components/common/Card";
-import CheckIcon from "../../components/common/icons/CheckIcon";
+import WorkoutTabs from "@/components/records/WorkoutTabs";
+import DateSelect from "@/components/records/DateSelect";
+import SummaryCard, { type Expense } from "@/components/common/SummaryCard";
+import Card from "@/components/common/Card";
+import CheckIcon from "@/components/common/icons/CheckIcon";
 
 // 스타일
-import styles from "./WorkoutHistory.module.css";
+import styles from "../workout/Workout.module.css";
 
 const EXPENSES = [
   { id: 1, value: "운동 용품", label: "운동 용품", color: "#fcd7ff" },
@@ -37,7 +37,7 @@ const getExpenseStats = () => {
   return api.get(expenseApi.STATS);
 };
 
-const ExpenseHistoryPage = () => {
+const ExpensePage = () => {
   // 라우팅
   const navigate = useNavigate();
 
@@ -223,4 +223,4 @@ const ExpenseHistoryPage = () => {
   );
 };
 
-export default ExpenseHistoryPage;
+export default ExpensePage;

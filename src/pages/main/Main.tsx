@@ -1,10 +1,10 @@
 import styles from './Main.module.css'
 
-import mainAkka from '../../assets/images/mainakka.png'
-import mainWorkout from '../../assets/images/mainworkout.png'
-import mainpage from '../../assets/images/mainpage.png'
+import mainAkka from "@/assets/images/mainakka.png";
+import mainWorkout from "@/assets/images/mainworkout.png";
+import mainpage from "@/assets/images/mainpage.png";
 
-import '../../chartDefaults'
+import "@/chartDefaults";
 
 
 export default function MainPage() {
