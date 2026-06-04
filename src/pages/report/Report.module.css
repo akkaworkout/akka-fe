@@ -9,7 +9,6 @@
     display: flex;
     justify-content: center;
     background-color: #FAFAFB;
-    margin-left: 220px;
     min-height: 900px;
 }
 
@@ -54,11 +53,9 @@
     grid-row: 3;
 }
 
-.reportHeader {}
-
 .monthArea {
     position: absolute;
-    color: #2C2C2C;
+    color: var(--black);
     top: 37px;
     font-size: 24px;
     font-weight: 700;
@@ -68,7 +65,7 @@
 }
 
 .monthText {
-    color: #2C2C2C;
+    color: var(--black);
     font-size: 24px;
     font-weight: 700;
 }
@@ -83,7 +80,7 @@
 
 .summaryArea {
     position: absolute;
-    color: #2C2C2C;
+    color: var(--black);
     top: 37px;
     right: 68px;
     font-weight: 700;
@@ -110,7 +107,7 @@
 .divider {
     width: 4px;
     height: 51px;
-    background-color: #000;
+    background-color: var(--black);
 }
 
 
@@ -125,7 +122,7 @@
 
   font-size: 14px;
   font-weight: 700;
-  color: #2C2C2C;
+  color: var(--black);
 
   text-decoration: underline;
   text-underline-offset: 4px;

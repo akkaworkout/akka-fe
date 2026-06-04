@@ -179,7 +179,7 @@
   padding-right: 48px;
   font-size: 14px;
   font-weight: 400;
-  color: #2c2c2c;
+  color: var(--black);
   outline: none;
   box-sizing: border-box;
   background: #ffffff;
@@ -193,7 +193,7 @@
   padding: 0 16px;
   font-size: 14px;
   font-weight: 400;
-  color: #2c2c2c;
+  color: var(--black);
   outline: none;
   box-sizing: border-box;
   background: #ffffff;
@@ -250,7 +250,7 @@
   height: 46px;
   border: 0;
   border-radius: 10px;
-  background: #454dd7;
+  background: var(--primary);
   color: #ffffff;
   font-size: 14px;
   font-weight: 400;
@@ -287,8 +287,8 @@
   font-weight: 600;
   cursor: pointer;
 
-  background: #454dd7;
-  color: #ffffff;
+  background: var(--primary);
+  color: var(--white);
 }
 
 .submitBtn:disabled {

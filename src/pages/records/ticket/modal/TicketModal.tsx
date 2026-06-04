@@ -1,0 +1,46 @@
+import Modal from '@/components/modal/Modal'
+import styles from './TicketModal.module.css'
+
+type Props = {
+  title: string
+  buttonText: string
+  onClose: () => void
+  onNext: () => void
+  children: React.ReactNode
+  nextDisabled?: boolean
+}
+
+const TicketModal = ({
+  title,
+  buttonText,
+  onClose,
+  onNext,
+  children,
+  nextDisabled,
+}: Props) => {
+  return (
+    <Modal
+      title={title}
+      onClose={onClose}
+    >
+      <div className={styles.divider} />
+
+      <div className={styles.body}>
+        {children}
+      </div>
+
+      <div className={styles.footer}>
+        <button
+          onClick={onNext}
+          disabled={nextDisabled}
+          className={`${styles.nextBtn} ${nextDisabled ? styles.disabled : ''
+            }`}
+        >
+          {buttonText}
+        </button>
+      </div>
+    </Modal>
+  )
+}
+
+export default TicketModal

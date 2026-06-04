@@ -1,0 +1,104 @@
+.wrap {
+  display: flex;
+  min-height: 100vh;
+}
+
+.mainPage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  background-color: #FAFAFB;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+.mainInner {
+  position: relative;
+  width: 100%;
+  max-width: 1008px;
+  padding: 100px 24px 60px;
+  box-sizing: border-box;
+}
+
+.card {
+    width: 100%;
+    border-radius: 16px;
+    padding: 0;
+}
+
+.headerArea {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 86px;
+}
+
+.pageTitle {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+    color: #111;
+}
+
+.form :global(label) {
+    visibility: hidden;
+}
+
+/* 회원가입이랑 동일 */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 33px;
+    width: 619px;
+    margin: 0 auto;
+    transform: translateX(-50px);
+}
+
+/* 비번칸 ↔ 버튼 62 */
+.passwordBlock {
+    margin-bottom: 62px;
+}
+
+/* 제출 버튼(회원가입과 동일) */
+.submitRow {
+    display: grid;
+    grid-template-columns: 200px 449px;
+    column-gap: 24px;
+}
+
+.submitArea {
+  grid-column: 2;
+  display: flex;
+  justify-content: center; /* 449 안에서 333을 가운데 */
+}
+
+.submitBtn {
+  width: 333px;
+  height: 46px;
+  border-radius: 10px;
+  border: 0;
+  box-sizing: border-box;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  background: var(--primary);
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transform: translateX(-82px);
+}
+
+
+.signupGuide {
+    margin-top: 22px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.signupLink {
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}

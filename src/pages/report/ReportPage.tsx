@@ -1,24 +1,30 @@
 import { useState } from "react";
-import ReportHeader from "./ReportHeader";
-import SideNav from "../../components/sideNav/SideNav";
+import ReportHeader from "./components/ReportHeader";
+
 import SummaryCard, {
   type Exercise,
-} from "../../components/common/SummaryCard";
-import InsightCard from "../../components/report/InsightCard";
-import Card from "../../components/common/Card";
-import BarChart from "../../components/report/charts/BarChart";
-import TotalExpenseCard from "../../components/report/card/TotalExpenseCard/TotalExpenseCard";
-import TotalExerciseCard from "../../components/report/card/TotalExerciseCard/TotalExerciseCard";
-import TotalNoShowCard from "../../components/report/card/TotalNoShowCard/TotalNoShowCard";
-import RingChart from "../../components/report/charts/RingChart";
-import styles from "./Report.module.css";
-import MemoDetailModal from "../report/modals/MemoDetailModal";
-import Spinner from "../../components/common/Spinner";
-import { useTickets } from "../../hooks/useTickets";
-import { useReportData } from "../../hooks/useReportData";
-import { useExerciseOptions } from "../../hooks/useExerciseOptions";
-import { useInsightCalculations } from "../../hooks/useInsightCalculations";
-import { useReportMetrics } from "../../hooks/useReportMetrics";
+} from "@/components/summaryCard/SummaryCard";
+
+import BarChart from "./components/charts/BarChart";
+import RingChart from "./components/charts/RingChart";
+
+import InsightCard from "./components/card/InsightCard";
+import Card from "@/components/card/Card";
+import TotalExpenseCard from "./components/card/TotalExpenseCard/TotalExpenseCard";
+import TotalExerciseCard from "./components/card/TotalExerciseCard/TotalExerciseCard";
+import TotalNoShowCard from "./components/card/TotalNoShowCard/TotalNoShowCard";
+
+import styles from "@/pages/report/Report.module.css";
+
+import MemoDetailModal from "@/pages/report/modals/MemoDetailModal";
+
+import Spinner from "@/components/spinner/Spinner";
+
+import { useTickets } from "@/hooks/useTickets";
+import { useReportData } from "@/hooks/useReportData";
+import { useExerciseOptions } from "@/hooks/useExerciseOptions";
+import { useInsightCalculations } from "@/hooks/useInsightCalculations";
+import { useReportMetrics } from "@/hooks/useReportMetrics";
 
 const EXERCISES: Exercise[] = [
   { id: 1, label: "발레", color: "rgb(252, 215, 255)" },
@@ -28,7 +34,6 @@ const EXERCISES: Exercise[] = [
 ];
 
 export default function ReportPage() {
-  const [isSidebarFolded, setIsSidebarFolded] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<Exercise>(
     EXERCISES[0],
   );
@@ -98,15 +103,7 @@ export default function ReportPage() {
 
   return (
     <div className={styles.wrap}>
-      <SideNav
-        folded={isSidebarFolded}
-        onToggle={() => setIsSidebarFolded((prev) => !prev)}
-      />
-
-      <main
-        className={styles.reportPage}
-        style={{ marginLeft: isSidebarFolded ? 74 : 220 }}
-      >
+      <main className={styles.reportPage}>
         <div className={styles.reportInner}>
           <ReportHeader
             year={year}

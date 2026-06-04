@@ -1,21 +1,21 @@
 // React / 외부 라이브러리
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // API / hooks / utils
-import { useCalendar } from '../../hooks/useCalendar'
-import { useGoals } from '../../hooks/useGoals'
-import { useSummary } from '../../hooks/useSummary'
-import { useTodayItems } from '../../hooks/useTodayItems'
-import type { TodayItem } from '../../hooks/useTodayItems'
+import { useCalendar } from "@/hooks/useCalendar";
+import { useGoals } from "@/hooks/useGoals";
+import { useSummary } from "@/hooks/useSummary";
+import { useTodayItems } from "@/hooks/useTodayItems";
+import type { TodayItem } from "@/hooks/useTodayItems";
 
 // 컴포넌트
-import Calendar from './Calendar'
-import TodayItemModal from './TodayItemModal'
+import Calendar from "./components/Calendar";
+import Card from "@/components/card/Card";
+import Spinner from "@/components/spinner/Spinner";
 
-import SideNav from '../../components/sideNav/SideNav'
-import Card from '../../components/common/Card'
-import Spinner from '../../components/common/Spinner'
+// 모달
+import TodayItemModal from "./modal/TodayItemModal";
 
 // 스타일 
 import styles from './Calendar.module.css'
@@ -59,15 +59,7 @@ const CalenderPage = () => {
   return (
     <>
       <div className={styles.wrap}>
-        <SideNav
-          folded={false}
-          onToggle={() => { }}
-        />
-
-        <main
-          className={styles.calendarPage}
-          style={{ marginLeft: 220 }}
-        >
+        <main className={styles.calendarPage}>
           <div className={styles.calendarInner}>
             <div className={styles.title}>캘린더</div>
 

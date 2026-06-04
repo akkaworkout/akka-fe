@@ -1,38 +1,55 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import Main from './pages/main/Main'
 
-import WorkoutHistoryPage from './pages/write/WorkoutHistoryPage'
-import ExpenseHistoryPage from './pages/write/ExpenseHistoryPage'
-import TicketHistoryPage from './pages/write/TicketHistoryPage'
+import { useSidebarStore } from '@/stores/useSidebarStore'
 
-import ReportPage from './pages/report/ReportPage'
-import CalendarPage from './pages/calendar/CalendarPage'
+import SideNav from '@/components/sideNav/SideNav'
 
-import SignUpPage from './pages/auth/SignUpPage'
-import LoginPage from './pages/auth/LoginPage'
-import SignUpSuccessPage from './pages/auth/SignUpSuccessPage'
+import Main from '@/pages/main/MainPage'
 
-import MyPage from './pages/mypage/MyPage'
+import WorkoutPage from '@/pages/records/workout/WorkoutPage'
+import ExpensePage from '@/pages/records/expense/ExpensePage'
+import TicketPage from '@/pages/records/ticket/TicketPage'
+
+import ReportPage from '@/pages/report/ReportPage'
+import CalendarPage from '@/pages/calendar/CalendarPage'
+
+import LoginPage from '@/pages/auth/login/LoginPage'
+import SignUpPage from '@/pages/auth/signup/SignUpPage'
+import SignUpSuccessPage from '@/pages/auth/signup/SignUpSuccessPage'
+
+import MyPage from '@/pages/mypage/MyPage'
+
+import styles from '@/App.module.css'
 
 function App() {
+  const { folded } = useSidebarStore()
+
   return (
-    <Routes>
-      <Route path="/main" element={<Main />} />
-      <Route path="/" element={<Navigate to="/main" replace />} />
+    <div className={styles.layout}>
+      <SideNav />
 
-      <Route path="/write" element={<WorkoutHistoryPage />} />
-      <Route path="/expense" element={<ExpenseHistoryPage />} />
-      <Route path="/ticket" element={<TicketHistoryPage />} />
+      <main
+        className={`${styles.main} ${folded ? styles.mainFolded : ''}`}
+      >
+        <Routes>
+          <Route path="/main" element={<Main />} />
+          <Route path="/" element={<Navigate to="/main" replace />} />
 
-      <Route path="/report" element={<ReportPage />} />
-      <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/write" element={<WorkoutPage />} />
+          <Route path="/expense" element={<ExpensePage />} />
+          <Route path="/ticket" element={<TicketPage />} />
 
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup/success" element={<SignUpSuccessPage />} />
+          <Route path="/report" element={<ReportPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
 
-      <Route path="/mypage" element={<MyPage />} />
-    </Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/signup/success" element={<SignUpSuccessPage />} />
+
+          <Route path="/mypage" element={<MyPage />} />
+        </Routes>
+      </main>
+    </div>
   )
 }
 
