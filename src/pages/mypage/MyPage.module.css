@@ -150,10 +150,10 @@
   width: 333px;
 }
 
-/* 오른쪽 카드 input wrap */
 .inputWrapRight {
   width: 100%;
   min-width: 0;
+  position: relative;  
 }
 
 .error {
