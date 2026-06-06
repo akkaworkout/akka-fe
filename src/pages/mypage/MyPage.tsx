@@ -3,7 +3,6 @@ import styles from "./MyPage.module.css";
 
 import Card from "@/components/card/Card";
 
-import profileDefault from "@/assets/icons/profile-default.png";
 import editAvatar from "@/assets/icons/edit-avatar.png";
 import eyeOn from "@/assets/icons/icon-eye-on.png";
 import eyeOff from "@/assets/icons/icon-eye-off.png";
@@ -16,6 +15,7 @@ import { useUserData } from "@/hooks/useUserData";
 import { useFormValidation } from "@/hooks/useFormValidation";
 
 const API_BASE = import.meta.env.VITE_API_URL;
+const DEFAULT_PROFILE = "https://placehold.co/120?text=Profile";
 
 export default function MyPage() {
   const [showPw, setShowPw] = useState(false);
@@ -43,7 +43,7 @@ export default function MyPage() {
         : String(user.target_budget),
     exerciseGoal:
       user?.target_exercise_count === null ||
-        user?.target_exercise_count === undefined
+      user?.target_exercise_count === undefined
         ? ""
         : String(user.target_exercise_count),
     premiumPoint: user?.premium_point ? `${user.premium_point}P` : "0P",
@@ -98,7 +98,8 @@ export default function MyPage() {
     if (form.budgetDirty) payload.target_budget = Number(form.formData.budget);
     if (form.exerciseDirty)
       payload.target_exercise_count = Number(form.formData.exerciseGoal);
-    if (form.formData.password.trim()) payload.password = form.formData.password;
+    if (form.formData.password.trim())
+      payload.password = form.formData.password;
 
     if (Object.keys(payload).length === 0) {
       alert("수정할 값이 없습니다.");
@@ -179,9 +180,10 @@ export default function MyPage() {
                       className={styles.avatarImg}
                       src={
                         profilePreview ??
-                        (user?.profile_image_url
+                        (user?.profile_image_url &&
+                        user.profile_image_url.trim()
                           ? `${API_BASE}${user.profile_image_url}`
-                          : profileDefault)
+                          : DEFAULT_PROFILE)
                       }
                       alt="프로필"
                       draggable={false}
@@ -222,8 +224,9 @@ export default function MyPage() {
                     <div className={styles.fieldLine}>
                       <div className={styles.inputWrap}>
                         <input
-                          className={`${styles.input} ${form.showError("email") ? styles.inputError : ""
-                            }`}
+                          className={`${styles.input} ${
+                            form.showError("email") ? styles.inputError : ""
+                          }`}
                           value={form.formData.email}
                           onChange={(e) => {
                             const v = e.target.value;
@@ -275,10 +278,11 @@ export default function MyPage() {
                       <div className={styles.inputWrap}>
                         <div className={styles.inputInner}>
                           <input
-                            className={`${styles.input} ${form.showError("password")
+                            className={`${styles.input} ${
+                              form.showError("password")
                                 ? styles.inputError
                                 : ""
-                              }`}
+                            }`}
                             type={showPw ? "text" : "password"}
                             value={form.formData.password}
                             placeholder="비밀번호 (특수문자 포함, 8자 이상)"
@@ -302,7 +306,7 @@ export default function MyPage() {
                                     : undefined,
                                 passwordConfirm:
                                   form.formData.passwordConfirm.trim() &&
-                                    v !== form.formData.passwordConfirm
+                                  v !== form.formData.passwordConfirm
                                     ? "비밀번호가 일치하지 않습니다."
                                     : prev.passwordConfirm,
                               }));
@@ -333,10 +337,11 @@ export default function MyPage() {
                       <div className={styles.inputWrap}>
                         <div className={styles.inputInner}>
                           <input
-                            className={`${styles.input} ${form.showError("passwordConfirm")
+                            className={`${styles.input} ${
+                              form.showError("passwordConfirm")
                                 ? styles.inputError
                                 : ""
-                              }`}
+                            }`}
                             type={showPwConfirm ? "text" : "password"}
                             value={form.formData.passwordConfirm}
                             placeholder="비밀번호 확인"
@@ -356,11 +361,10 @@ export default function MyPage() {
                                 passwordConfirm:
                                   !form.formData.password.trim() && v.trim()
                                     ? "비밀번호를 먼저 입력해주세요."
-                                    : form.formData.password.trim() &&
-                                      !v.trim()
+                                    : form.formData.password.trim() && !v.trim()
                                       ? "비밀번호 확인을 입력해주세요."
                                       : form.formData.password.trim() &&
-                                        v !== form.formData.password
+                                          v !== form.formData.password
                                         ? "비밀번호가 일치하지 않습니다."
                                         : undefined,
                               }));
@@ -392,10 +396,9 @@ export default function MyPage() {
                     <div className={styles.fieldLine}>
                       <div className={styles.inputWrap}>
                         <input
-                          className={`${styles.input} ${form.showError("nickname")
-                              ? styles.inputError
-                              : ""
-                            }`}
+                          className={`${styles.input} ${
+                            form.showError("nickname") ? styles.inputError : ""
+                          }`}
                           value={form.formData.nickname}
                           onChange={(e) => {
                             const v = e.target.value;
@@ -448,10 +451,11 @@ export default function MyPage() {
                   <div className={styles.submitArea}>
                     <button
                       type="submit"
-                      className={`${styles.submitBtn} ${!form.canSubmit
+                      className={`${styles.submitBtn} ${
+                        !form.canSubmit
                           ? styles.submitDisabled
                           : styles.submitActive
-                        }`}
+                      }`}
                     >
                       완료
                     </button>
@@ -478,10 +482,9 @@ export default function MyPage() {
                       <div className={styles.unitLine}>
                         <div className={styles.inputWrapRight}>
                           <input
-                            className={`${styles.inputRight} ${form.showError("budget")
-                                ? styles.inputError
-                                : ""
-                              }`}
+                            className={`${styles.inputRight} ${
+                              form.showError("budget") ? styles.inputError : ""
+                            }`}
                             value={form.formData.budget}
                             onChange={(e) => {
                               const v = e.target.value;
@@ -520,10 +523,11 @@ export default function MyPage() {
                       <div className={styles.unitLine}>
                         <div className={styles.inputWrapRight}>
                           <input
-                            className={`${styles.inputRight} ${form.showError("exerciseGoal")
+                            className={`${styles.inputRight} ${
+                              form.showError("exerciseGoal")
                                 ? styles.inputError
                                 : ""
-                              }`}
+                            }`}
                             value={form.formData.exerciseGoal}
                             onChange={(e) => {
                               const v = e.target.value;
