@@ -98,38 +98,6 @@
   z-index: 10;
 }
 
-.dropdownItem {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  height: 36px;
-  padding: 0 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.edit {
-  background: #F5F6FD;
-  color: var(--primary);
-}
-
-.delete {
-  background: #FFF6F6;
-  color: #FF5858;
-}
-
-.editIcon {
-  width: 14.64px;
-  height: 14.64px !important;
-}
-
-.deleteIcon {
-  width: 15.86px;
-  height: 15.86px !important;
-}
-
 .colStatus {
   width: 96px;
   height: 40px;

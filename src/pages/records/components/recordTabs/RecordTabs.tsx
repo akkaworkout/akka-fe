@@ -1,4 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+
+import Button from '@/components/button/Button'
+
 import styles from './RecordTabs.module.css'
 
 const TABS = [
@@ -14,18 +17,17 @@ const RecordTabs = () => {
   return (
     <div className={styles.tabContainer}>
       {TABS.map(tab => {
-        const isActive = location.pathname === tab.path
+        const isActive =
+          location.pathname === tab.path
 
         return (
-          <button
+          <Button
             key={tab.label}
-            className={`${styles.tab} ${
-              isActive ? styles.active : ''
-            }`}
+            active={isActive}
             onClick={() => navigate(tab.path)}
           >
             {tab.label}
-          </button>
+          </Button>
         )
       })}
     </div>

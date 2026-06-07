@@ -13,12 +13,17 @@ import {
 } from '@/api/exerciseApi'
 
 // 컴포넌트
-import WorkoutTabs from "@/components/recordTabs/RecordTabs";
-import DateSelect from "@/components/dateSelect/DateSelect";
-import SummaryCard, { type Exercise } from '@/components/summaryCard/SummaryCard'
+import RecordLayout from '../layout/RecordLayout';
+import Button from '@/components/button/Button';
+import { type Exercise } from '@/components/summaryCard/SummaryCard'
 import RecordSummaryCard from '../components/RecordSummaryCard'
+
+import WorkoutExerciseField from './components/WorkoutExerciseField';
+import WorkoutDateField from './components/WorkoutDateField';
 import WorkoutResultField from './components/WorkoutResultField'
 import WorkoutImageField from './components/WorkoutImageField'
+import WorkoutMemoField from './components/WorkoutMemoField';
+import WorkoutFailReasonField from './components/WorkoutFailReasonField';
 
 // 스타일
 import styles from './Workout.module.css'
@@ -240,140 +245,89 @@ const WorkoutPage = () => {
   }, [previewUrl])
 
   return (
-    <div className={styles.wrap}>
-      <main className={styles.writePage}>
-        <div className={styles.writeInner}>
-          <div className={styles.title}>운동 기록</div>
+    <RecordLayout title="운동 기록">
+      <div className={styles.write}>
+        <div className={styles.row}>
+          <WorkoutDateField
+            date={form.date}
+            setForm={setForm}
+          />
 
-          <div className={styles.tabContainer}>
-            <WorkoutTabs />
-          </div>
-
-          <div className={styles.write}>
-            <div className={styles.row}>
-              <div className={styles.field}>
-                <label>날짜*</label>
-                <DateSelect
-                  value={form.date}
-                  onChange={(newDate) => {
-                    setForm(prev => ({
-                      ...prev,
-                      date: newDate
-                    }))
-                  }}
-                />
-              </div>
-
-              <div className={styles.field}>
-                <label>운동 종목*</label>
-                <SummaryCard<Exercise>
-                  expenses={mappedTickets}
-                  selected={form.exercise}
-                  disabled={!!recordId}
-                  showAddButton={true}
-                  onChange={(value) => {
-                    if (recordId) return
-                    setForm(prev => ({
-                      ...prev,
-                      exercise: value
-                    }))
-                  }}
-                />
-              </div>
-            </div>
-
-            <WorkoutResultField
-              workoutResult={form.workoutResult}
-              failReason={form.failReason}
-              setForm={setForm}
-            />
-
-            <WorkoutImageField
-              previewUrl={previewUrl}
-              fileInputRef={fileInputRef}
-              handleFileChange={handleFileChange}
-              setPreviewUrl={setPreviewUrl}
-              setForm={setForm}
-            />
-
-            <div className={styles.field}>
-              <label>메모</label>
-              <input
-                className={styles.input}
-                value={form.memo}
-                onChange={e => {
-                  setForm(prev => ({
-                    ...prev,
-                    memo: e.target.value
-                  }))
-                }}
-                placeholder="메모"
-                maxLength={30}
-              />
-            </div>
-
-            {form.workoutResult === '실패' && (
-              <div className={styles.field}>
-                <label>
-                  실패 이유 <span className={styles.limit}>(7자 이하)</span>
-                </label>
-                <input
-                  className={styles.input}
-                  value={form.failReason}
-                  onChange={e => {
-                    setForm(prev => ({
-                      ...prev,
-                      failReason: e.target.value
-                    }))
-                  }}
-                  placeholder="실패 이유"
-                  maxLength={7}
-                />
-              </div>
-            )}
-
-            <div className={styles.footer}>
-              <span className={styles.required}>
-                *는 필수 입력사항입니다.
-              </span>
-
-              {!recordId ? (
-                <button
-                  className={styles.submitBtn}
-                  onClick={handleSubmit}
-                >
-                  완료
-                </button>
-              ) : (
-                <div className={styles.editButtons}>
-                  <button
-                    className={styles.deleteBtn}
-                    onClick={handleDelete}
-                  >
-                    삭제
-                  </button>
-                  <button
-                    className={styles.submitBtn}
-                    onClick={handleUpdate}
-                  >
-                    수정
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <RecordSummaryCard
-            title="현재 이용권 상태는 다음과 같아요"
-            items={[
-              `목표 잔여 횟수: ${remainingCount}회 남음`,
-              `누적 운동 횟수: ${usedCount}회`,
-              `회당 금액: ${pricePerSession.toLocaleString()}원`,
-            ]}
+          <WorkoutExerciseField
+            mappedTickets={mappedTickets}
+            selectedExercise={form.exercise}
+            recordId={recordId}
+            setForm={setForm}
           />
         </div>
-      </main>
-    </div>
+
+        <WorkoutResultField
+          workoutResult={form.workoutResult}
+          failReason={form.failReason}
+          setForm={setForm}
+        />
+
+        <WorkoutImageField
+          previewUrl={previewUrl}
+          fileInputRef={fileInputRef}
+          handleFileChange={handleFileChange}
+          setPreviewUrl={setPreviewUrl}
+          setForm={setForm}
+        />
+
+        <WorkoutMemoField
+          memo={form.memo}
+          setForm={setForm}
+        />
+
+        {form.workoutResult === '실패' && (
+          <WorkoutFailReasonField
+            failReason={form.failReason}
+            setForm={setForm}
+          />
+        )}
+
+        <div className={styles.footer}>
+          <span className={styles.required}>
+            *는 필수 입력사항입니다.
+          </span>
+
+          {!recordId ? (
+            <Button
+              variant="primary"
+              onClick={handleSubmit}
+            >
+              완료
+            </Button>
+          ) : (
+            <div className={styles.editButtons}>
+              <Button
+                variant="gray"
+                onClick={handleDelete}
+              >
+                삭제
+              </Button>
+
+              <Button
+                variant="primary"
+                onClick={handleUpdate}
+              >
+                수정
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <RecordSummaryCard
+        title="현재 이용권 상태는 다음과 같아요"
+        items={[
+          `목표 잔여 횟수: ${remainingCount}회 남음`,
+          `누적 운동 횟수: ${usedCount}회`,
+          `회당 금액: ${pricePerSession.toLocaleString()}원`,
+        ]}
+      />
+    </RecordLayout>
   )
 }
 

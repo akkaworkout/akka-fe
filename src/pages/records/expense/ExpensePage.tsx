@@ -7,10 +7,11 @@ import api from "@/api/client";
 import { expenseApi } from "@/api/expense";
 
 // 컴포넌트 (UI)
-import WorkoutTabs from "@/components/recordTabs/RecordTabs";
+import RecordLayout from "../layout/RecordLayout";
 import DateSelect from "@/components/dateSelect/DateSelect";
 import SummaryCard, { type Expense } from "@/components/summaryCard/SummaryCard";
 import RecordSummaryCard from '../components/RecordSummaryCard'
+import Button from "@/components/button/Button";
 
 // 스타일
 import styles from "../workout/Workout.module.css";
@@ -108,90 +109,80 @@ const ExpensePage = () => {
   }, []);
 
   return (
-    <div className={styles.wrap}>
-      {/* 메인 */}
-      <main className={styles.writePage}>
-        <div className={styles.writeInner}>
-          {/* 헤더 */}
-          <div className={styles.title}>기타 지출</div>
+    <RecordLayout title="기타 지출">
 
-          <div className={styles.tabContainer}>
-            <WorkoutTabs />
+      {/* 입력 영역 */}
+      <div className={styles.write}>
+        {/* 날짜 + 분류 */}
+        <div className={styles.row}>
+          <div className={styles.field}>
+            <label>날짜*</label>
+            <DateSelect value={date} onChange={setDate} />
           </div>
 
-          {/* 입력 영역 */}
-          <div className={styles.write}>
-            {/* 날짜 + 분류 */}
-            <div className={styles.row}>
-              <div className={styles.field}>
-                <label>날짜*</label>
-                <DateSelect value={date} onChange={setDate} />
-              </div>
-
-              <div className={styles.field}>
-                <label>지출 분류*</label>
-                <SummaryCard
-                  expenses={EXPENSES}
-                  selected={selectedCategory}
-                  onChange={setSelectedCategory}
-                />
-              </div>
-            </div>
-
-            {/* 항목 */}
-            <div className={styles.field}>
-              <label>항목*</label>
-              <input
-                className={styles.input}
-                value={item}
-                onChange={(e) => setItem(e.target.value)}
-                placeholder="단백질 쉐이크"
-                maxLength={30}
-              />
-            </div>
-
-            {/* 금액 */}
-            <div className={styles.field}>
-              <label>금액*</label>
-              <div className={styles.priceInput}>
-                <input
-                  className={styles.input}
-                  value={amount}
-                  onChange={(e) =>
-                    setAmount(e.target.value.replace(/[^0-9]/g, ""))
-                  }
-                  placeholder="23,000"
-                  maxLength={8}
-                />
-                <span className={styles.unit}>원</span>
-              </div>
-            </div>
-
-            {/* 버튼 */}
-            <div className={styles.footer}>
-              <span className={styles.required}>*는 필수 입력사항입니다.</span>
-              <button
-                className={styles.submitBtn}
-                onClick={handleSubmit}
-                disabled={!isFormValid}
-              >
-                완료
-              </button>
-            </div>
+          <div className={styles.field}>
+            <label>지출 분류*</label>
+            <SummaryCard
+              expenses={EXPENSES}
+              selected={selectedCategory}
+              onChange={setSelectedCategory}
+            />
           </div>
+        </div>
 
-          {/* 요약 카드 */}
-          <RecordSummaryCard
-            title="이번 기록으로 이렇게 반영돼요"
-            items={[
-              `이번 달 지출: ${monthlyExpenseCount}회`,
-              `이번 달 누적 지출금: ${monthlyTotalExpense.toLocaleString()}원`,
-              `가장 많이 쓴 항목: ${topExpenseCategory}`,
-            ]}
+        {/* 항목 */}
+        <div className={styles.field}>
+          <label>항목*</label>
+          <input
+            className={styles.input}
+            value={item}
+            onChange={(e) => setItem(e.target.value)}
+            placeholder="단백질 쉐이크"
+            maxLength={30}
           />
         </div>
-      </main>
-    </div>
+
+        {/* 금액 */}
+        <div className={styles.field}>
+          <label>금액*</label>
+          <div className={styles.priceInput}>
+            <input
+              className={styles.input}
+              value={amount}
+              onChange={(e) =>
+                setAmount(e.target.value.replace(/[^0-9]/g, ""))
+              }
+              placeholder="23,000"
+              maxLength={8}
+            />
+            <span className={styles.unit}>원</span>
+          </div>
+        </div>
+
+        {/* 버튼 */}
+        <div className={styles.footer}>
+          <span className={styles.required}>*는 필수 입력사항입니다.</span>
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            type="button"
+            disabled={!isFormValid}
+          >
+            완료
+          </Button>
+        </div>
+      </div>
+
+      {/* 요약 카드 */}
+      <RecordSummaryCard
+        title="이번 기록으로 이렇게 반영돼요"
+        items={[
+          `이번 달 지출: ${monthlyExpenseCount}회`,
+          `이번 달 누적 지출금: ${monthlyTotalExpense.toLocaleString()}원`,
+          `가장 많이 쓴 항목: ${topExpenseCategory}`,
+        ]}
+      />
+    </RecordLayout>
   );
 };
 
