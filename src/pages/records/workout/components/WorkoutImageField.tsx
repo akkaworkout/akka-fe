@@ -1,6 +1,6 @@
-import styles from '../Workout.module.css'
+import Button from '@/components/button/Button'
 
-import uploadIcon from '@/assets/icons/upload.png'
+import styles from '../Workout.module.css'
 
 type Props = {
   previewUrl: string | null
@@ -36,19 +36,15 @@ const WorkoutImageField = ({
       />
 
       {!previewUrl ? (
-        <button
+        <Button
           type="button"
-          className={styles.uploadBox}
+          variant="file"
           onClick={() =>
             fileInputRef.current?.click()
           }
         >
-          <img
-            src={uploadIcon}
-            alt="upload_icon"
-          />
           파일 업로드
-        </button>
+        </Button>
       ) : (
         <div className={styles.imagePreviewBox}>
           <img

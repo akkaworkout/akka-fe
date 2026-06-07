@@ -1,5 +1,7 @@
 import styles from './TicketRow.module.css'
 
+import Button from '@/components/button/Button'
+
 import CalendarIcon from '@/assets/icons/sidebar/sidebar_calendar_active.png'
 import Goal from '@/assets/icons/goal.png'
 import MoreButton from '@/assets/icons/moreButton.png'
@@ -29,14 +31,6 @@ type TicketRowProps = {
   onDelete: (index: number) => void
   onView: (index: number) => void
   dropdownRef: React.RefObject<HTMLDivElement | null>
-}
-
-const getMonthDiff = (start: string, end: string) => {
-  const startDate = new Date(start)
-  const endDate = new Date(end)
-  const yearDiff = endDate.getFullYear() - startDate.getFullYear()
-  const monthDiff = endDate.getMonth() - startDate.getMonth()
-  return yearDiff * 12 + monthDiff
 }
 
 const TicketRow = ({
@@ -103,30 +97,22 @@ const TicketRow = ({
           {openIndex === index && (
             <div className={styles.dropdown}>
               {isActive && (
-                <div
-                  className={`${styles.dropdownItem} ${styles.edit}`}
+                <Button
+                  variant="dropdownEdit"
+                  icon={EditIcon}
                   onClick={() => onEnd(index)}
                 >
-                  <img
-                    src={EditIcon}
-                    alt="edit"
-                    className={styles.editIcon}
-                  />
                   이용권 종료
-                </div>
+                </Button>
               )}
 
-              <div
-                className={`${styles.dropdownItem} ${styles.delete}`}
+              <Button
+                variant="dropdownDelete"
+                icon={DeleteIcon}
                 onClick={() => onDelete(index)}
               >
-                <img
-                  src={DeleteIcon}
-                  alt="delete"
-                  className={styles.deleteIcon}
-                />
                 이용권 삭제
-              </div>
+              </Button>
             </div>
           )}
         </div>

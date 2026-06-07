@@ -10,7 +10,7 @@ import {
 } from '@/api/ticketApi'
 
 // 컴포넌트
-import WorkoutTabs from "@/components/recordTabs/RecordTabs";
+import RecordLayout from '../layout/RecordLayout'
 import TicketRow from './components/ticketRow/TicketRow'
 
 // 모달
@@ -178,58 +178,49 @@ const TicketPage = () => {
   }, [])
 
   return (
-    <div className={styles.wrap}>
-      <main className={styles.writePage}>
-        <div className={styles.writeInner}>
-          <div className={styles.title}>이용권 관리</div>
-
-          <div className={styles.tabContainer}>
-            <WorkoutTabs />
+    <RecordLayout title="이용권 관리">
+      
+      <div className={styles.write}>
+        {ticketList.length === 0 ? (
+          <div className={styles.emptyText}>
+            등록된 티켓이 없어요
           </div>
+        ) : (
+          ticketList.map((ticket, index) => {
+            const isActive = ticket.status === '진행 중'
 
-          <div className={styles.write}>
-            {ticketList.length === 0 ? (
-              <div className={styles.emptyText}>
-                등록된 티켓이 없어요
-              </div>
-            ) : (
-              ticketList.map((ticket, index) => {
-                const isActive = ticket.status === '진행 중'
+            return (
+              <TicketRow
+                key={ticket.id}
+                ticket={ticket}
+                index={index}
+                isActive={isActive}
+                openIndex={activeDropdownIndex}
+                onToggle={handleToggle}
+                onEnd={(i) => {
+                  setEndTargetIndex(i)
+                  setActiveDropdownIndex(null)
+                }}
+                onDelete={() => {
+                  setDeleteTargetIndex(ticket.id)
+                  setActiveDropdownIndex(null)
+                }}
+                onView={(i) => {
+                  setViewTargetIndex(i)
+                }}
+                dropdownRef={dropdownRef}
+              />
+            )
+          })
+        )}
 
-                return (
-                  <TicketRow
-                    key={ticket.id}
-                    ticket={ticket}
-                    index={index}
-                    isActive={isActive}
-                    openIndex={activeDropdownIndex}
-                    onToggle={handleToggle}
-                    onEnd={(i) => {
-                      setEndTargetIndex(i)
-                      setActiveDropdownIndex(null)
-                    }}
-                    onDelete={() => {
-                      setDeleteTargetIndex(ticket.id)
-                      setActiveDropdownIndex(null)
-                    }}
-                    onView={(i) => {
-                      setViewTargetIndex(i)
-                    }}
-                    dropdownRef={dropdownRef}
-                  />
-                )
-              })
-            )}
-
-            <div
-              className={styles.addBtn}
-              onClick={() => setIsAddModalOpen(true)}
-            >
-              +
-            </div>
-          </div>
+        <div
+          className={styles.addBtn}
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          +
         </div>
-      </main>
+      </div>
 
       {deleteTargetIndex !== null && (
         <ConfirmModal
@@ -291,7 +282,7 @@ const TicketPage = () => {
         />
       )}
 
-    </div>
+    </RecordLayout>
   )
 }
 

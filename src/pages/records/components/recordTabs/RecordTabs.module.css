@@ -1,0 +1,7 @@
+.tabContainer {
+  position: absolute;
+  right: 0px;
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}

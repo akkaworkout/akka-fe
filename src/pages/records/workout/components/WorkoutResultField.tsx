@@ -1,3 +1,5 @@
+import Button from '@/components/button/Button'
+
 import styles from '../Workout.module.css'
 
 type Props = {
@@ -16,13 +18,10 @@ const WorkoutResultField = ({
       <label>결과*</label>
 
       <div className={styles.resultButtons}>
-        <button
+        <Button
           type="button"
-          className={`${styles.resultBtn} ${
-            workoutResult === '성공'
-              ? styles.success
-              : ''
-          }`}
+          active={workoutResult === '성공'}
+          variant="green"
           onClick={() => {
             if (
               workoutResult === '실패' &&
@@ -43,15 +42,12 @@ const WorkoutResultField = ({
           }}
         >
           성공
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
-          className={`${styles.resultBtn} ${
-            workoutResult === '실패'
-              ? styles.fail
-              : ''
-          }`}
+          active={workoutResult === '실패'}
+          variant="red"
           onClick={() => {
             setForm((prev: any) => ({
               ...prev,
@@ -60,7 +56,7 @@ const WorkoutResultField = ({
           }}
         >
           실패
-        </button>
+        </Button>
       </div>
     </div>
   )
