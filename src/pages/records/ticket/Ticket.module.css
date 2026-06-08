@@ -49,7 +49,6 @@
 }
 
 .addBtn {
-  width: 965px;
   height: 49px;
   border-radius: 24.5px;
   background: #F2F2F4;
@@ -247,4 +246,10 @@
 .readOnly {
   pointer-events: none;
   opacity: 0.95;
+}
+
+@media (max-width: 1440px) {
+  .write {
+    width: 100%;
+  }
 }

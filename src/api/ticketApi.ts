@@ -1,4 +1,4 @@
-import api from '@/api/client'
+import api from '@/api/api'
 
 export type Ticket = {
   id: number
@@ -82,7 +82,7 @@ export const endTicket = async (
             ? 'REFUNDED'
             : 'ETC',
 
-    refund_price:
+    refund_amount:
       endReason.label === '환불'
         ? Number(refundAmount)
         : null,

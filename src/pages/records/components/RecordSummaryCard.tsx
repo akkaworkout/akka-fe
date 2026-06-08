@@ -16,7 +16,7 @@ const RecordSummaryCard = ({
     <div className={styles.currentRecord}>
       <Card
         title={title}
-        width={386}
+        width="100%"
         height={227}
         radius={20}
         backgroundColor="#ffffff"
