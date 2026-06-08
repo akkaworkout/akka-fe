@@ -1,13 +1,8 @@
 // React / 외부 라이브러리
 import { useState, useRef, useEffect } from 'react'
 
-// API / hooks / utils
-import {
-  getTickets,
-  createTicket,
-  deleteTicket,
-  endTicket,
-} from '@/api/ticketApi'
+// hooks
+import { useTickets } from '@/hooks/useTickets'
 
 // 컴포넌트
 import RecordLayout from '../layout/RecordLayout'
@@ -42,19 +37,6 @@ const COLOR_OPTIONS = [
   '#D7FFF3',
 ]
 
-type Ticket = {
-  id: number
-  exercise_type: string
-  color_code: string
-  ticket_type: 'COUNT' | 'PERIOD'
-  target_count: number
-  total_amount: number
-  start_date: string
-  end_date: string
-  status: string
-  refund_amount?: number
-}
-
 const TicketPage = () => {
   // UI
   const [activeDropdownIndex, setActiveDropdownIndex] = useState<number | null>(null)
@@ -72,51 +54,15 @@ const TicketPage = () => {
   const [endReason, setEndReason] = useState<Exercise>(END_TYPES[0])
   const [refundAmount, setRefundAmount] = useState('')
 
-  // 데이터
-  const [ticketList, setTicketList] = useState<Ticket[]>([])
+  const {
+    tickets: ticketList,
+    handleCreateTicket,
+    handleDeleteTicket,
+    handleEndTicket,
+  } = useTickets()
 
   const handleToggle = (index: number) => {
     setActiveDropdownIndex(prev => (prev === index ? null : index))
-  }
-
-  const handleDelete = async () => {
-    try {
-      if (deleteTargetIndex === null) return
-
-      await deleteTicket(deleteTargetIndex)
-
-      setTicketList(prev =>
-        prev.filter(t => t.id !== deleteTargetIndex)
-      )
-
-      setDeleteTargetIndex(null)
-
-      alert('이용권이 정상적으로 삭제되었습니다.')
-    } catch (error) {
-      console.log('DELETE 실패', error)
-    }
-  }
-
-  const handleEnd = async () => {
-    try {
-      const ticketId = ticketList[endTargetIndex!].id
-
-      await endTicket(
-        ticketId,
-        endReason,
-        refundAmount
-      )
-
-      alert('이용권이 정상적으로 종료되었습니다.')
-
-      setEndTargetIndex(null)
-      setEndReason(END_TYPES[0])
-      setRefundAmount('')
-
-      fetchTickets()
-    } catch (error) {
-      console.log('PATCH 실패', error)
-    }
   }
 
   const handleAddClose = () => {
@@ -131,30 +77,6 @@ const TicketPage = () => {
 
     setEndReason(END_TYPES[0])
     setRefundAmount('')
-  }
-
-  const fetchTickets = async () => {
-    try {
-      const tickets = await getTickets()
-
-      setTicketList(tickets)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleCreateTicket = async (data: any) => {
-    try {
-      await createTicket(data)
-
-      alert('이용권 등록이 완료되었습니다.')
-
-      await fetchTickets()
-
-      setIsAddModalOpen(false)
-    } catch (error) {
-      console.log('POST 실패:', error)
-    }
   }
 
   useEffect(() => {
@@ -173,13 +95,9 @@ const TicketPage = () => {
     }
   }, [])
 
-  useEffect(() => {
-    fetchTickets()
-  }, [])
-
   return (
     <RecordLayout title="이용권 관리">
-      
+
       <div className={styles.write}>
         {ticketList.length === 0 ? (
           <div className={styles.emptyText}>
@@ -187,7 +105,7 @@ const TicketPage = () => {
           </div>
         ) : (
           ticketList.map((ticket, index) => {
-            const isActive = ticket.status === '진행 중'
+            const isActive = ticket.status === 'ACTIVE'
 
             return (
               <TicketRow
@@ -225,7 +143,16 @@ const TicketPage = () => {
       {deleteTargetIndex !== null && (
         <ConfirmModal
           onCancel={() => setDeleteTargetIndex(null)}
-          onConfirm={handleDelete}
+          onConfirm={async () => {
+            if (deleteTargetIndex === null) return
+
+            await handleDeleteTicket(
+              deleteTargetIndex,
+              () => {
+                setDeleteTargetIndex(null)
+              },
+            )
+          }}
         />
       )}
 
@@ -238,7 +165,23 @@ const TicketPage = () => {
           setRefundAmount={setRefundAmount}
           END_TYPES={END_TYPES}
           onClose={handleEndClose}
-          onConfirm={handleEnd}
+          onConfirm={async () => {
+            if (endTargetIndex === null) return
+
+            const ticketId =
+              ticketList[endTargetIndex].id
+
+            await handleEndTicket(
+              ticketId,
+              endReason,
+              refundAmount,
+              () => {
+                setEndTargetIndex(null)
+                setEndReason(END_TYPES[0])
+                setRefundAmount('')
+              },
+            )
+          }}
         />
       )}
 
@@ -257,6 +200,16 @@ const TicketPage = () => {
       {viewTargetIndex !== null && (
         <TicketAddModal
           mode="view"
+          initialData={{
+            exerciseType: ticketList[viewTargetIndex].exercise_type,
+            colorCode: ticketList[viewTargetIndex].color_code,
+            ticketType: ticketList[viewTargetIndex].ticket_type,
+            targetCount: ticketList[viewTargetIndex].target_count ?? 0,
+            totalAmount: ticketList[viewTargetIndex].total_amount ?? 0,
+            startDate: ticketList[viewTargetIndex].start_date ?? '',
+            endDate: ticketList[viewTargetIndex].end_date ?? '',
+            refundAmount: ticketList[viewTargetIndex].refund_amount,
+          }}
           ticketType={
             ticketList[viewTargetIndex].ticket_type === 'COUNT'
               ? '횟수권'
@@ -266,19 +219,13 @@ const TicketPage = () => {
           colorCode={ticketList[viewTargetIndex].color_code}
           setSelectedColor={setColorCode}
           COLOR_OPTIONS={COLOR_OPTIONS}
-          initialData={{
-            exerciseType: ticketList[viewTargetIndex].exercise_type ?? '',
-            colorCode: ticketList[viewTargetIndex].color_code,
-            ticketType: ticketList[viewTargetIndex].ticket_type,
-            targetCount: ticketList[viewTargetIndex].target_count,
-            totalAmount: ticketList[viewTargetIndex].total_amount,
-            startDate: ticketList[viewTargetIndex].start_date,
-            endDate: ticketList[viewTargetIndex].end_date,
-            refundAmount: ticketList[viewTargetIndex].refund_amount,
+          onClose={() => {
+            setViewTargetIndex(null)
           }}
-          onClose={() => setViewTargetIndex(null)}
-          onConfirm={() => setViewTargetIndex(null)}
-          isRefunded={ticketList[viewTargetIndex].status === '환불'}
+          onConfirm={() => { }}
+          isRefunded={
+            ticketList[viewTargetIndex].status === 'ENDED'
+          }
         />
       )}
 

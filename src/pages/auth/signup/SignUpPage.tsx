@@ -9,7 +9,7 @@ import editAvatar from "@/assets/icons/edit-avatar.png";
 
 import Form from "@/components/form/Form";
 
-import { API_BASE } from "@/api/api";
+import api from "@/api/api";
 
 type FieldErrors = Partial<{
   email: string;
@@ -114,22 +114,20 @@ export default function SignUpPage() {
     }
 
     try {
-      const res = await fetch(
-        `${API_BASE}/auth/check-email?email=${encodeURIComponent(email)}`,
-      );
-
-      const data = (await res.json()) as CheckDuplicateResponse;
-
-      if (!res.ok) {
-        throw new Error(data?.message || "이메일 중복확인 실패");
-      }
+      const { data } = await api.get("/auth/check-email", {
+        params: {
+          email,
+        },
+      });
 
       setEmailChecked(true);
       setEmailAvailable(data.available);
 
       setErrors((prev) => ({
         ...prev,
-        email: data.available ? undefined : "이미 사용 중인 이메일입니다.",
+        email: data.available
+          ? undefined
+          : "이미 사용 중인 이메일입니다.",
       }));
 
       if (data.available) {
@@ -137,6 +135,7 @@ export default function SignUpPage() {
       }
     } catch (err) {
       console.error(err);
+
       setErrors((prev) => ({
         ...prev,
         email: "이메일 중복확인 중 오류가 발생했습니다.",
@@ -164,22 +163,20 @@ export default function SignUpPage() {
     }
 
     try {
-      const res = await fetch(
-        `${API_BASE}/auth/check-nickname?nickname=${encodeURIComponent(v)}`,
-      );
-
-      const data = (await res.json()) as CheckDuplicateResponse;
-
-      if (!res.ok) {
-        throw new Error(data?.message || "닉네임 중복확인 실패");
-      }
+      const { data } = await api.get("/auth/check-nickname", {
+        params: {
+          nickname: v,
+        },
+      });
 
       setNicknameChecked(true);
       setNicknameAvailable(data.available);
 
       setErrors((prev) => ({
         ...prev,
-        nickname: data.available ? undefined : "이미 사용 중인 닉네임입니다.",
+        nickname: data.available
+          ? undefined
+          : "이미 사용 중인 닉네임입니다.",
       }));
 
       if (data.available) {
@@ -187,6 +184,7 @@ export default function SignUpPage() {
       }
     } catch (err) {
       console.error(err);
+
       setErrors((prev) => ({
         ...prev,
         nickname: "닉네임 중복확인 중 오류가 발생했습니다.",
@@ -196,8 +194,11 @@ export default function SignUpPage() {
 
   /* ================= 이벤트 ================= */
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
     e.preventDefault();
+
     if (!validate()) return;
 
     if (!emailChecked || !emailAvailable) {
@@ -218,45 +219,34 @@ export default function SignUpPage() {
 
     try {
       const formData = new FormData();
+
       formData.append("email", email);
       formData.append("password", password);
       formData.append("nickname", nickname);
-      formData.append("target_budget", String(Number(budget)));
-      formData.append("target_exercise_count", String(Number(exerciseGoal)));
+      formData.append(
+        "target_budget",
+        String(Number(budget)),
+      );
+      formData.append(
+        "target_exercise_count",
+        String(Number(exerciseGoal)),
+      );
 
-      // 파일 키는 반드시 "profile"
-      if (profileFile) formData.append("profile", profileFile);
-
-      const res = await fetch(`${API_BASE}/auth/register`, {
-        method: "POST",
-        body: formData,
-      });
-
-      // 400 원인 확인용
-      const raw = await res.text();
-      console.log("STATUS:", res.status);
-      console.log("RAW:", raw);
-
-      let data: RegisterResponse | null = null;
-
-      try {
-        data = JSON.parse(raw) as RegisterResponse;
-      } catch {
-        data = null;
+      if (profileFile) {
+        formData.append("profile", profileFile);
       }
 
-      if (!res.ok) {
-        alert(data?.message ?? raw ?? "회원가입 실패");
-        return;
-      }
+      await api.post("/auth/register", formData);
 
       alert("회원가입 성공!");
+
       nav("/signup/success", {
         state: { nickname },
       });
     } catch (err) {
       console.error(err);
-      alert("서버 연결 실패");
+
+      alert("회원가입 실패");
     }
   };
 
@@ -495,9 +485,8 @@ export default function SignUpPage() {
                   <button
                     type="submit"
                     disabled={!canSubmit}
-                    className={`${styles.submitBtn} ${
-                      !canSubmit ? styles.submitDisabled : styles.submitActive
-                    }`}
+                    className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
+                      }`}
                   >
                     회원가입
                   </button>

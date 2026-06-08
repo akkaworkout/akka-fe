@@ -7,12 +7,12 @@ import { useCalendar } from "@/hooks/useCalendar";
 import { useGoals } from "@/hooks/useGoals";
 import { useSummary } from "@/hooks/useSummary";
 import { useTodayItems } from "@/hooks/useTodayItems";
-import type { TodayItem } from "@/hooks/useTodayItems";
 
 // 컴포넌트
 import Calendar from "./components/Calendar";
 import Card from "@/components/card/Card";
 import Spinner from "@/components/spinner/Spinner";
+import TodayRecordSection from './components/TodayRecordSection'
 
 // 모달
 import TodayItemModal from "./modal/TodayItemModal";
@@ -40,7 +40,7 @@ const CalenderPage = () => {
   } = useGoals(year, month)
 
   const { summary } = useSummary(year, month)
-  
+
   const {
     selectedDate,
     selectedItem,
@@ -85,7 +85,7 @@ const CalenderPage = () => {
                         {Number(summary.totalAmount).toLocaleString()}
                       </span>
                       <span className={styles.total}>
-                        &nbsp;/ {summary.targetBudget.toLocaleString()}원
+                        &nbsp;/ {Number(summary.targetBudget ?? 0).toLocaleString()}원
                       </span>
                     </div>
                   }
@@ -96,11 +96,11 @@ const CalenderPage = () => {
                 >
                   <div className={styles.badges}>
                     <div className={styles.badgeYellow}>
-                      이번달 날린 금액: <strong>{summary.failAmount.toLocaleString()}원</strong>
+                      이번달 날린 금액: <strong>{Number(summary.failAmount ?? 0).toLocaleString()}원</strong>
                     </div>
 
                     <div className={styles.badgeBlue}>
-                      운동 횟수: <strong>{summary.exerciseCount}</strong> / {summary.targetExerciseCount}회
+                      운동 횟수: <strong>{summary.exerciseCount ?? 0}</strong> / {summary.targetExerciseCount ?? 0}회
                     </div>
                   </div>
                 </Card>
@@ -134,58 +134,14 @@ const CalenderPage = () => {
               </Card>
             </div>
 
-            <div className={styles.today}>
-              <Card
-                title={`${year}년 ${month + 1}월 ${selectedDate}일`}
-                width={445}
-                height={307}
-                backgroundColor="#ffffff"
-                radius={20}
-              >
-                <div className={styles.summary}>
-                  <ul className={styles.list}>
-                    {isLoading ? (
-                      <Spinner />
-                    ) : todayItems.length === 0 ? (
-                      <div className={styles.empty}>아직 기록이 없어요</div>
-                    ) : (
-                      todayItems.map((item: TodayItem) => (
-                        <li
-                          key={item.id}
-                          className={`${styles.item} ${item.status === '이용권 등록' ? styles.ticketItem : ''}`}
-                          onClick={() => handleItemClick(item)}
-                        >
-                          <div className={styles.left}>
-                            <span
-                              className={styles.dot}
-                              style={{ backgroundColor: item.color }}
-                            />
-                            <div>
-                              <div className={styles.name}>{item.name}</div>
-                              <div className={styles.status}>{item.status}</div>
-                            </div>
-                          </div>
-
-                          <span
-                            className={
-                              item.status === '성공'
-                                ? styles.success
-                                : item.status === '실패'
-                                  ? styles.fail
-                                  : styles.purchase
-                            }
-                          >
-                            {(item.amount ?? 0).toLocaleString()}원
-                          </span>
-                        </li>
-                      ))
-                    )}
-                  </ul>
-
-                  <button className={styles.addBtn}>+</button>
-                </div>
-              </Card>
-            </div>
+            <TodayRecordSection
+              year={year}
+              month={month}
+              selectedDate={selectedDate}
+              todayItems={todayItems}
+              isLoading={isLoading}
+              onItemClick={handleItemClick}
+            />
           </div>
         </main>
       </div>

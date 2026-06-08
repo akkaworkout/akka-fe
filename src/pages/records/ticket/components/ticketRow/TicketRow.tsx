@@ -8,21 +8,10 @@ import MoreButton from '@/assets/icons/moreButton.png'
 import EditIcon from '@/assets/icons/edit.png'
 import DeleteIcon from '@/assets/icons/delete.png'
 
-type Ticket = {
-  id: number
-  exercise_type: string
-  color_code: string
-  ticket_type: 'COUNT' | 'PERIOD'
-  target_count: number
-  total_amount: number
-  start_date: string
-  end_date: string
-  status: string
-  refund_amount?: number
-}
+import type { TicketItem } from '@/hooks/useTickets'
 
 type TicketRowProps = {
-  ticket: Ticket
+  ticket: TicketItem
   index: number
   isActive: boolean
   openIndex: number | null
@@ -44,7 +33,8 @@ const TicketRow = ({
   onView,
   dropdownRef,
 }: TicketRowProps) => {
-  const formattedPeriod = `${ticket.start_date.replaceAll('-', '.')} - ${ticket.end_date.replaceAll('-', '.')}`
+  const formattedPeriod =
+    `${ticket.start_date!.replaceAll('-', '.')} - ${ticket.end_date!.replaceAll('-', '.')}`
 
   const formattedCount = `${ticket.target_count}회`
 
@@ -58,18 +48,27 @@ const TicketRow = ({
           className={styles.dot}
           style={{ backgroundColor: ticket.color_code }}
         />
+
         <span className={styles.exercise}>
           {ticket.exercise_type}
         </span>
       </div>
 
       <div className={styles.colPeriod}>
-        <img src={CalendarIcon} alt="calendar_icon" />
+        <img
+          src={CalendarIcon}
+          alt="calendar_icon"
+        />
+
         {formattedPeriod}
       </div>
 
       <div className={styles.colCount}>
-        <img src={Goal} alt="goal_icon" />
+        <img
+          src={Goal}
+          alt="goal_icon"
+        />
+
         {formattedCount}
       </div>
 
@@ -78,7 +77,13 @@ const TicketRow = ({
         className={styles.colStatus}
         onClick={() => onView(index)}
       >
-        {ticket.status}
+        {
+          ticket.status === 'ACTIVE'
+            ? '진행중'
+            : ticket.status === 'ENDED'
+              ? '종료'
+              : ticket.status
+        }
       </button>
 
       <div className={styles.colAction}>
@@ -91,7 +96,10 @@ const TicketRow = ({
             className={styles.moreButton}
             onClick={() => onToggle(index)}
           >
-            <img src={MoreButton} alt="more_button_icon" />
+            <img
+              src={MoreButton}
+              alt="more_button_icon"
+            />
           </button>
 
           {openIndex === index && (

@@ -1,62 +1,63 @@
 // React / 외부 라이브러리
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-//  API / 로직
-import api from "@/api/client";
-import { expenseApi } from "@/api/expense";
+// API / 로직
+import {
+  createExpense,
+  getExpenseStats,
+} from '@/api/expenseApi'
 
 // 컴포넌트 (UI)
-import RecordLayout from "../layout/RecordLayout";
-import DateSelect from "@/components/dateSelect/DateSelect";
-import SummaryCard, { type Expense } from "@/components/summaryCard/SummaryCard";
+import RecordLayout from '../layout/RecordLayout'
+import DateSelect from '@/components/dateSelect/DateSelect'
+import SummaryCard, {
+  type Expense,
+} from '@/components/summaryCard/SummaryCard'
 import RecordSummaryCard from '../components/RecordSummaryCard'
-import Button from "@/components/button/Button";
+import Button from '@/components/button/Button'
 
 // 스타일
-import styles from "../workout/Workout.module.css";
+import styles from '../workout/Workout.module.css'
 
 const EXPENSES = [
-  { id: 1, value: "운동 용품", label: "운동 용품", color: "#fcd7ff" },
-  { id: 2, value: "운동 식품", label: "운동 식품", color: "#FFE6CC" },
-  { id: 3, value: "기타", label: "기타(교통비 등)", color: "#E0F0FF" },
-];
-
-// 생성
-const createExpense = (data: {
-  category: string;
-  title: string;
-  amount: number;
-  expense_date: string;
-}) => {
-  return api.post(expenseApi.BASE, data);
-};
-
-// 요약 조회
-const getExpenseStats = () => {
-  return api.get(expenseApi.STATS);
-};
+  {
+    id: 1,
+    value: '운동 용품',
+    label: '운동 용품',
+    color: '#fcd7ff',
+  },
+  {
+    id: 2,
+    value: '운동 식품',
+    label: '운동 식품',
+    color: '#FFE6CC',
+  },
+  {
+    id: 3,
+    value: '기타',
+    label: '기타(교통비 등)',
+    color: '#E0F0FF',
+  },
+]
 
 const ExpensePage = () => {
-  // 라우팅
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  // UI / 입력 상태
-  const [date, setDate] = useState<Date>(new Date()); // 날짜 (생성일)
-  const [selectedCategory, setSelectedCategory] = useState<Expense>(
-    EXPENSES[0],
-  ); // 선택된 카테고리
-  const [item, setItem] = useState(""); // 기타 지출 아이템
-  const [amount, setAmount] = useState(""); // 금액
+  // 입력 상태
+  const [date, setDate] = useState<Date>(new Date())
+  const [selectedCategory, setSelectedCategory] = useState<Expense>(EXPENSES[0])
+  const [item, setItem] = useState('')
+  const [amount, setAmount] = useState('')
 
   // 요약 데이터
-  const [monthlyExpenseCount, setMonthlyExpenseCount] = useState(0);
-  const [monthlyTotalExpense, setMonthlyTotalExpense] = useState(0);
-  const [topExpenseCategory, setTopExpenseCategory] = useState("기록 없음");
+  const [monthlyExpenseCount, setMonthlyExpenseCount] =  useState(0)
+  const [monthlyTotalExpense, setMonthlyTotalExpense] = useState(0)
+  const [topExpenseCategory, setTopExpenseCategory] = useState('기록 없음')
 
-  const isFormValid = item.trim() !== "" && amount.trim() !== "";
+  const isFormValid = item.trim() !== '' && amount.trim() !== ''
 
-  const formatDate = (date: Date) => date.toISOString().split("T")[0];
+  const formatDate = (date: Date) => date.toISOString().split('T')[0]
 
   const handleSubmit = async () => {
     try {
@@ -65,59 +66,44 @@ const ExpensePage = () => {
         title: item,
         amount: Number(amount),
         expense_date: formatDate(date),
-      });
+      })
 
-      alert("운동지출 기록이 완료되었습니다.");
-      navigate("/calendar");
+      alert('운동지출 기록이 완료되었습니다.')
+
+      navigate('/calendar')
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   useEffect(() => {
     const fetchExpenseSummary = async () => {
       try {
-        const { data } = await getExpenseStats();
+        const stats = await getExpenseStats()
 
-        const stats = data.data;
-        setMonthlyExpenseCount(stats.expenseCount);
-        setMonthlyTotalExpense(stats.totalAmount);
-        setTopExpenseCategory(stats.topCategory);
+        setMonthlyExpenseCount(stats.expenseCount)
+        setMonthlyTotalExpense(stats.totalAmount)
+        setTopExpenseCategory(stats.topCategory)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    };
+    }
 
-    fetchExpenseSummary();
-  }, []);
-
-  useEffect(() => {
-    const fetchExpenseSummary = async () => {
-      try {
-        const { data } = await getExpenseStats();
-
-        const stats = data.data;
-        setMonthlyExpenseCount(stats.expenseCount);
-        setMonthlyTotalExpense(stats.totalAmount);
-        setTopExpenseCategory(stats.topCategory);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchExpenseSummary();
-  }, []);
+    fetchExpenseSummary()
+  }, [])
 
   return (
     <RecordLayout title="기타 지출">
-
-      {/* 입력 영역 */}
       <div className={styles.write}>
         {/* 날짜 + 분류 */}
         <div className={styles.row}>
           <div className={styles.field}>
             <label>날짜*</label>
-            <DateSelect value={date} onChange={setDate} />
+
+            <DateSelect
+              value={date}
+              onChange={setDate}
+            />
           </div>
 
           <div className={styles.field}>
@@ -136,7 +122,9 @@ const ExpensePage = () => {
           <input
             className={styles.input}
             value={item}
-            onChange={(e) => setItem(e.target.value)}
+            onChange={(e) =>
+              setItem(e.target.value)
+            }
             placeholder="단백질 쉐이크"
             maxLength={30}
           />
@@ -150,18 +138,29 @@ const ExpensePage = () => {
               className={styles.input}
               value={amount}
               onChange={(e) =>
-                setAmount(e.target.value.replace(/[^0-9]/g, ""))
+                setAmount(
+                  e.target.value.replace(
+                    /[^0-9]/g,
+                    ''
+                  )
+                )
               }
               placeholder="23,000"
               maxLength={8}
             />
-            <span className={styles.unit}>원</span>
+
+            <span className={styles.unit}>
+              원
+            </span>
           </div>
         </div>
 
         {/* 버튼 */}
         <div className={styles.footer}>
-          <span className={styles.required}>*는 필수 입력사항입니다.</span>
+          <span className={styles.required}>
+            *는 필수 입력사항입니다.
+          </span>
+
           <Button
             variant="primary"
             onClick={handleSubmit}
@@ -183,7 +182,7 @@ const ExpensePage = () => {
         ]}
       />
     </RecordLayout>
-  );
-};
+  )
+}
 
-export default ExpensePage;
+export default ExpensePage

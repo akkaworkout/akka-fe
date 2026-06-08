@@ -1,4 +1,4 @@
-import styles from '@/pages/records/ticket/Ticket.module.css'
+import styles from '../Ticket.module.css'
 
 type ConfirmModalProps = {
   message?: string

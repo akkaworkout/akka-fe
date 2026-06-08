@@ -1,7 +1,6 @@
 .wrap {
   display: flex;
   min-height: 100vh;
-  min-width: 1280px;
 }
 
 .writePage {
@@ -33,4 +32,10 @@
   display: flex;
   gap: 12px;
   margin-top: 16px;
+}
+
+@media (max-width: 1440px) {
+  .writeInner {
+    width: 604px;
+  }
 }
