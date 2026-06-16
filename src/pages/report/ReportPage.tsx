@@ -1,3 +1,5 @@
+// ReportPage.tsx
+
 import { useState } from "react";
 import ReportHeader from "./components/ReportHeader";
 
@@ -51,7 +53,9 @@ export default function ReportPage() {
     selectedExercise.label,
   );
 
-  const loading = ticketsLoading || reportLoading;
+  // === 첫 로드 vs 부분 로딩 구분 ===
+  const isInitialLoad = ticketsLoading;
+  const isPartialLoading = reportLoading && !isInitialLoad;
 
   // === 계산 훅 ===
   const exerciseOptions = useExerciseOptions(tickets, year, month);
@@ -86,7 +90,8 @@ export default function ReportPage() {
     });
   };
 
-  if (loading) {
+  // === 첫 로드일 때만 전체 로딩 ===
+  if (isInitialLoad) {
     return (
       <div
         style={{
@@ -129,7 +134,13 @@ export default function ReportPage() {
                   selected={currentExercise}
                   onChange={setSelectedExercise}
                 />
-                <RingChart percent={metrics.ringPercent} />
+                {isPartialLoading ? (
+                  <div className={styles.goalLoadingContainer}>
+                    <Spinner size={30} />
+                  </div>
+                ) : (
+                  <RingChart percent={metrics.ringPercent} />
+                )}
               </Card>
             </div>
 

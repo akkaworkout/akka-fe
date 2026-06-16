@@ -2,10 +2,9 @@ import { useState, type FormEvent } from "react";
 import styles from "./MyPage.module.css";
 
 import Card from "@/components/card/Card";
+import Input from "@/components/form/Form";
 
 import editAvatar from "@/assets/icons/edit-avatar.png";
-import eyeOn from "@/assets/icons/icon-eye-on.png";
-import eyeOff from "@/assets/icons/icon-eye-off.png";
 import premiumCard from "@/assets/images/premium-card.png";
 
 import { apiFetch } from "@/api/api";
@@ -17,10 +16,52 @@ import { useFormValidation } from "@/hooks/useFormValidation";
 const API_BASE = import.meta.env.VITE_API_URL;
 const DEFAULT_PROFILE = "https://placehold.co/120?text=Profile";
 
-export default function MyPage() {
-  const [showPw, setShowPw] = useState(false);
-  const [showPwConfirm, setShowPwConfirm] = useState(false);
+// ===== FORM FIELDS CONFIG =====
+type FormFieldConfig = {
+  name: "email" | "nickname";
+  label: string;
+  type: "email" | "text";
+  hasButton: boolean;
+  buttonText: string;
+};
 
+const LEFT_FORM_FIELDS: FormFieldConfig[] = [
+  {
+    name: "email",
+    label: "이메일",
+    type: "email",
+    hasButton: true,
+    buttonText: "중복 확인",
+  },
+  {
+    name: "nickname",
+    label: "닉네임",
+    type: "text",
+    hasButton: true,
+    buttonText: "중복 확인",
+  },
+];
+
+type RightFieldConfig = {
+  name: "budget" | "exerciseGoal";
+  label: string;
+  unit: string;
+};
+
+const RIGHT_FORM_FIELDS: RightFieldConfig[] = [
+  {
+    name: "budget",
+    label: "목표 예산(월 기준)",
+    unit: "원",
+  },
+  {
+    name: "exerciseGoal",
+    label: "목표 운동 횟수(월 기준)",
+    unit: "회",
+  },
+];
+
+export default function MyPage() {
   // === 훅 사용 ===
   const { user, fetchMe } = useUserData();
   const {
@@ -51,15 +92,150 @@ export default function MyPage() {
 
   const form = useMyPageForm(initialData);
 
+  // === 통합 handleFieldChange ===
+  const handleFieldChange = (
+    fieldName: "email" | "nickname" | "budget" | "exerciseGoal",
+    value: string
+  ) => {
+    form.setFormData((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }));
+
+    // 중복확인 상태 초기화
+    if (fieldName === "email") {
+      form.setEmailChecked(false);
+    } else if (fieldName === "nickname") {
+      form.setNicknameChecked(false);
+    }
+
+    // touched 업데이트
+    form.setTouched((t) => ({ ...t, [fieldName]: true }));
+
+    // validation 에러 업데이트
+    if (!value.trim()) {
+      form.setErrors((prev) => ({ ...prev, [fieldName]: undefined }));
+      return;
+    }
+
+    let errorMsg: string | undefined;
+    switch (fieldName) {
+      case "email":
+        errorMsg = !validation.isEmailValid(value)
+          ? "올바른 이메일 형식이 아닙니다."
+          : undefined;
+        break;
+      case "nickname":
+        errorMsg = !validation.isNicknameValid(value)
+          ? "5글자 이내로 입력해주세요."
+          : undefined;
+        break;
+      case "budget":
+        errorMsg = !validation.isBudgetValid(value)
+          ? "숫자만 입력 가능합니다."
+          : undefined;
+        break;
+      case "exerciseGoal":
+        errorMsg = !validation.isExerciseValid(value)
+          ? "숫자만 입력 가능합니다."
+          : undefined;
+        break;
+    }
+
+    form.setErrors((prev) => ({ ...prev, [fieldName]: errorMsg }));
+  };
+
+  // === 비번 변경 ===
+  const handlePasswordChange = (
+    fieldName: "password" | "passwordConfirm",
+    value: string
+  ) => {
+    form.setFormData((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }));
+    form.setTouched((t) => ({ ...t, [fieldName]: true }));
+
+    let errorMsg: string | undefined;
+
+    if (fieldName === "password") {
+      if (!value.trim()) {
+        errorMsg = undefined;
+      } else if (!validation.isPasswordValid(value)) {
+        errorMsg = "비밀번호는 특수문자 포함 8자 이상이어야 합니다.";
+      }
+
+      // 비번 변경 시 확인도 체크
+      if (
+        form.formData.passwordConfirm.trim() &&
+        value !== form.formData.passwordConfirm
+      ) {
+        form.setErrors((prev) => ({
+          ...prev,
+          password: errorMsg,
+          passwordConfirm: "비밀번호가 일치하지 않습니다.",
+        }));
+        return;
+      }
+    } else if (fieldName === "passwordConfirm") {
+      if (!form.formData.password.trim() && value.trim()) {
+        errorMsg = "비밀번호를 먼저 입력해주세요.";
+      } else if (form.formData.password.trim() && !value.trim()) {
+        errorMsg = "비밀번호 확인을 입력해주세요.";
+      } else if (
+        form.formData.password.trim() &&
+        value !== form.formData.password
+      ) {
+        errorMsg = "비밀번호가 일치하지 않습니다.";
+      }
+    }
+
+    form.setErrors((prev) => ({ ...prev, [fieldName]: errorMsg }));
+  };
+
+  // === 중복 확인 핸들러 ===
+  const handleCheck = (fieldName: "email" | "nickname") => {
+    if (fieldName === "email") {
+      if (!form.emailDirty || !validation.isEmailValid(form.formData.email)) {
+        form.setErrors((prev) => ({
+          ...prev,
+          email: "올바른 이메일 형식이 아닙니다.",
+        }));
+        form.setTouched((t) => ({ ...t, email: true }));
+        return;
+      }
+      alert("이메일 중복 확인");
+      form.setEmailChecked(true);
+    } else if (fieldName === "nickname") {
+      if (!form.nicknameDirty) {
+        form.setErrors((prev) => ({
+          ...prev,
+          nickname: "닉네임을 입력해주세요.",
+        }));
+        form.setTouched((t) => ({ ...t, nickname: true }));
+        return;
+      }
+      if (!validation.isNicknameValid(form.formData.nickname)) {
+        form.setErrors((prev) => ({
+          ...prev,
+          nickname: "5글자 이내로 입력해주세요.",
+        }));
+        form.setTouched((t) => ({ ...t, nickname: true }));
+        return;
+      }
+      alert("닉네임 중복 확인");
+      form.setNicknameChecked(true);
+    }
+  };
+
   // === API: updateMe ===
   const updateMe = async (
     payload: Record<string, string | number>,
-    file?: File,
+    file?: File
   ) => {
     const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("토큰 없음");
 
-    // 파일이 있으면 FormData
     if (file) {
       const formData = new FormData();
       Object.entries(payload).forEach(([key, value]) => {
@@ -73,7 +249,6 @@ export default function MyPage() {
       });
     }
 
-    // 파일 없으면 JSON
     return apiFetch("/users/me", {
       method: "PATCH",
       body: JSON.stringify(payload),
@@ -119,44 +294,6 @@ export default function MyPage() {
     }
   };
 
-  // === 중복 확인 ===
-  const handleEmailCheck = () => {
-    if (!form.emailDirty || !validation.isEmailValid(form.formData.email)) {
-      form.setErrors((prev) => ({
-        ...prev,
-        email: "올바른 이메일 형식이 아닙니다.",
-      }));
-      form.setTouched((t) => ({ ...t, email: true }));
-      return;
-    }
-
-    alert("이메일 중복 확인");
-    form.setEmailChecked(true);
-  };
-
-  const handleNicknameCheck = () => {
-    if (!form.nicknameDirty) {
-      form.setErrors((prev) => ({
-        ...prev,
-        nickname: "닉네임을 입력해주세요.",
-      }));
-      form.setTouched((t) => ({ ...t, nickname: true }));
-      return;
-    }
-
-    if (!validation.isNicknameValid(form.formData.nickname)) {
-      form.setErrors((prev) => ({
-        ...prev,
-        nickname: "5글자 이내로 입력해주세요.",
-      }));
-      form.setTouched((t) => ({ ...t, nickname: true }));
-      return;
-    }
-
-    alert("닉네임 중복 확인");
-    form.setNicknameChecked(true);
-  };
-
   return (
     <div className={styles.wrap}>
       <main className={styles.main}>
@@ -166,6 +303,7 @@ export default function MyPage() {
           </header>
 
           <div className={styles.grid}>
+            {/* === 왼쪽 카드: 개인 정보 수정 === */}
             <div className={styles.leftCard}>
               <Card
                 title="개인 정보 수정"
@@ -217,245 +355,82 @@ export default function MyPage() {
                   onSubmit={handleSubmit}
                   autoComplete="off"
                 >
-                  {/* === 이메일 === */}
-                  <div className={styles.row}>
-                    <label className={styles.label}>이메일</label>
-
-                    <div className={styles.fieldLine}>
-                      <div className={styles.inputWrap}>
-                        <input
-                          className={`${styles.input} ${
-                            form.showError("email") ? styles.inputError : ""
-                          }`}
-                          value={form.formData.email}
-                          onChange={(e) => {
-                            const v = e.target.value;
-                            form.setFormData((prev) => ({
-                              ...prev,
-                              email: v,
-                            }));
-                            form.setEmailChecked(false);
-                            form.setTouched((t) => ({ ...t, email: true }));
-
-                            form.setErrors((prev) => ({
-                              ...prev,
-                              email: !v.trim()
-                                ? undefined
-                                : !validation.isEmailValid(v)
-                                  ? "올바른 이메일 형식이 아닙니다."
-                                  : undefined,
-                            }));
-                          }}
-                          onBlur={() =>
-                            form.setTouched((t) => ({ ...t, email: true }))
-                          }
-                          autoComplete="off"
-                        />
-                        {form.showError("email") && (
-                          <p className={styles.error}>{form.errors.email}</p>
-                        )}
-                      </div>
-
-                      <button
-                        type="button"
-                        className={styles.dupBtn}
-                        onClick={handleEmailCheck}
-                        disabled={
-                          !form.emailDirty ||
-                          !validation.isEmailValid(form.formData.email)
-                        }
-                      >
-                        중복 확인
-                      </button>
-                    </div>
-                  </div>
+                  {/* === 이메일, 닉네임 (map으로 렌더링) === */}
+                  {LEFT_FORM_FIELDS.map((field) => (
+                    <Input
+                      key={field.name}
+                      label={field.label}
+                      value={form.formData[field.name]}
+                      onChange={(e) =>
+                        handleFieldChange(field.name, e.target.value)
+                      }
+                      type={field.type}
+                      errorText={
+                        form.showError(field.name)
+                          ? form.errors[field.name]
+                          : undefined
+                      }
+                      rightButton={
+                        field.hasButton
+                          ? {
+                              label: field.buttonText,
+                              onClick: () => handleCheck(field.name),
+                              disabled:
+                                field.name === "email"
+                                  ? !form.emailDirty ||
+                                    !validation.isEmailValid(
+                                      form.formData.email
+                                    )
+                                  : !form.nicknameDirty ||
+                                    !validation.isNicknameValid(
+                                      form.formData.nickname
+                                    ),
+                            }
+                          : undefined
+                      }
+                    />
+                  ))}
 
                   {/* === 비밀번호 === */}
-                  <div className={styles.row}>
-                    <label className={styles.label}>비밀번호</label>
-
-                    <div className={styles.fieldOnly}>
-                      <div className={styles.inputWrap}>
-                        <div className={styles.inputInner}>
-                          <input
-                            className={`${styles.input} ${
-                              form.showError("password")
-                                ? styles.inputError
-                                : ""
-                            }`}
-                            type={showPw ? "text" : "password"}
-                            value={form.formData.password}
-                            placeholder="비밀번호 (특수문자 포함, 8자 이상)"
-                            onChange={(e) => {
-                              const v = e.target.value;
-                              form.setFormData((prev) => ({
-                                ...prev,
-                                password: v,
-                              }));
-                              form.setTouched((t) => ({
-                                ...t,
-                                password: true,
-                              }));
-
-                              form.setErrors((prev) => ({
-                                ...prev,
-                                password: !v.trim()
-                                  ? undefined
-                                  : !validation.isPasswordValid(v)
-                                    ? "비밀번호는 특수문자 포함 8자 이상이어야 합니다."
-                                    : undefined,
-                                passwordConfirm:
-                                  form.formData.passwordConfirm.trim() &&
-                                  v !== form.formData.passwordConfirm
-                                    ? "비밀번호가 일치하지 않습니다."
-                                    : prev.passwordConfirm,
-                              }));
-                            }}
-                          />
-
-                          <button
-                            type="button"
-                            className={styles.eyeBtn}
-                            onClick={() => setShowPw((v) => !v)}
-                          >
-                            <img src={showPw ? eyeOn : eyeOff} alt="" />
-                          </button>
-                        </div>
-
-                        {form.showError("password") && (
-                          <p className={styles.error}>{form.errors.password}</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <Input
+                    label="비밀번호"
+                    value={form.formData.password}
+                    onChange={(e) =>
+                      handlePasswordChange("password", e.target.value)
+                    }
+                    type="password"
+                    placeholder="비밀번호 (특수문자 포함, 8자 이상)"
+                    errorText={
+                      form.showError("password")
+                        ? form.errors.password
+                        : undefined
+                    }
+                    showPasswordToggle={true}
+                  />
 
                   {/* === 비밀번호 확인 === */}
-                  <div className={styles.row}>
-                    <label className={styles.label}>비밀번호 확인</label>
-
-                    <div className={styles.fieldOnly}>
-                      <div className={styles.inputWrap}>
-                        <div className={styles.inputInner}>
-                          <input
-                            className={`${styles.input} ${
-                              form.showError("passwordConfirm")
-                                ? styles.inputError
-                                : ""
-                            }`}
-                            type={showPwConfirm ? "text" : "password"}
-                            value={form.formData.passwordConfirm}
-                            placeholder="비밀번호 확인"
-                            onChange={(e) => {
-                              const v = e.target.value;
-                              form.setFormData((prev) => ({
-                                ...prev,
-                                passwordConfirm: v,
-                              }));
-                              form.setTouched((t) => ({
-                                ...t,
-                                passwordConfirm: true,
-                              }));
-
-                              form.setErrors((prev) => ({
-                                ...prev,
-                                passwordConfirm:
-                                  !form.formData.password.trim() && v.trim()
-                                    ? "비밀번호를 먼저 입력해주세요."
-                                    : form.formData.password.trim() && !v.trim()
-                                      ? "비밀번호 확인을 입력해주세요."
-                                      : form.formData.password.trim() &&
-                                          v !== form.formData.password
-                                        ? "비밀번호가 일치하지 않습니다."
-                                        : undefined,
-                              }));
-                            }}
-                          />
-
-                          <button
-                            type="button"
-                            className={styles.eyeBtn}
-                            onClick={() => setShowPwConfirm((v) => !v)}
-                          >
-                            <img src={showPwConfirm ? eyeOn : eyeOff} alt="" />
-                          </button>
-                        </div>
-
-                        {form.showError("passwordConfirm") && (
-                          <p className={styles.error}>
-                            {form.errors.passwordConfirm}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* === 닉네임 === */}
-                  <div className={styles.row}>
-                    <label className={styles.label}>닉네임</label>
-
-                    <div className={styles.fieldLine}>
-                      <div className={styles.inputWrap}>
-                        <input
-                          className={`${styles.input} ${
-                            form.showError("nickname") ? styles.inputError : ""
-                          }`}
-                          value={form.formData.nickname}
-                          onChange={(e) => {
-                            const v = e.target.value;
-                            form.setFormData((prev) => ({
-                              ...prev,
-                              nickname: v,
-                            }));
-                            form.setNicknameChecked(false);
-                            form.setTouched((t) => ({
-                              ...t,
-                              nickname: true,
-                            }));
-
-                            form.setErrors((prev) => ({
-                              ...prev,
-                              nickname: !v.trim()
-                                ? undefined
-                                : !validation.isNicknameValid(v)
-                                  ? "5글자 이내로 입력해주세요."
-                                  : undefined,
-                            }));
-                          }}
-                          onBlur={() =>
-                            form.setTouched((t) => ({
-                              ...t,
-                              nickname: true,
-                            }))
-                          }
-                        />
-                        {form.showError("nickname") && (
-                          <p className={styles.error}>{form.errors.nickname}</p>
-                        )}
-                      </div>
-
-                      <button
-                        type="button"
-                        className={styles.dupBtn}
-                        onClick={handleNicknameCheck}
-                        disabled={
-                          !form.nicknameDirty ||
-                          !validation.isNicknameValid(form.formData.nickname)
-                        }
-                      >
-                        중복 확인
-                      </button>
-                    </div>
-                  </div>
+                  <Input
+                    label="비밀번호 확인"
+                    value={form.formData.passwordConfirm}
+                    onChange={(e) =>
+                      handlePasswordChange("passwordConfirm", e.target.value)
+                    }
+                    type="password"
+                    placeholder="비밀번호 확인"
+                    errorText={
+                      form.showError("passwordConfirm")
+                        ? form.errors.passwordConfirm
+                        : undefined
+                    }
+                    showPasswordToggle={true}
+                  />
 
                   {/* === Submit 버튼 === */}
                   <div className={styles.submitArea}>
                     <button
                       type="submit"
-                      className={`${styles.submitBtn} ${
-                        !form.canSubmit
-                          ? styles.submitDisabled
-                          : styles.submitActive
-                      }`}
+                      className={styles.submitBtn}
+                      disabled={!form.canSubmit}
                     >
                       완료
                     </button>
@@ -466,7 +441,7 @@ export default function MyPage() {
 
             {/* === 오른쪽 사이드 === */}
             <aside className={styles.rightCol}>
-              {/* 목표 설정 */}
+              {/* === 목표 설정 === */}
               <div className={styles.rightCard}>
                 <Card
                   title="개인 목표 설정"
@@ -476,94 +451,38 @@ export default function MyPage() {
                   radius={20}
                 >
                   <div className={styles.rightInner}>
-                    {/* 목표 예산 */}
-                    <div className={styles.goalBlock}>
-                      <div className={styles.goalLabel}>목표 예산(월 기준)</div>
-                      <div className={styles.unitLine}>
-                        <div className={styles.inputWrapRight}>
-                          <input
-                            className={`${styles.inputRight} ${
-                              form.showError("budget") ? styles.inputError : ""
-                            }`}
-                            value={form.formData.budget}
-                            onChange={(e) => {
-                              const v = e.target.value;
-                              form.setFormData((prev) => ({
-                                ...prev,
-                                budget: v,
-                              }));
-                              form.setTouched((t) => ({
-                                ...t,
-                                budget: true,
-                              }));
-
-                              form.setErrors((prev) => ({
-                                ...prev,
-                                budget: !v.trim()
-                                  ? undefined
-                                  : !validation.isBudgetValid(v)
-                                    ? "숫자만 입력 가능합니다."
-                                    : undefined,
-                              }));
-                            }}
-                          />
-                          {form.showError("budget") && (
-                            <p className={styles.error}>{form.errors.budget}</p>
-                          )}
+                    {RIGHT_FORM_FIELDS.map((field) => (
+                      <div key={field.name} className={styles.goalBlock}>
+                        <div className={styles.goalLabel}>{field.label}</div>
+                        <div className={styles.unitLine}>
+                          <div className={styles.inputWrapRight}>
+                            <input
+                              className={`${styles.inputRight} ${
+                                form.showError(field.name)
+                                  ? styles.inputError
+                                  : ""
+                              }`}
+                              value={form.formData[field.name]}
+                              onChange={(e) =>
+                                handleFieldChange(field.name, e.target.value)
+                              }
+                              type="number"
+                            />
+                            {form.showError(field.name) && (
+                              <p className={styles.error}>
+                                {form.errors[field.name]}
+                              </p>
+                            )}
+                          </div>
+                          <span className={styles.unit}>{field.unit}</span>
                         </div>
-                        <span className={styles.unit}>원</span>
                       </div>
-                    </div>
-
-                    {/* 목표 운동 횟수 */}
-                    <div className={styles.goalBlock}>
-                      <div className={styles.goalLabel}>
-                        목표 운동 횟수(월 기준)
-                      </div>
-                      <div className={styles.unitLine}>
-                        <div className={styles.inputWrapRight}>
-                          <input
-                            className={`${styles.inputRight} ${
-                              form.showError("exerciseGoal")
-                                ? styles.inputError
-                                : ""
-                            }`}
-                            value={form.formData.exerciseGoal}
-                            onChange={(e) => {
-                              const v = e.target.value;
-                              form.setFormData((prev) => ({
-                                ...prev,
-                                exerciseGoal: v,
-                              }));
-                              form.setTouched((t) => ({
-                                ...t,
-                                exerciseGoal: true,
-                              }));
-
-                              form.setErrors((prev) => ({
-                                ...prev,
-                                exerciseGoal: !v.trim()
-                                  ? undefined
-                                  : !validation.isExerciseValid(v)
-                                    ? "숫자만 입력 가능합니다."
-                                    : undefined,
-                              }));
-                            }}
-                          />
-                          {form.showError("exerciseGoal") && (
-                            <p className={styles.error}>
-                              {form.errors.exerciseGoal}
-                            </p>
-                          )}
-                        </div>
-                        <span className={styles.unit}>회</span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </Card>
               </div>
 
-              {/* 프리미엄 */}
+              {/* === 프리미엄 === */}
               <div className={styles.premiumCard}>
                 <Card
                   title="프리미엄"
