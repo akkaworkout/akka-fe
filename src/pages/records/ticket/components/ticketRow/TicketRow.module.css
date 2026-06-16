@@ -121,3 +121,13 @@
   background: #FFE7AA;
 }
 
+@media (max-width: 1440px) {
+  .ticketRow {
+    grid-template-columns: 1fr 140px 30px;
+  }
+
+  .colPeriod,
+  .colCount {
+    display: none;
+  }
+}

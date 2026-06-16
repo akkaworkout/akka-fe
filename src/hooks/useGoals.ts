@@ -1,80 +1,72 @@
 import { useState, useEffect } from 'react'
-import { apiFetch } from '../api/api'
-import { CALENDAR_ENDPOINTS } from '../api/calendar'
 
-export const useGoals = (year: number, month: number) => {
+import {
+  getGoals,
+  updateGoals as updateGoalsApi,
+} from '@/api/calendarApi'
 
-  const [goals, setGoals] = useState<string[]>(["", "", ""])
+export const useGoals = (
+  year: number,
+  month: number
+) => {
+  const [goals, setGoals] =
+    useState<string[]>([
+      '',
+      '',
+      '',
+    ])
 
   // 목표 입력 변경
-  const handleGoalChange = (index: number, value: string) => {
+  const handleGoalChange = (
+    index: number,
+    value: string
+  ) => {
     const updatedGoals = [...goals]
+
     updatedGoals[index] = value
+
     setGoals(updatedGoals)
   }
 
   // 목표 조회
-  const getGoals = async () => {
-    try {
+  useEffect(() => {
+    const fetchGoals =
+      async () => {
+        try {
+          const data =
+            await getGoals(
+              year,
+              month
+            )
 
-      const res = await apiFetch(
-        `${CALENDAR_ENDPOINTS.GOAL}?year=${year}&month=${month}`
-      )
-
-      const data = res.data
-
-      if (!Array.isArray(data)) {
-        setGoals(["", "", ""])
-        return
+          setGoals(data)
+        } catch (error) {
+          console.log(error)
+        }
       }
 
-      const padded = [
-        data[0] || "",
-        data[1] || "",
-        data[2] || ""
-      ]
-
-      setGoals(padded)
-
-    } catch (error) {
-      console.log(error)
-    }
-  }
+    fetchGoals()
+  }, [year, month])
 
   // 목표 저장
   const updateGoals = async () => {
     try {
-
-      const filteredGoals = goals.filter(goal => goal.trim() !== "")
-
-      const res = await apiFetch(
-        CALENDAR_ENDPOINTS.GOAL,
-        {
-          method: "PATCH",
-          body: JSON.stringify({
-            year,
-            month,
-            goals: filteredGoals
-          })
-        }
+      await updateGoalsApi(
+        year,
+        month,
+        goals
       )
 
-      alert("저장이 완료되었습니다.");
-      return res
-
+      alert('저장이 완료되었습니다.')
     } catch (error) {
       console.log(error)
     }
   }
-
-  useEffect(() => {
-    getGoals()
-  }, [year, month])
 
   return {
     goals,
     setGoals,
     handleGoalChange,
-    updateGoals
+    updateGoals,
   }
 }

@@ -1,34 +1,35 @@
-import { useState, useEffect } from 'react'
-import { apiFetch } from '../api/api'
-import { CALENDAR_ENDPOINTS } from '../api/calendar'
+import { useEffect, useState } from 'react'
 
-type Summary = {
-  totalAmount: number
-  targetBudget: number
-  failAmount: number
-  exerciseCount: number
-  targetExerciseCount: number
-}
+import {
+  getSummary,
+  type Summary,
+} from '@/api/calendarApi'
 
-export const useSummary = (year: number, month: number) => {
-  const [summary, setSummary] = useState<Summary | null>(null)
+export const useSummary = (
+  year: number,
+  month: number
+) => {
+  const [summary, setSummary] =
+    useState<Summary | null>(null)
 
   useEffect(() => {
-    const getSummary = async () => {
-      try {
-        const res = await apiFetch(
-          `${CALENDAR_ENDPOINTS.SUMMARY}?year=${year}&month=${month + 1}`
-        )
-        setSummary(res.data)
-      } catch (error) {
-        console.log(error)
-      }
-    }
+    const fetchSummary =
+      async () => {
+        try {
+          const data =
+            await getSummary(
+              year,
+              month
+            )
 
-    getSummary()  
+          setSummary(data)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+    fetchSummary()
   }, [year, month])
 
-  return {
-    summary,
-  }
+  return { summary }
 }

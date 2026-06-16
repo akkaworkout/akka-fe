@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import { apiFetch } from '../api/api'
 import { flushSync } from 'react-dom'
+
+import api from '../api/api'
 
 export type User = {
   id?: number
@@ -19,6 +20,7 @@ export const useUserData = () => {
 
   const fetchMe = useCallback(async () => {
     const token = localStorage.getItem('accessToken')
+
     if (!token) {
       setLoading(false)
       return null
@@ -26,8 +28,10 @@ export const useUserData = () => {
 
     try {
       setLoading(true)
-      const json = await apiFetch('/users/me', { method: 'GET' })
-      const me = json?.data ?? {}
+
+      const { data } = await api.get('/users/me')
+
+      const me = data?.data ?? {}
 
       flushSync(() => {
         setUser(me)
@@ -36,7 +40,9 @@ export const useUserData = () => {
       return me
     } catch (err) {
       console.error('내 정보 조회 실패:', err)
+
       setUser(null)
+
       return null
     } finally {
       setLoading(false)

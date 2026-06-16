@@ -7,7 +7,7 @@ import Input from "@/components/form/Form";
 import editAvatar from "@/assets/icons/edit-avatar.png";
 import premiumCard from "@/assets/images/premium-card.png";
 
-import { apiFetch } from "@/api/api";
+import api from "@/api/api";
 import { useMyPageForm, type InitialData } from "@/hooks/useMyPageForm";
 import { useProfileImage } from "@/hooks/useProfileImage";
 import { useUserData } from "@/hooks/useUserData";
@@ -243,10 +243,7 @@ export default function MyPage() {
       });
       formData.append("profile", file);
 
-      return apiFetch("/users/me", {
-        method: "PATCH",
-        body: formData,
-      });
+      return api.patch("/users/me", formData);
     }
 
     return apiFetch("/users/me", {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { apiFetch } from '../api/api'
+import api from '../api/api'
 
 export type ReportKPI = {
   totalExerciseCount?: number
@@ -39,16 +39,19 @@ export const useReportData = (
   const [reportData, setReportData] = useState<ReportData | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // 리포트 조회
   const getReportData = async () => {
     try {
       setLoading(true)
-      const res = await apiFetch(
-        `/reports?year=${year}&month=${month}&exerciseType=${encodeURIComponent(exerciseType)}`
-      )
-      
-      const data = res?.data ?? null
-      setReportData(data)
+
+      const { data } = await api.get('/reports', {
+        params: {
+          year,
+          month,
+          exerciseType,
+        },
+      })
+
+      setReportData(data?.data ?? null)
     } catch (error) {
       console.error('리포트 조회 실패:', error)
       setReportData(null)
@@ -64,6 +67,6 @@ export const useReportData = (
   return {
     reportData,
     loading,
-    refetch: getReportData
+    refetch: getReportData,
   }
 }

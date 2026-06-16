@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react'
-import { apiFetch } from '../api/api'
-import { CALENDAR_ENDPOINTS } from '../api/calendar'
 
-type Schedule = {
-  date: string
-  label: string
-  color: string
-  type: string
-}
+import {
+  getCalendar,
+  type Schedule,
+} from '@/api/calendarApi'
 
 type CalendarDay = {
   date: string
@@ -19,13 +15,23 @@ type CalendarDay = {
 export const useCalendar = () => {
   const now = new Date()
 
-  const [year, setYear] = useState(now.getFullYear())
-  const [month, setMonth] = useState(now.getMonth())
+  const [year, setYear] = useState(
+    now.getFullYear()
+  )
 
-  const [schedules, setSchedules] = useState<Schedule[]>([])
-  const [calendarMap, setCalendarMap] = useState<Record<string, CalendarDay>>({})
+  const [month, setMonth] = useState(
+    now.getMonth()
+  )
 
-  // 이전 달로 이동
+  const [schedules, setSchedules] =
+    useState<Schedule[]>([])
+
+  const [calendarMap, setCalendarMap] =
+    useState<
+      Record<string, CalendarDay>
+    >({})
+
+  // 이전 달
   const handlePrevMonth = () => {
     if (month === 0) {
       setYear(prev => prev - 1)
@@ -35,7 +41,7 @@ export const useCalendar = () => {
     }
   }
 
-  // 다음 달로 이동
+  // 다음 달
   const handleNextMonth = () => {
     if (month === 11) {
       setYear(prev => prev + 1)
@@ -45,9 +51,14 @@ export const useCalendar = () => {
     }
   }
 
-  // 일정 목록을 날짜 기준으로 정리하고 표시할 일정과 숨길 일정 계산
-  const buildCalendarMap = (list: Schedule[]) => {
-    const map: Record<string, CalendarDay> = {}
+  // 캘린더 데이터 정리
+  const buildCalendarMap = (
+    list: Schedule[]
+  ) => {
+    const map: Record<
+      string,
+      CalendarDay
+    > = {}
 
     list.forEach(item => {
       const key = item.date
@@ -56,7 +67,7 @@ export const useCalendar = () => {
         map[key] = {
           date: key,
           visible: [],
-          hiddenCount: 0
+          hiddenCount: 0,
         }
       }
 
@@ -69,39 +80,38 @@ export const useCalendar = () => {
 
     Object.values(map).forEach(day => {
       if (day.visible.length > 2) {
-        day.hiddenCount = day.visible.length - 2
-        day.visible = day.visible.slice(0, 2)
+        day.hiddenCount =
+          day.visible.length - 2
+
+        day.visible =
+          day.visible.slice(0, 2)
       }
     })
 
     return map
   }
 
-  // 서버에서 캘린더 데이터를 불러오는 함수
-  const getCalendar = async () => {
-    try {
-      const res = await apiFetch(
-        `${CALENDAR_ENDPOINTS.LIST}?year=${year}&month=${month + 1}`
-      )
-
-      const data = res.data
-
-      const mappedSchedules: Schedule[] = data.map((item: any) => ({
-        date: item.date.slice(0, 10),
-        label: item.name,
-        color: item.color,
-        type: item.type
-      }))
-
-      setSchedules(mappedSchedules)
-      setCalendarMap(buildCalendarMap(mappedSchedules))
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   useEffect(() => {
-    getCalendar()
+    const fetchCalendar =
+      async () => {
+        try {
+          const data =
+            await getCalendar(
+              year,
+              month
+            )
+
+          setSchedules(data)
+
+          setCalendarMap(
+            buildCalendarMap(data)
+          )
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+    fetchCalendar()
   }, [year, month])
 
   return {
@@ -110,6 +120,6 @@ export const useCalendar = () => {
     schedules,
     calendarMap,
     handlePrevMonth,
-    handleNextMonth
+    handleNextMonth,
   }
 }

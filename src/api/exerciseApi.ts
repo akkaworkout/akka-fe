@@ -1,4 +1,4 @@
-import api from '@/api/client'
+import api from '@/api/api'
 
 const buildExerciseFormData = (form: any) => {
   const formData = new FormData()

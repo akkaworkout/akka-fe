@@ -1,13 +1,22 @@
 import { useState, useEffect } from 'react'
-import { apiFetch } from '../api/api'
+
+import api from '../api/api'
+
+import {
+  createTicket,
+  deleteTicket,
+  endTicket,
+} from '@/api/ticketApi'
+
+import { type Exercise } from '@/components/summaryCard/SummaryCard'
 
 export type TicketItem = {
   id: number
   user_id: number
   exercise_type: string
-  color_code?: string
+  color_code: string
   color?: string
-  ticket_type: string
+  ticket_type: 'COUNT' | 'PERIOD'
   target_count?: number
   total_amount?: number
   refund_amount?: number
@@ -28,20 +37,83 @@ export const useTickets = () => {
   const getTickets = async () => {
     try {
       setLoading(true)
-      const res = await apiFetch('/tickets')
-      
-      const list = Array.isArray(res?.data) 
-        ? res.data 
-        : Array.isArray(res) 
-          ? res 
+
+      const { data } = await api.get('/tickets')
+
+      const list = Array.isArray(data?.data)
+        ? data.data
+        : Array.isArray(data)
+          ? data
           : []
-      
+
       setTickets(list)
     } catch (error) {
       console.error('티켓 조회 실패:', error)
       setTickets([])
     } finally {
       setLoading(false)
+    }
+  }
+
+  // 티켓 생성
+  const handleCreateTicket = async (
+    data: any,
+    onSuccess?: () => void,
+  ) => {
+    try {
+      await createTicket(data)
+
+      alert('이용권 등록이 완료되었습니다.')
+
+      await getTickets()
+
+      onSuccess?.()
+    } catch (error) {
+      console.log('POST 실패:', error)
+    }
+  }
+
+  // 티켓 삭제
+  const handleDeleteTicket = async (
+    ticketId: number,
+    onSuccess?: () => void,
+  ) => {
+    try {
+      await deleteTicket(ticketId)
+
+      setTickets(prev =>
+        prev.filter(ticket => ticket.id !== ticketId),
+      )
+
+      alert('이용권이 정상적으로 삭제되었습니다.')
+
+      onSuccess?.()
+    } catch (error) {
+      console.log('DELETE 실패', error)
+    }
+  }
+
+  // 티켓 종료
+  const handleEndTicket = async (
+    ticketId: number,
+    endReason: Exercise,
+    refundAmount: string,
+    onSuccess?: () => void,
+  ) => {
+    try {
+      await endTicket(
+        ticketId,
+        endReason,
+        refundAmount,
+      )
+
+      alert('이용권이 정상적으로 종료되었습니다.')
+
+      await getTickets()
+
+      onSuccess?.()
+    } catch (error) {
+      console.log('PATCH 실패', error)
     }
   }
 
@@ -52,6 +124,10 @@ export const useTickets = () => {
   return {
     tickets,
     loading,
-    refetch: getTickets
+    refetch: getTickets,
+
+    handleCreateTicket,
+    handleDeleteTicket,
+    handleEndTicket,
   }
 }
