@@ -90,7 +90,7 @@ export const getCalendar = async (
     `/calendar?year=${year}&month=${month + 1}`
   )
 
-  return res.data.map(mapSchedule)
+  return res.data.data.map(mapSchedule)
 }
 
 export const getGoals = async (
@@ -101,7 +101,7 @@ export const getGoals = async (
     `/calendar/goal?year=${year}&month=${month}`
   )
 
-  const data = res.data
+  const data = res.data.data
 
   if (!Array.isArray(data)) {
     return ['', '', '']
@@ -132,7 +132,7 @@ export const updateGoals = async (
     }
   )
 
-  return response.data
+  return response.data.data
 }
 
 export const getSummary = async (
@@ -143,7 +143,7 @@ export const getSummary = async (
     `/calendar/summary?year=${year}&month=${month + 1}`
   )
 
-  return res.data
+  return res.data.data
 }
 
 export const getTodayItems = async (
@@ -153,7 +153,7 @@ export const getTodayItems = async (
     `/calendar/${date}`
   )
 
-  return res.data.records
+  return res.data.data.records
     .map(mapTodayItem)
     .filter(Boolean) as TodayItem[]
 }

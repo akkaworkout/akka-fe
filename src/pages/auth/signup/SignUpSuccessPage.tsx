@@ -11,7 +11,7 @@ export default function SignUpSuccessPage() {
 
   return (
     <div className={styles.wrap}>
-      <main className={styles.main}>
+      <div className={styles.main}>
         <div className={styles.mainInner}>
           <section className={styles.card}>
             <h1 className={styles.title}>회원가입 완료!</h1>
@@ -38,7 +38,7 @@ export default function SignUpSuccessPage() {
             </button>
           </section>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

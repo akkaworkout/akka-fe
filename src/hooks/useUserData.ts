@@ -3,6 +3,8 @@ import { flushSync } from 'react-dom'
 
 import api from '../api/api'
 
+import { useAuthStore } from '@/stores/useAuthStore'
+
 export type User = {
   id?: number
   email?: string
@@ -19,7 +21,7 @@ export const useUserData = () => {
   const [loading, setLoading] = useState(true)
 
   const fetchMe = useCallback(async () => {
-    const token = localStorage.getItem('accessToken')
+    const token = useAuthStore.getState().token;
 
     if (!token) {
       setLoading(false)

@@ -121,14 +121,25 @@ const WorkoutPage = () => {
         </div>
       </div>
 
-      <RecordSummaryCard
-        title="현재 이용권 상태는 다음과 같아요"
-        items={[
-          `목표 잔여 횟수: ${remainingCount}회 남음`,
-          `누적 운동 횟수: ${usedCount}회`,
-          `회당 금액: ${pricePerSession.toLocaleString()}원`,
-        ]}
-      />
+      {remainingCount == null ||
+        usedCount == null ||
+        pricePerSession == null ? (
+        <RecordSummaryCard
+          title="이용권 정보를 확인할 수 없어요"
+          items={[
+            '운동 종목을 선택해 이용권을 확인해주세요.',
+          ]}
+        />
+      ) : (
+        <RecordSummaryCard
+          title="현재 이용권 상태는 다음과 같아요"
+          items={[
+            `목표 잔여 횟수: ${remainingCount}회 남았어요`,
+            `누적 운동 횟수: ${usedCount}회`,
+            `회당 금액: ${pricePerSession.toLocaleString()}원`,
+          ]}
+        />
+      )}
     </RecordLayout>
   )
 }

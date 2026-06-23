@@ -13,7 +13,7 @@ const WorkoutFailReasonField = ({
 }: Props) => {
   return (
     <div className={styles.field}>
-      <label>
+      <label htmlFor='failReason'>
         실패 이유{' '}
         <span className={styles.limit}>
           (7자 이하)
@@ -21,6 +21,7 @@ const WorkoutFailReasonField = ({
       </label>
 
       <input
+        id='failReason'
         className={styles.input}
         value={failReason}
         onChange={e => {

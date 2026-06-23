@@ -108,8 +108,8 @@ export default function ReportPage() {
 
   return (
     <div className={styles.wrap}>
-      <main className={styles.reportPage}>
-        <div className={styles.reportInner}>
+      <div className={styles.reportPage}>
+        <section className={styles.reportInner}>
           <ReportHeader
             year={year}
             month={month}
@@ -215,7 +215,7 @@ export default function ReportPage() {
               />
             </div>
           </div>
-        </div>
+        </section>
 
         <MemoDetailModal
           open={openMemo}
@@ -223,7 +223,7 @@ export default function ReportPage() {
           monthText={`${year}.${String(month).padStart(2, "0")}`}
           rows={metrics.failMemoRows}
         />
-      </main>
+      </div>
     </div>
   );
 }

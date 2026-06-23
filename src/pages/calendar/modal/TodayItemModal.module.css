@@ -22,17 +22,17 @@
 
 .fail {
   background: rgba(255, 88, 88, 0.07);
-  color: #FF5858;
+  color: var(--error);
 }
 
 .success {
   background: rgba(0, 170, 33, 0.07);
-  color: #00AA21;
+  color: var(--success);
 }
 
 .purchase {
   background: rgba(229, 181, 59, 0.07);
-  color: #E5B53B;
+  color: var(--secondary-dark);
 }
 
 .section {

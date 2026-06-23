@@ -71,9 +71,10 @@ const TicketEndModal = ({
 
       {endReason.label === '환불' && (
         <div className={styles.field}>
-          <label>환불 금액*</label>
+          <label htmlFor='refundAmount'>환불 금액*</label>
           <div className={styles.priceInput}>
             <input
+              id='refundAmount'
               className={styles.input}
               value={refundAmount}
               onChange={e =>

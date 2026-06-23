@@ -7,7 +7,7 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  background-color: #FAFAFB;
+  background-color: var(--background);
   min-height: 100vh;
   transition: margin-left 0.3s ease;
 }
@@ -36,7 +36,7 @@
     margin: 0;
     font-size: 28px;
     font-weight: 600;
-    color: #111;
+    color: var(--black);
 }
 
 .form :global(label) {
@@ -82,7 +82,7 @@
   font-weight: 700;
 
   background: var(--primary);
-  color: #ffffff;
+  color: var(--white);
 
   cursor: pointer;
 

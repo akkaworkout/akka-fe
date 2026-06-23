@@ -11,7 +11,7 @@
     height: 100vh;
     min-height: 600px;
     flex-shrink: 0;
-    background: #fff;
+    background: var( --white);
     z-index: 100;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .sidebarToggleWrapper:hover {
-    background: #E9ECFF;
+    background: var(--primary-soft);
 }
 
 .sidebarToggleIcon {
@@ -104,13 +104,13 @@
 }
 
 .active {
-    background-color: #E9ECFF;
+    background-color: var(--primary-soft);
     color: var(--primary);
     font-weight: 700;
 }
 
 .sidebarMenu:hover {
-    background: #E9ECFF;
+    background: var(--primary-soft);
 }
 
 .sidebarMenuIcon {

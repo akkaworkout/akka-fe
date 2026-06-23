@@ -25,9 +25,10 @@ const WorkoutImageField = ({
 }: Props) => {
   return (
     <div className={styles.field}>
-      <label>사진 첨부</label>
+      <label htmlFor='imageFile'>사진 첨부</label>
 
       <input
+        id='imageFile'
         type="file"
         accept="image/*"
         ref={fileInputRef}

@@ -13,7 +13,7 @@ const RecordLayout = ({
 }: Props) => {
   return (
     <div className={styles.wrap}>
-      <main className={styles.writePage}>
+      <div className={styles.writePage}>
         <div className={styles.writeInner}>
           <div className={styles.title}>
             {title}
@@ -25,7 +25,7 @@ const RecordLayout = ({
 
           {children}
         </div>
-      </main>
+      </div>
     </div>
   )
 }
