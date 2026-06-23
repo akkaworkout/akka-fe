@@ -9,7 +9,7 @@
   padding: 0 12px 0 16px;
   border-radius: 10px;
   border: 1px solid #D9D9D9;
-  background-color: #FFFFFF;
+  background-color: var(--white);
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -47,7 +47,7 @@
   padding: 12px;
   border-radius: 7px;
   border: 1px solid #D9D9D9;
-  background: #FFF;
+  background: var( --white);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
   z-index: 10;
   box-sizing: border-box;
@@ -103,6 +103,6 @@
 
 .active {
   background: #4C5BFF;
-  color: #FFFFFF;
+  color: var( --white);
   font-weight: 600;
 }

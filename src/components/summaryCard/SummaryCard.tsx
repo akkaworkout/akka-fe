@@ -75,7 +75,7 @@ export default function SummaryCard<
             navigate(addPath)
           }}
         >
-          + 이용권 추가하기
+          이용권 등록하기
         </button>
       </div>
     )

@@ -2,7 +2,7 @@
   width: 275px;
   min-height: 324px;
   box-sizing: border-box;
-  background: #ffffff;
+  background: var( --white);
   border-radius: 16px;
   overflow: visible;
 }
@@ -36,13 +36,13 @@
 .label {
   font-size: 13px;
   font-weight: 700;
-  color: #111;
+  color: var(--black);
 }
 
 .count {
   font-size: 13px;
   font-weight: 400;
-  color: #111;
+  color: var(--black);
 }
 
 .exercise-row.highlight {
@@ -58,7 +58,7 @@
   cursor: pointer;
   background: none;
   border: none;
-  border-bottom: 2px solid #000 !important;
+  border-bottom: 2px solid var(--black) !important;
   padding-bottom: 3px;
 }
 
@@ -70,11 +70,11 @@
   margin: 0;
   font-size: 13px;
   font-weight: 700;
-  color: #111;
+  color: var(--black);
 }
 
 .summary-number {
-  color: #16a34a;
+  color: var(--success);
   font-weight: 900;
 }
 

@@ -49,9 +49,10 @@ const ExpensePage = () => {
   const [selectedCategory, setSelectedCategory] = useState<Expense>(EXPENSES[0])
   const [item, setItem] = useState('')
   const [amount, setAmount] = useState('')
+  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
 
   // 요약 데이터
-  const [monthlyExpenseCount, setMonthlyExpenseCount] =  useState(0)
+  const [monthlyExpenseCount, setMonthlyExpenseCount] = useState(0)
   const [monthlyTotalExpense, setMonthlyTotalExpense] = useState(0)
   const [topExpenseCategory, setTopExpenseCategory] = useState('기록 없음')
 
@@ -84,8 +85,10 @@ const ExpensePage = () => {
         setMonthlyExpenseCount(stats.expenseCount)
         setMonthlyTotalExpense(stats.totalAmount)
         setTopExpenseCategory(stats.topCategory)
+        setStatus('success')
       } catch (error) {
         console.log(error)
+        setStatus('error')
       }
     }
 
@@ -118,8 +121,9 @@ const ExpensePage = () => {
 
         {/* 항목 */}
         <div className={styles.field}>
-          <label>항목*</label>
+          <label htmlFor='itemName'>항목*</label>
           <input
+            id='itemName'
             className={styles.input}
             value={item}
             onChange={(e) =>
@@ -132,9 +136,10 @@ const ExpensePage = () => {
 
         {/* 금액 */}
         <div className={styles.field}>
-          <label>금액*</label>
+          <label htmlFor='amount'>금액*</label>
           <div className={styles.priceInput}>
             <input
+              id='amount'
               className={styles.input}
               value={amount}
               onChange={(e) =>
@@ -175,10 +180,14 @@ const ExpensePage = () => {
       {/* 요약 카드 */}
       <RecordSummaryCard
         title="이번 기록으로 이렇게 반영돼요"
-        items={[
+        items={status === 'success' ? [
           `이번 달 지출: ${monthlyExpenseCount}회`,
           `이번 달 누적 지출금: ${monthlyTotalExpense.toLocaleString()}원`,
           `가장 많이 쓴 항목: ${topExpenseCategory}`,
+        ] : [
+          `이번 달 지출: 조회에 실패했어요`,
+          `이번 달 누적 지출금: 조회에 실패했어요`,
+          `가장 많이 쓴 항목: 조회에 실패했어요`,
         ]}
       />
     </RecordLayout>

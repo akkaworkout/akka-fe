@@ -3,7 +3,7 @@
   top: 98px;
   width: 604px;
   border-radius: 20px;
-  background: #FFF;
+  background: var( --white);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
   padding: 31px 23px;
 }
@@ -35,7 +35,7 @@
   padding: 0 14px;
   border-radius: 10px;
   border: 1px solid #E5E6EB;
-  background-color: #FFFFFF;
+  background-color: var( --white);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -85,7 +85,7 @@
   border-radius: 50%;
   border: none;
   background: rgba(0, 0, 0, 0.6);
-  color: #fff;
+  color: var( --white);
   font-size: 16px;
   cursor: pointer;
 }
@@ -109,7 +109,7 @@
 }
 
 .required {
-  color: #FF5858;
+  color: var(--error);
   font-size: 14px;
 }
 

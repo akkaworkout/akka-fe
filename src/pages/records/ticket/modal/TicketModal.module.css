@@ -27,7 +27,7 @@
   border-radius: 10px;
   border: none;
   background-color: #4C4FD5;
-  color: #FFF;
+  color: var( --white);
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
@@ -92,6 +92,6 @@
 }
 
 .alert {
-  color: #FF5858;
+  color: var(--error);
   font-size: 14px;
 }

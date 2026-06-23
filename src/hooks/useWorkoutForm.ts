@@ -49,20 +49,11 @@ export const useWorkoutForm = (
     imageFile: null,
   })
 
-  const [ticketList, setTicketList] =
-    useState<Ticket[]>([])
-
-  const [previewUrl, setPreviewUrl] =
-    useState<string | null>(null)
-
-  const [remainingCount, setRemainingCount] =
-    useState(0)
-
-  const [usedCount, setUsedCount] =
-    useState(0)
-
-  const [pricePerSession, setPricePerSession] =
-    useState(0)
+  const [ticketList, setTicketList] = useState<Ticket[]>([])
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [remainingCount, setRemainingCount] = useState<number | null>(null)
+  const [usedCount, setUsedCount] = useState<number | null>(null)
+  const [pricePerSession, setPricePerSession] = useState<number | null>(null)
 
   const mappedTickets: Exercise[] =
     ticketList.map(ticket => ({
@@ -75,15 +66,17 @@ export const useWorkoutForm = (
     try {
       const tickets = await getActiveTickets()
 
-      setTicketList(tickets)
+      const list = tickets.data ?? []
 
-      if (tickets.length > 0) {
+      setTicketList(list)
+
+      if (list.length > 0) {
         setForm(prev => ({
           ...prev,
           exercise: {
-            id: tickets[0].id,
-            label: tickets[0].exercise_type,
-            color: tickets[0].color_code,
+            id: list[0].id,
+            label: list[0].exercise_type,
+            color: list[0].color_code,
           }
         }))
       }
@@ -92,19 +85,13 @@ export const useWorkoutForm = (
     }
   }
 
-  const getSummary = async (
-    ticketId: number
-  ) => {
+  const getSummary = async (ticketId: number) => {
     try {
-      const data =
-        await getExerciseSummary(ticketId)
+      const response = await getExerciseSummary(ticketId)
 
-      setRemainingCount(data.remainingCount)
-      setUsedCount(data.usedCount)
-
-      setPricePerSession(
-        data.amountPerSession ?? 0
-      )
+      setRemainingCount(response.data.remainingCount)
+      setUsedCount(response.data.usedCount)
+      setPricePerSession(response.data.amountPerSession)
     } catch (error) {
       console.log(error)
     }

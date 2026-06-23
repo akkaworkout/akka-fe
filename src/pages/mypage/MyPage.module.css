@@ -8,7 +8,7 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  background-color: #FAFAFB;
+  background-color: var(--background);
   min-height: 900px;
   padding: 0;
 }
@@ -31,7 +31,7 @@
   margin: 0;
   font-size: 24px;
   font-weight: 600;
-  color: #111;
+  color: var(--black);
 }
 
 /* 레이아웃 고정 */
@@ -107,7 +107,7 @@
 .profileError {
   margin: 0;
   font-size: 12px;
-  color: #ff5858;
+  color: var(--error);
 }
 
 /* 프로필 ~ 이메일 간격 30 */
@@ -167,7 +167,7 @@
   font-weight: 400;
   letter-spacing: -0.5px;
   white-space: nowrap;
-  color: #ff5858;
+  color: var(--error);
 }
 
 .input {
@@ -212,17 +212,17 @@
 .input:focus,
 .inputRight:focus {
   border-color: #88A6F1;
-  background: #E9ECFF;
+  background: var(--primary-soft);
 }
 
 .inputError {
-  border-color: #ff5858;
-  background: #ffffff;
+  border-color: var(--error);
+  background: var(--white);
 }
 
 .inputError:focus {
-  border-color: #ff5858;
-  background: #ffffff;
+  border-color: var(--error);
+  background: var(--white);
 }
 
 .inputInner {
@@ -251,7 +251,7 @@
   border: 0;
   border-radius: 10px;
   background: var(--primary);
-  color: #ffffff;
+  color: var(--white);
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
@@ -319,7 +319,7 @@
 .goalLabel {
   font-size: 13px;
   font-weight: 700;
-  color: #111;
+  color: var(--black);
 }
 
 .unitLine {
@@ -331,7 +331,7 @@
 
 .unit {
   font-size: 13px;
-  color: #111;
+  color: var(--black);
   white-space: nowrap;
 }
 
@@ -346,7 +346,7 @@
 .premiumPoint {
   font-size: 16px;
   font-weight: 800;
-  color: #111;
+  color: var(--black);
 }
 
 .premiumImg {

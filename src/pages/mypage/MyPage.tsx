@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { type FormEvent } from "react";
 import styles from "./MyPage.module.css";
 
 import Card from "@/components/card/Card";
@@ -12,6 +12,7 @@ import { useMyPageForm, type InitialData } from "@/hooks/useMyPageForm";
 import { useProfileImage } from "@/hooks/useProfileImage";
 import { useUserData } from "@/hooks/useUserData";
 import { useFormValidation } from "@/hooks/useFormValidation";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 const DEFAULT_PROFILE = "https://placehold.co/120?text=Profile";
@@ -233,7 +234,7 @@ export default function MyPage() {
     payload: Record<string, string | number>,
     file?: File
   ) => {
-    const token = localStorage.getItem("accessToken");
+    const token = useAuthStore.getState().token;
     if (!token) throw new Error("토큰 없음");
 
     if (file) {
@@ -293,7 +294,7 @@ export default function MyPage() {
 
   return (
     <div className={styles.wrap}>
-      <main className={styles.main}>
+      <div className={styles.main}>
         <div className={styles.mainInner}>
           <header className={styles.headerArea}>
             <h1 className={styles.pageTitle}>마이페이지</h1>
@@ -504,7 +505,7 @@ export default function MyPage() {
             </aside>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

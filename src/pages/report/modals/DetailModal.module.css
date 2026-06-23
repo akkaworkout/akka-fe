@@ -30,7 +30,7 @@
 .detailRow {
   width: 282px;
   height: 38px;
-  background: #FAFAFB;
+  background: var(--background);
   border-radius: 10px;
 
   display: flex;

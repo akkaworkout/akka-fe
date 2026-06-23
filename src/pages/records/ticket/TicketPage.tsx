@@ -7,6 +7,7 @@ import { useTickets } from '@/hooks/useTickets'
 // 컴포넌트
 import RecordLayout from '../layout/RecordLayout'
 import TicketRow from './components/ticketRow/TicketRow'
+import Spinner from '@/components/spinner/Spinner'
 
 // 모달
 import ConfirmModal from './modal/ConfirmModal'
@@ -59,6 +60,8 @@ const TicketPage = () => {
     handleCreateTicket,
     handleDeleteTicket,
     handleEndTicket,
+    loading,
+    error
   } = useTickets()
 
   const handleToggle = (index: number) => {
@@ -99,7 +102,13 @@ const TicketPage = () => {
     <RecordLayout title="이용권 관리">
 
       <div className={styles.write}>
-        {ticketList.length === 0 ? (
+        {loading ? (
+          <Spinner />
+        ) : error ? (
+          <div className={styles.emptyText}>
+            티켓을 불러오지 못했어요
+          </div>
+        ) : ticketList.length === 0 ? (
           <div className={styles.emptyText}>
             등록된 티켓이 없어요
           </div>

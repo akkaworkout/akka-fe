@@ -46,12 +46,13 @@ const TicketAddModal = ({
   const isViewMode = mode === 'view'
 
   const [step, setStep] = useState(1)
-
-  const [exerciseType, setExerciseType] = useState('')
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(new Date())
-  const [targetCount, setTargetCount] = useState('')
-  const [totalAmount, setTotalPrice] = useState('')
+  const [form, setForm] = useState({
+    exerciseType: '',
+    startDate: new Date(),
+    endDate: new Date(),
+    targetCount: '',
+    totalAmount: '',
+  })
 
   const getOnlyNumber = (value: string) => value.replace(/[^0-9]/g, '')
 
@@ -60,19 +61,19 @@ const TicketAddModal = ({
   const isDirty =
     !isViewMode &&
     (
-      exerciseType.trim() !== '' ||
-      targetCount.trim() !== '' ||
-      totalAmount.trim() !== ''
+      form.exerciseType.trim() !== '' ||
+      form.targetCount.trim() !== '' ||
+      form.totalAmount.trim() !== ''
     )
 
-  const isStep1Valid = exerciseType.trim() !== ''
+  const isStep1Valid = form.exerciseType.trim() !== ''
 
   const isStep2Valid =
-    targetCount.trim() !== '' &&
-    totalAmount.trim() !== '' &&
-    Number(targetCount) > 0 &&
-    Number(totalAmount) > 0 &&
-    startDate <= endDate
+    form.targetCount.trim() !== '' &&
+    form.totalAmount.trim() !== '' &&
+    Number(form.targetCount) > 0 &&
+    Number(form.totalAmount) > 0 &&
+    form.startDate <= form.endDate
 
   const nextDisabled = isViewMode ? false : step === 1 ? !isStep1Valid : !isStep2Valid
 
@@ -92,18 +93,18 @@ const TicketAddModal = ({
     if (!isStep2Valid) return
 
     onConfirm({
-      exerciseType,
+      exerciseType: form.exerciseType,
       colorCode,
       ticketType:
         ticketType === '횟수권'
           ? 'COUNT'
           : 'PERIOD',
 
-      targetCount: Number(targetCount),
-      totalAmount: Number(totalAmount),
+      targetCount: Number(form.targetCount),
+      totalAmount: Number(form.totalAmount),
 
-      startDate: formatDate(startDate),
-      endDate: formatDate(endDate),
+      startDate: formatDate(form.startDate),
+      endDate: formatDate(form.endDate),
     })
   }
 
@@ -120,14 +121,15 @@ const TicketAddModal = ({
   }
 
   useEffect(() => {
-    if (isViewMode && initialData) {
-      setExerciseType(initialData.exerciseType)
-      setTargetCount(String(initialData.targetCount))
-      setTotalPrice(String(initialData.totalAmount))
+    if (!isViewMode || !initialData) return
 
-      setStartDate(new Date(initialData.startDate))
-      setEndDate(new Date(initialData.endDate))
-    }
+    setForm({
+      exerciseType: initialData.exerciseType,
+      targetCount: String(initialData.targetCount),
+      totalAmount: String(initialData.totalAmount),
+      startDate: new Date(initialData.startDate),
+      endDate: new Date(initialData.endDate),
+    })
   }, [isViewMode, initialData])
 
   return (
@@ -149,14 +151,18 @@ const TicketAddModal = ({
           <>
             <div className={styles.row}>
               <div className={styles.field}>
-                <label>운동 종목</label>
+                <label htmlFor="exerciseType">운동 종목</label>
 
                 <input
+                  id="exerciseType"
                   className={styles.input}
-                  value={exerciseType}
+                  value={form.exerciseType}
                   disabled={isViewMode}
                   onChange={(e) =>
-                    setExerciseType(e.target.value)
+                    setForm((prev) => ({
+                      ...prev,
+                      exerciseType: e.target.value,
+                    }))
                   }
                   placeholder="헬스"
                 />
@@ -169,11 +175,10 @@ const TicketAddModal = ({
                   <button
                     type="button"
                     disabled={isViewMode}
-                    className={`${styles.ticketTypeButton} ${
-                      ticketType === '횟수권'
-                        ? styles.active
-                        : ''
-                    }`}
+                    className={`${styles.ticketTypeButton} ${ticketType === '횟수권'
+                      ? styles.active
+                      : ''
+                      }`}
                     onClick={() => setTicketType('횟수권')}
                   >
                     횟수권
@@ -182,11 +187,10 @@ const TicketAddModal = ({
                   <button
                     type="button"
                     disabled={isViewMode}
-                    className={`${styles.ticketTypeButton} ${
-                      ticketType === '기간권'
-                        ? styles.active
-                        : ''
-                    }`}
+                    className={`${styles.ticketTypeButton} ${ticketType === '기간권'
+                      ? styles.active
+                      : ''
+                      }`}
                     onClick={() => setTicketType('기간권')}
                   >
                     기간권
@@ -204,11 +208,10 @@ const TicketAddModal = ({
                     key={color}
                     type="button"
                     disabled={isViewMode}
-                    className={`${styles.colorCircle} ${
-                      colorCode === color
-                        ? styles.selected
-                        : ''
-                    }`}
+                    className={`${styles.colorCircle} ${colorCode === color
+                      ? styles.selected
+                      : ''
+                      }`}
                     style={{ backgroundColor: color }}
                     onClick={() =>
                       setSelectedColor(color)
@@ -235,8 +238,13 @@ const TicketAddModal = ({
 
               <div className={styles.periodRow}>
                 <DateSelect
-                  value={startDate}
-                  onChange={setStartDate}
+                  value={form.startDate}
+                  onChange={(date) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      startDate: date,
+                    }))
+                  }
                   disabled={isViewMode}
                 />
 
@@ -245,8 +253,13 @@ const TicketAddModal = ({
                 </span>
 
                 <DateSelect
-                  value={endDate}
-                  onChange={setEndDate}
+                  value={form.endDate}
+                  onChange={(date) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      endDate: date,
+                    }))
+                  }
                   disabled={isViewMode}
                 />
               </div>
@@ -254,17 +267,19 @@ const TicketAddModal = ({
 
             <div className={styles.row}>
               <div className={styles.field}>
-                <label>목표 횟수</label>
+                <label htmlFor="targetCount">목표 횟수</label>
 
                 <div className={styles.priceInput}>
                   <input
+                    id="targetCount"
                     className={styles.input}
-                    value={targetCount}
+                    value={form.targetCount}
                     disabled={isViewMode}
                     onChange={(e) =>
-                      setTargetCount(
-                        getOnlyNumber(e.target.value),
-                      )
+                      setForm((prev) => ({
+                        ...prev,
+                        targetCount: getOnlyNumber(e.target.value),
+                      }))
                     }
                     placeholder="24"
                     maxLength={3}
@@ -277,17 +292,19 @@ const TicketAddModal = ({
               </div>
 
               <div className={styles.field}>
-                <label>금액</label>
+                <label htmlFor='totalAmount'>금액</label>
 
                 <div className={styles.priceInput}>
                   <input
+                    id='totalAmount'
                     className={styles.input}
-                    value={totalAmount}
+                    value={form.totalAmount}
                     disabled={isViewMode}
                     onChange={(e) =>
-                      setTotalPrice(
-                        getOnlyNumber(e.target.value),
-                      )
+                      setForm((prev) => ({
+                        ...prev,
+                        totalAmount: getOnlyNumber(e.target.value),
+                      }))
                     }
                     placeholder="480000"
                     maxLength={8}
@@ -302,10 +319,11 @@ const TicketAddModal = ({
 
             {isViewMode && isRefunded && (
               <div className={styles.field}>
-                <label>환불 금액</label>
+                <label htmlFor='refundAmount'>환불 금액</label>
 
                 <div className={styles.priceInput}>
                   <input
+                    id='refundAmount'
                     className={styles.input}
                     value={
                       initialData?.refundAmount !== undefined

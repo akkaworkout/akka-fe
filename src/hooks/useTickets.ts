@@ -32,11 +32,13 @@ export type TicketItem = {
 export const useTickets = () => {
   const [tickets, setTickets] = useState<TicketItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   // 티켓 조회
   const getTickets = async () => {
     try {
       setLoading(true)
+      setError(null)
 
       const { data } = await api.get('/tickets')
 
@@ -47,9 +49,10 @@ export const useTickets = () => {
           : []
 
       setTickets(list)
-    } catch (error) {
+    } catch (error: any) {
       console.error('티켓 조회 실패:', error)
-      setTickets([])
+
+      setError('티켓 조회에 실패했습니다.')
     } finally {
       setLoading(false)
     }
@@ -68,8 +71,13 @@ export const useTickets = () => {
       await getTickets()
 
       onSuccess?.()
-    } catch (error) {
-      console.log('POST 실패:', error)
+    } catch (error: any) {
+      console.error('이용권 등록 실패:', error)
+
+      alert(
+        error?.response?.data?.message ??
+        '이용권 등록에 실패했습니다.'
+      )
     }
   }
 
@@ -89,7 +97,8 @@ export const useTickets = () => {
 
       onSuccess?.()
     } catch (error) {
-      console.log('DELETE 실패', error)
+      console.log('DELETE 실패:', error)
+      alert('이용권 삭제에 실패했습니다. 다시 시도해주세요.')
     }
   }
 
@@ -113,7 +122,8 @@ export const useTickets = () => {
 
       onSuccess?.()
     } catch (error) {
-      console.log('PATCH 실패', error)
+      console.log('PATCH 실패:', error)
+      alert('이용권 종료에 실패했습니다. 다시 시도해주세요.')
     }
   }
 
@@ -124,6 +134,7 @@ export const useTickets = () => {
   return {
     tickets,
     loading,
+    error,
     refetch: getTickets,
 
     handleCreateTicket,

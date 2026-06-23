@@ -59,7 +59,7 @@ const CalenderPage = () => {
   return (
     <>
       <div className={styles.wrap}>
-        <main className={styles.calendarPage}>
+        <div className={styles.calendarPage}>
           <div className={styles.calendarInner}>
             <div className={styles.title}>캘린더</div>
 
@@ -80,13 +80,19 @@ const CalenderPage = () => {
                 <Card
                   title={
                     <div className={styles.moneyMain}>
-                      <span className={styles.label}>금액:</span>
-                      <span className={styles.current}>
-                        {Number(summary.totalAmount).toLocaleString()}
-                      </span>
-                      <span className={styles.total}>
-                        &nbsp;/ {Number(summary.targetBudget ?? 0).toLocaleString()}원
-                      </span>
+                      {Number.isNaN(Number(summary.totalAmount))
+                        ? <span className={styles.label}>아직 이번 달 기록이 없어요</span>
+                        :
+                        <>
+                          <span className={styles.label}>금액:</span>
+                          <span className={styles.current}>
+                            {Number(summary.totalAmount).toLocaleString()}
+                          </span>
+                          <span className={styles.total}>
+                            &nbsp;/ {Number(summary.targetBudget ?? 0).toLocaleString()}원
+                          </span>
+                        </>
+                      }
                     </div>
                   }
                   width={445}
@@ -143,7 +149,7 @@ const CalenderPage = () => {
               onItemClick={handleItemClick}
             />
           </div>
-        </main>
+        </div>
       </div>
 
       {isModalOpen && selectedItem && (

@@ -35,7 +35,7 @@
   border-radius: 10px;
   border: 0;
   background: var(--primary);
-  color: #fff;
+  color: var(--white);
   font-weight: 700;
   cursor: pointer;
 

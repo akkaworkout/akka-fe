@@ -22,7 +22,7 @@
 
 .active {
   background-color: var(--primary);
-  color: #FFFFFF;
+  color: var(--white);
 }
 
 .default.active {
@@ -34,11 +34,11 @@
 }
 
 .green.active {
-  background: #00AA21;
+  background: var(--success);
 }
 
 .red.active {
-  background: #FF5858;
+  background: var(--error);
 }
 
 .file {
@@ -60,7 +60,7 @@
   width: 127px;
   height: 50px;
   background: var(--primary);
-  color: #FFFFFF;
+  color: var(--white);
   font-size: 20px;
   font-weight: 600;
 }
@@ -70,7 +70,7 @@
   height: 50px;
 
   background: var(--primary);
-  color: #FFFFFF;
+  color: var(--white);
 
   font-size: 20px;
   font-weight: 600;
@@ -82,7 +82,7 @@
 
 .primary:disabled {
   background: #DADADA;
-  color: #FFFFFF;
+  color: var(--white);
   cursor: not-allowed;
   opacity: 0.7;
 }
@@ -92,7 +92,7 @@
   height: 50px;
 
   background: #DADADA;
-  color: #FFFFFF;
+  color: var(--white);
 
   font-size: 20px;
   font-weight: 600;
@@ -118,7 +118,7 @@
 
 .dropdownDelete {
   background: #FFF6F6;
-  color: #FF5858;
+  color: var(--error);
 }
 
 .dropdownDelete:hover:not(.active) {

@@ -4,6 +4,8 @@
   --primary-soft: #E9ECFF;
   --primary-dark: #38359D;
 
+  --background: #FAFAFB;
+
   --secondary: #FFC227;
   --secondary-light: #FFE7AA;
   --secondary-soft: #FFF8E6;
@@ -27,7 +29,7 @@ body {
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   min-height: 100%;
-  background-color: #FAFAFB;
+  background-color: var(--background);
   color: var(--black);
 
   text-rendering: optimizeLegibility;

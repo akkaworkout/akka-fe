@@ -20,7 +20,7 @@ const mapExpenseStats = (
     expenseCount: item.expenseCount,
     totalAmount: item.totalAmount,
     topCategory:
-      item.topCategory ?? '기록 없음',
+      item.topCategory ?? '아직 기록이 없어요',
   }
 }
 

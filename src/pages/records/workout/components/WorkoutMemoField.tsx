@@ -13,9 +13,10 @@ const WorkoutMemoField = ({
 }: Props) => {
   return (
     <div className={styles.field}>
-      <label>메모</label>
+      <label htmlFor='memo'>메모</label>
 
       <input
+        id='memo'
         className={styles.input}
         value={memo}
         onChange={e => {

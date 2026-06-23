@@ -107,7 +107,7 @@ export default function LoginPage() {
 
   return (
     <div className={styles.wrap}>
-      <main className={styles.mainPage}>
+      <div className={styles.mainPage}>
         <div className={styles.mainInner}>
           <section className={styles.card}>
             <header className={styles.headerArea}>
@@ -176,7 +176,7 @@ export default function LoginPage() {
             </p>
           </section>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

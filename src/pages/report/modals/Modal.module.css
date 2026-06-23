@@ -14,7 +14,7 @@
 /* ===== Modal Box (공통) ===== */
 .modal {
   position: relative;
-  background: #ffffff;
+  background: var( --white);
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   overflow: hidden;
@@ -46,7 +46,7 @@
 
   border: 0;
   background: var(--primary);
-  color: #fff;
+  color: var( --white);
 
 
   display: flex;

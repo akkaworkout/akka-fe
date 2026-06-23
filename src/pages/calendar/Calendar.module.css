@@ -8,7 +8,7 @@
     flex: 1;
     display: flex;
     justify-content: center;
-    background-color: #FAFAFB;
+    background-color: var(--background);
     min-height: 900px;
 }
 
@@ -32,7 +32,7 @@
     top: 98px;
     width: 546px;
     height: 770px;
-    background: #fff;
+    background: var(--white);
     border-radius: 20px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
 }
@@ -264,7 +264,7 @@
 
 .goalItem:focus-within,
 .goalItem:hover {
-    background-color: #E9ECFF;
+    background-color: var(--primary-soft);
 }
 
 .goalItem span {
@@ -374,7 +374,7 @@
 }
 
 .activeDay {
-    background: #E9ECFF;
+    background: var(--primary-soft);
 }
 
 .status {
@@ -383,18 +383,18 @@
 }
 
 .success {
-    color: #00AA21;
+    color: var(--success);
     font-weight: 600;
 }
 
 .fail {
-    color: #FF5858;
+    color: var(--error);
     text-decoration: line-through;
     font-weight: 600;
 }
 
 .purchase {
-    color: #E5B53B;
+    color: var(--secondary-dark);
     font-weight: 600;
 }
 
@@ -411,7 +411,7 @@
 }
 
 .addBtn:hover {
-    background-color: #E9ECFF;
+    background-color: var(--primary-soft);
 }
 
 .ticketWrapper {

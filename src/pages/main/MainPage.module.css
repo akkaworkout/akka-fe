@@ -7,7 +7,7 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  background-color: #FAFAFB;
+  background-color: var(--background);
   min-height: 100vh;
   transition: margin-left 0.3s ease;
 }
@@ -44,7 +44,7 @@
   margin: 6px 0 0;
   font-size: clamp(28px, 5vw, 48px);
   font-weight: 800;
-  color: #111827;
+  color: var(--black);
   line-height: 1.2;
 }
 
@@ -105,7 +105,7 @@
   height: 56px;
   border: none;
   border-radius: 16px;
-  background: #38359D;
+  background: var(--primary-dark);
   color: white;
   font-size: 16px;
   font-weight: 600;

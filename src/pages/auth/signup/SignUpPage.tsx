@@ -297,7 +297,7 @@ export default function SignUpPage() {
 
   return (
     <div className={styles.wrap}>
-      <main className={styles.main}>
+      <div className={styles.main}>
         <div className={styles.mainInner}>
           <section className={styles.card}>
             <header className={styles.headerArea}>
@@ -495,7 +495,7 @@ export default function SignUpPage() {
             </form>
           </section>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
