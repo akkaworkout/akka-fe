@@ -110,22 +110,6 @@
   background-color: var(--black);
 }
 
-.moreLink {
-  background: none;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  display: inline-block;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--black);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  text-decoration-thickness: 1px;
-}
-
-/* === 부분 로딩 컨테이너 === */
 .goalLoadingContainer {
   display: flex;
   justify-content: center;

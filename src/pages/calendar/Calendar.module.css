@@ -139,50 +139,6 @@
     font-weight: 700;
 }
 
-.activeDateLine {
-    position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 4px);
-    height: 1px;
-    background-color: #FF8F6B;
-    border-radius: 999px;
-    border: none;
-    z-index: 3;
-}
-
-.tag {
-    width: 71px;
-    margin-top: 4px;
-    padding: 3px;
-    border-radius: 2px;
-    font-size: 11px;
-    text-align: center;
-    color: var(--black);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
-}
-
-.moreTag {
-    position: absolute;
-    left: 8px;
-    bottom: 5px;
-
-}
-
-.health {
-    background: #dcd8ff;
-    color: #4b44c7;
-}
-
-.ballet {
-    background: #f5d9ff;
-    color: #a23bc7;
-}
-
 .workout {
     background: #dff6f6;
     color: #1d7a7a;
@@ -192,10 +148,6 @@
     position: absolute;
     top: 98px;
     right: 0px;
-}
-
-.moneyCard {
-    padding: 9.5px;
 }
 
 .moneyMain {

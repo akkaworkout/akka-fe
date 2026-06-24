@@ -1,6 +1,6 @@
 // 이미지
-import arrowIcon from '@/assets/icons/chevron-left.png'
-import ticketIcon from '@/assets/icons/ticket.png'
+import arrowIcon from '@/assets/icons/common/chevron-left.png'
+import ticketIcon from '@/assets/images/ticket.png'
 
 // 스타일
 import styles from '../Calendar.module.css'

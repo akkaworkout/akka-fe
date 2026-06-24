@@ -2,13 +2,13 @@ import styles from './TicketRow.module.css'
 
 import Button from '@/components/button/Button'
 
-import CalendarIcon from '@/assets/icons/sidebar/sidebar_calendar_active.png'
-import Goal from '@/assets/icons/goal.png'
-import MoreButton from '@/assets/icons/moreButton.png'
-import EditIcon from '@/assets/icons/edit.png'
-import DeleteIcon from '@/assets/icons/delete.png'
+import CalendarIcon from '@/assets/icons/sidebar/calendar-active.png'
+import Goal from '@/assets/icons/common/goal.png'
+import MoreButton from '@/assets/icons/common/moreButton.png'
+import EditIcon from '@/assets/icons/common/edit.png'
+import DeleteIcon from '@/assets/icons/common/delete.png'
 
-import type { TicketItem } from '@/hooks/useTickets'
+import type { TicketItem } from '@/pages/records/hooks/useTickets'
 
 type TicketRowProps = {
   ticket: TicketItem

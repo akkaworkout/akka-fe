@@ -1,6 +1,6 @@
 import styles from './Button.module.css'
 
-import uploadIcon from '@/assets/icons/upload.png'
+import uploadIcon from '@/assets/icons/common/upload.png'
 
 type Props = {
   children?: React.ReactNode

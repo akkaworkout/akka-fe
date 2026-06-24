@@ -1,11 +1,12 @@
 import React, { useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet-async'
 
 import styles from "./SignUpPage.module.css";
 
-import profileDefault from "@/assets/icons/profile-default.png";
-import editAvatar from "@/assets/icons/edit-avatar.png";
+import profileDefault from "@/assets/icons/auth/profile-default.png";
+import editAvatar from "@/assets/icons/auth/edit-avatar.png";
 
 import Form from "@/components/form/Form";
 
@@ -20,17 +21,6 @@ type FieldErrors = Partial<{
   exerciseGoal: string;
   profile: string;
 }>;
-
-type RegisterResponse = {
-  message?: string;
-  success?: boolean;
-};
-
-type CheckDuplicateResponse = {
-  success?: boolean;
-  available: boolean;
-  message?: string;
-};
 
 export default function SignUpPage() {
   const nav = useNavigate();
@@ -127,18 +117,18 @@ export default function SignUpPage() {
         ...prev,
         email: data.available
           ? undefined
-          : "이미 사용 중인 이메일입니다.",
+          : "이미 사용 중인 이메일이에요",
       }));
 
       if (data.available) {
-        alert("사용 가능한 이메일입니다.");
+        alert("사용 가능한 이메일이에요");
       }
     } catch (err) {
       console.error(err);
 
       setErrors((prev) => ({
         ...prev,
-        email: "이메일 중복확인 중 오류가 발생했습니다.",
+        email: "이메일 중복확인 중 오류가 발생했어요",
       }));
     }
   };
@@ -149,7 +139,7 @@ export default function SignUpPage() {
     if (v.length === 0) {
       setErrors((prev) => ({
         ...prev,
-        nickname: "닉네임을 입력해주세요.",
+        nickname: "닉네임을 입력해주세요",
       }));
       return;
     }
@@ -157,7 +147,7 @@ export default function SignUpPage() {
     if (v.length > 5) {
       setErrors((prev) => ({
         ...prev,
-        nickname: "5글자 이내로 입력해주세요.",
+        nickname: "5글자 이내로 입력해주세요",
       }));
       return;
     }
@@ -176,11 +166,11 @@ export default function SignUpPage() {
         ...prev,
         nickname: data.available
           ? undefined
-          : "이미 사용 중인 닉네임입니다.",
+          : "이미 사용 중인 닉네임이에요",
       }));
 
       if (data.available) {
-        alert("사용 가능한 닉네임입니다.");
+        alert("사용 가능한 닉네임이에요");
       }
     } catch (err) {
       console.error(err);
@@ -238,7 +228,7 @@ export default function SignUpPage() {
 
       await api.post("/auth/register", formData);
 
-      alert("회원가입 성공!");
+      alert("가입이 완료됐어요");
 
       nav("/signup/success", {
         state: { nickname },
@@ -246,7 +236,7 @@ export default function SignUpPage() {
     } catch (err) {
       console.error(err);
 
-      alert("회원가입 실패");
+      alert("가입에 실패했어요. 다시 시도해 주세요");
     }
   };
 
@@ -296,206 +286,222 @@ export default function SignUpPage() {
   /* ================= 렌더 ================= */
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.main}>
-        <div className={styles.mainInner}>
-          <section className={styles.card}>
-            <header className={styles.headerArea}>
-              <h1 className={styles.pageTitle}>회원가입</h1>
-            </header>
+    <>
+      <Helmet>
+        <title>회원가입 | Akkaworkout</title>
+        <meta
+          name="description"
+          content="Akkaworkout에 가입하고 운동 루틴과 지출을 함께 관리해 보세요."
+        />
+      </Helmet>
+      
+      <div className={styles.wrap}>
+        <div className={styles.main}>
+          <div className={styles.mainInner}>
+            <section className={styles.card}>
+              <header className={styles.headerArea}>
+                <h1 className={styles.pageTitle}>회원가입</h1>
+              </header>
 
-            {/* profile */}
-            <div className={styles.profileArea}>
-              <div className={styles.avatar}>
-                <img
-                  className={styles.avatarImg}
-                  src={profilePreview ?? profileDefault}
-                  alt="프로필"
-                  draggable={false}
-                />
-                <button
-                  type="button"
-                  className={styles.editAvatarBtn}
-                  onClick={handlePickProfile}
-                  aria-label="프로필 사진 수정"
-                >
-                  <img src={editAvatar} alt="" draggable={false} />
-                </button>
-              </div>
-
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                className={styles.fileInput}
-                onChange={handleProfileChange}
-              />
-
-              {/* 필요하면 프로필 에러 표시 */}
-              {/* {errors.profile && <p className={styles.errorText}>{errors.profile}</p>} */}
-            </div>
-
-            <form className={styles.form} onSubmit={handleSubmit}>
-              <Form
-                label="이메일"
-                value={email}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setEmail(v);
-
-                  setEmailChecked(false);
-                  setEmailAvailable(false);
-
-                  setErrors((prev) => ({
-                    ...prev,
-                    email:
-                      v && !isEmailValid(v)
-                        ? "올바른 이메일 형식이 아닙니다"
-                        : undefined,
-                  }));
-                }}
-                placeholder="akka@naver.com"
-                autoComplete="email"
-                errorText={errors.email}
-                rightButton={{
-                  label: "중복 확인",
-                  onClick: handleCheckEmail,
-                  disabled:
-                    !isEmailValid(email) || (emailChecked && emailAvailable),
-                }}
-              />
-
-              <Form
-                label="비밀번호"
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setPassword(v);
-
-                  setErrors((prev) => {
-                    const next: FieldErrors = { ...prev };
-
-                    if (!v) next.password = "비밀번호를 입력해주세요.";
-                    else if (!isPasswordValid(v))
-                      next.password =
-                        "비밀번호는 특수문자 포함 8자 이상이어야 합니다.";
-                    else next.password = undefined;
-
-                    if (passwordConfirm) {
-                      next.passwordConfirm =
-                        passwordConfirm !== v
-                          ? "비밀번호가 일치하지 않습니다."
-                          : undefined;
-                    }
-
-                    return next;
-                  });
-                }}
-                placeholder="비밀번호 (특수문자 포함, 8자 이상)"
-                autoComplete="new-password"
-                showPasswordToggle
-                errorText={errors.password}
-              />
-
-              <Form
-                label="비밀번호 확인"
-                value={passwordConfirm}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setPasswordConfirm(v);
-                  setErrors((prev) => ({
-                    ...prev,
-                    passwordConfirm:
-                      v && v !== password
-                        ? "비밀번호가 일치하지 않습니다"
-                        : undefined,
-                  }));
-                }}
-                placeholder="비밀번호 (특수문자 포함, 8자 이상)"
-                type="password"
-                showPasswordToggle
-                errorText={errors.passwordConfirm}
-              />
-
-              <Form
-                label="닉네임"
-                value={nickname}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setNickname(v);
-
-                  setNicknameChecked(false);
-                  setNicknameAvailable(false);
-
-                  setErrors((prev) => ({ ...prev, nickname: undefined }));
-                }}
-                placeholder="5글자 이내로 입력해주세요"
-                errorText={errors.nickname}
-                rightButton={{
-                  label: "중복 확인",
-                  onClick: handleCheckNickname,
-                  disabled:
-                    nickname.trim().length === 0 ||
-                    (nicknameChecked && nicknameAvailable),
-                }}
-              />
-
-              <Form
-                label="목표 예산(월 기준)"
-                value={budget}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setBudget(v);
-                  setErrors((prev) => ({
-                    ...prev,
-                    budget:
-                      v && !/^\d+$/.test(v)
-                        ? "숫자만 입력 가능합니다"
-                        : undefined,
-                  }));
-                }}
-                inputMode="numeric"
-                placeholder="120000"
-                errorText={errors.budget}
-              />
-
-              <Form
-                label="목표 운동 횟수(월 기준)"
-                value={exerciseGoal}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setExerciseGoal(v);
-                  setErrors((prev) => ({
-                    ...prev,
-                    exerciseGoal:
-                      v && !/^\d+$/.test(v)
-                        ? "숫자만 입력 가능합니다"
-                        : undefined,
-                  }));
-                }}
-                inputMode="numeric"
-                placeholder="12"
-                errorText={errors.exerciseGoal}
-              />
-
-              <div className={styles.submitRow}>
-                <div />
-                <div className={styles.submitArea}>
+              {/* profile */}
+              <div className={styles.profileArea}>
+                <div className={styles.avatar}>
+                  <img
+                    className={styles.avatarImg}
+                    src={profilePreview ?? profileDefault}
+                    alt="프로필"
+                    draggable={false}
+                  />
                   <button
-                    type="submit"
-                    disabled={!canSubmit}
-                    className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
-                      }`}
+                    type="button"
+                    className={styles.editAvatarBtn}
+                    onClick={handlePickProfile}
+                    aria-label="프로필 사진 수정"
                   >
-                    회원가입
+                    <img src={editAvatar} alt="" draggable={false} />
                   </button>
                 </div>
+
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  className={styles.fileInput}
+                  onChange={handleProfileChange}
+                />
+
+                {/* 필요하면 프로필 에러 표시 */}
+                {/* {errors.profile && <p className={styles.errorText}>{errors.profile}</p>} */}
               </div>
-            </form>
-          </section>
+
+              <form className={styles.form} onSubmit={handleSubmit}>
+                <Form
+                  label="이메일"
+                  id="signup-email"
+                  value={email}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setEmail(v);
+
+                    setEmailChecked(false);
+                    setEmailAvailable(false);
+
+                    setErrors((prev) => ({
+                      ...prev,
+                      email:
+                        v && !isEmailValid(v)
+                          ? "올바른 이메일 형식이 아닙니다"
+                          : undefined,
+                    }));
+                  }}
+                  placeholder="akka@naver.com"
+                  autoComplete="email"
+                  errorText={errors.email}
+                  rightButton={{
+                    label: "중복 확인",
+                    onClick: handleCheckEmail,
+                    disabled:
+                      !isEmailValid(email) || (emailChecked && emailAvailable),
+                  }}
+                />
+
+                <Form
+                  label="비밀번호"
+                  id="signup-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setPassword(v);
+
+                    setErrors((prev) => {
+                      const next: FieldErrors = { ...prev };
+
+                      if (!v) next.password = "비밀번호를 입력해주세요.";
+                      else if (!isPasswordValid(v))
+                        next.password =
+                          "비밀번호는 특수문자 포함 8자 이상이어야 합니다.";
+                      else next.password = undefined;
+
+                      if (passwordConfirm) {
+                        next.passwordConfirm =
+                          passwordConfirm !== v
+                            ? "비밀번호가 일치하지 않습니다."
+                            : undefined;
+                      }
+
+                      return next;
+                    });
+                  }}
+                  placeholder="비밀번호 (특수문자 포함, 8자 이상)"
+                  autoComplete="new-password"
+                  showPasswordToggle
+                  errorText={errors.password}
+                />
+
+                <Form
+                  label="비밀번호 확인"
+                  id="signup-password"
+                  value={passwordConfirm}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setPasswordConfirm(v);
+                    setErrors((prev) => ({
+                      ...prev,
+                      passwordConfirm:
+                        v && v !== password
+                          ? "비밀번호가 일치하지 않습니다"
+                          : undefined,
+                    }));
+                  }}
+                  placeholder="비밀번호 (특수문자 포함, 8자 이상)"
+                  type="password"
+                  showPasswordToggle
+                  errorText={errors.passwordConfirm}
+                />
+
+                <Form
+                  label="닉네임"
+                  id="signup-nickname"
+                  value={nickname}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setNickname(v);
+
+                    setNicknameChecked(false);
+                    setNicknameAvailable(false);
+
+                    setErrors((prev) => ({ ...prev, nickname: undefined }));
+                  }}
+                  placeholder="5글자 이내로 입력해주세요"
+                  errorText={errors.nickname}
+                  rightButton={{
+                    label: "중복 확인",
+                    onClick: handleCheckNickname,
+                    disabled:
+                      nickname.trim().length === 0 ||
+                      (nicknameChecked && nicknameAvailable),
+                  }}
+                />
+
+                <Form
+                  label="목표 예산(월 기준)"
+                  id="signup-budget-goal"
+                  value={budget}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setBudget(v);
+                    setErrors((prev) => ({
+                      ...prev,
+                      budget:
+                        v && !/^\d+$/.test(v)
+                          ? "숫자만 입력 가능합니다"
+                          : undefined,
+                    }));
+                  }}
+                  inputMode="numeric"
+                  placeholder="120000"
+                  errorText={errors.budget}
+                />
+
+                <Form
+                  label="목표 운동 횟수(월 기준)"
+                  id="signup-exercise-goal"
+                  value={exerciseGoal}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setExerciseGoal(v);
+                    setErrors((prev) => ({
+                      ...prev,
+                      exerciseGoal:
+                        v && !/^\d+$/.test(v)
+                          ? "숫자만 입력 가능합니다"
+                          : undefined,
+                    }));
+                  }}
+                  inputMode="numeric"
+                  placeholder="12"
+                  errorText={errors.exerciseGoal}
+                />
+
+                <div className={styles.submitRow}>
+                  <div />
+                  <div className={styles.submitArea}>
+                    <button
+                      type="submit"
+                      disabled={!canSubmit}
+                      className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
+                        }`}
+                    >
+                      회원가입
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </section>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

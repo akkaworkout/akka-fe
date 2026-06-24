@@ -1,7 +1,7 @@
 import Card from '@/components/card/Card'
 import Spinner from '@/components/spinner/Spinner'
 
-import type { TodayItem } from '@/hooks/useTodayItems'
+import type { TodayItem } from '@/api/calendarApi'
 
 import styles from '../Calendar.module.css'
 

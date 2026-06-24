@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import type { Exercise } from '@/components/summaryCard/SummaryCard'
-import type { TicketItem } from './useTickets'
+import type { TicketItem } from '@/pages/records/hooks/useTickets'
 
 const EXERCISES: Exercise[] = [
   { id: 1, label: '발레', color: 'rgb(252, 215, 255)' },

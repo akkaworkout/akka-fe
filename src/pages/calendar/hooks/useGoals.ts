@@ -57,7 +57,7 @@ export const useGoals = (
         goals
       )
 
-      alert('저장이 완료되었습니다.')
+      alert('저장이 완료되었어요')
     } catch (error) {
       console.log(error)
     }

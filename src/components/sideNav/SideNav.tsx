@@ -6,28 +6,28 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 import styles from "./SideNav.module.css";
 
-import akkaLogo from "@/assets/images/akka_logo.png";
-import akkaLogoSvg from "@/assets/images/akka_logo_svg.png";
-import akkaLogout from "@/assets/icons/akka_logout.png";
+import akkaLogo from "@/assets/brand/akka-logo.png";
+import akkaLogoSvg from "@/assets/brand/akka-logo-symbol.png";
+import akkaLogout from "@/assets/icons/sidebar/logout.png";
 
-import sidebarToggleIcon from "@/assets/icons/sidebar/sidebar_toggle.png";
+import sidebarToggleIcon from "@/assets/icons/sidebar/toggle.png";
 
-import sidebarMenuIcon from "@/assets/icons/sidebar/sidebar_menu.png";
-import sidebarMenuActiveIcon from "@/assets/icons/sidebar/sidebar_menu_active.png";
+import sidebarMenuIcon from "@/assets/icons/sidebar/menu.png";
+import sidebarMenuActiveIcon from "@/assets/icons/sidebar/menu-active.png";
 
-import sidebarWriteIcon from "@/assets/icons/sidebar/sidebar_write.png";
-import sidebarWriteActiveIcon from "@/assets/icons/sidebar/sidebar_write_active.png";
+import sidebarRecordIcon from "@/assets/icons/sidebar/record.png";
+import sidebarRecordActiveIcon from "@/assets/icons/sidebar/record-active.png";
 
-import sidebarReportIcon from "@/assets/icons/sidebar/sidebar_report.png";
-import sidebarReportActiveIcon from "@/assets/icons/sidebar/sidebar_report_active.png";
+import sidebarReportIcon from "@/assets/icons/sidebar/report.png";
+import sidebarReportActiveIcon from "@/assets/icons/sidebar/report-active.png";
 
-import sidebarCalendarIcon from "@/assets/icons/sidebar/sidebar_calendar.png";
-import sidebarCalendarActiveIcon from "@/assets/icons/sidebar/sidebar_calendar_active.png";
+import sidebarCalendarIcon from "@/assets/icons/sidebar/calendar.png";
+import sidebarCalendarActiveIcon from "@/assets/icons/sidebar/calendar-active.png";
 
-import sidebarSettingIcon from "@/assets/icons/sidebar/sidebar_setting.png";
-import sidebarSettingActiveIcon from "@/assets/icons/sidebar/sidebar_setting_active.png";
+import sidebarSettingIcon from "@/assets/icons/sidebar/setting.png";
+import sidebarSettingActiveIcon from "@/assets/icons/sidebar/setting-active.png";
 
-import default_profile from "@/assets/icons/sidebar/default_profile.png";
+import default_profile from "@/assets/icons/sidebar/default-profile.png";
 
 const SideNav = () => {
   const navigate = useNavigate();
@@ -63,8 +63,8 @@ const SideNav = () => {
       label: "운동 기록",
       path: "/write",
       paths: ["/write", "/expense", "/ticket"],
-      icon: sidebarWriteIcon,
-      activeIcon: sidebarWriteActiveIcon,
+      icon: sidebarRecordIcon,
+      activeIcon: sidebarRecordActiveIcon,
       alt: "write",
     },
     {
@@ -101,7 +101,7 @@ const SideNav = () => {
     const publicPaths = ["/main"];
 
     if (!isLoggedIn && !publicPaths.includes(path)) {
-      alert("로그인이 필요한 서비스입니다.");
+      alert("로그인하고 이용할 수 있어요");
       navigate("/login");
       return;
     }
@@ -165,6 +165,8 @@ const SideNav = () => {
     logout();
 
     setUser(null);
+
+    alert("안전하게 로그아웃했어요");
 
     navigate("/main");
   };

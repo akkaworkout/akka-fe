@@ -8,6 +8,7 @@ import {
   Legend,
   type ChartOptions,
   type Plugin,
+  type ChartType,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 

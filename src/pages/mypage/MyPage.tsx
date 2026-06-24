@@ -1,18 +1,21 @@
 import { type FormEvent } from "react";
-import styles from "./MyPage.module.css";
+import { Helmet } from 'react-helmet-async'
+
+import { useAuthStore } from "@/stores/useAuthStore";
 
 import Card from "@/components/card/Card";
 import Input from "@/components/form/Form";
 
-import editAvatar from "@/assets/icons/edit-avatar.png";
+import editAvatar from "@/assets/icons/auth/edit-avatar.png";
 import premiumCard from "@/assets/images/premium-card.png";
 
 import api from "@/api/api";
-import { useMyPageForm, type InitialData } from "@/hooks/useMyPageForm";
-import { useProfileImage } from "@/hooks/useProfileImage";
-import { useUserData } from "@/hooks/useUserData";
-import { useFormValidation } from "@/hooks/useFormValidation";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { useMyPageForm, type InitialData } from "./hooks/useMyPageForm";
+import { useProfileImage } from "./hooks/useProfileImage";
+import { useUserData } from "./hooks/useUserData";
+import { useFormValidation } from "./hooks/useFormValidation";
+
+import styles from "./MyPage.module.css";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 const DEFAULT_PROFILE = "https://placehold.co/120?text=Profile";
@@ -85,7 +88,7 @@ export default function MyPage() {
         : String(user.target_budget),
     exerciseGoal:
       user?.target_exercise_count === null ||
-      user?.target_exercise_count === undefined
+        user?.target_exercise_count === undefined
         ? ""
         : String(user.target_exercise_count),
     premiumPoint: user?.premium_point ? `${user.premium_point}P` : "0P",
@@ -123,22 +126,22 @@ export default function MyPage() {
     switch (fieldName) {
       case "email":
         errorMsg = !validation.isEmailValid(value)
-          ? "올바른 이메일 형식이 아닙니다."
+          ? "올바른 이메일 형식이 아니에요"
           : undefined;
         break;
       case "nickname":
         errorMsg = !validation.isNicknameValid(value)
-          ? "5글자 이내로 입력해주세요."
+          ? "5글자 이내로 입력해주세요"
           : undefined;
         break;
       case "budget":
         errorMsg = !validation.isBudgetValid(value)
-          ? "숫자만 입력 가능합니다."
+          ? "숫자만 입력 가능해요"
           : undefined;
         break;
       case "exerciseGoal":
         errorMsg = !validation.isExerciseValid(value)
-          ? "숫자만 입력 가능합니다."
+          ? "숫자만 입력 가능해요"
           : undefined;
         break;
     }
@@ -200,18 +203,18 @@ export default function MyPage() {
       if (!form.emailDirty || !validation.isEmailValid(form.formData.email)) {
         form.setErrors((prev) => ({
           ...prev,
-          email: "올바른 이메일 형식이 아닙니다.",
+          email: "올바른 이메일 형식이 아니에요",
         }));
         form.setTouched((t) => ({ ...t, email: true }));
         return;
       }
-      alert("이메일 중복 확인");
+      alert("이메일 중복 확인이 완료되었어요");
       form.setEmailChecked(true);
     } else if (fieldName === "nickname") {
       if (!form.nicknameDirty) {
         form.setErrors((prev) => ({
           ...prev,
-          nickname: "닉네임을 입력해주세요.",
+          nickname: "닉네임을 입력해주세요",
         }));
         form.setTouched((t) => ({ ...t, nickname: true }));
         return;
@@ -219,12 +222,12 @@ export default function MyPage() {
       if (!validation.isNicknameValid(form.formData.nickname)) {
         form.setErrors((prev) => ({
           ...prev,
-          nickname: "5글자 이내로 입력해주세요.",
+          nickname: "5글자 이내로 입력해주세요",
         }));
         form.setTouched((t) => ({ ...t, nickname: true }));
         return;
       }
-      alert("닉네임 중복 확인");
+      alert("닉네임 중복 확인이 완료되었어요");
       form.setNicknameChecked(true);
     }
   };
@@ -275,237 +278,247 @@ export default function MyPage() {
       payload.password = form.formData.password;
 
     if (Object.keys(payload).length === 0) {
-      alert("수정할 값이 없습니다.");
+      alert("바뀐 내용이 없어요");
       return;
     }
 
     try {
       const file = fileRef.current?.files?.[0];
       await updateMe(payload, file);
-      alert("수정 완료");
+      alert("바뀐 내용을 저장했어요");
       form.reset();
       resetProfile();
       await fetchMe();
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "수정 실패";
+      const errorMsg = err instanceof Error ? err.message : "수정에 실패했어요";
       alert(errorMsg);
     }
   };
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.main}>
-        <div className={styles.mainInner}>
-          <header className={styles.headerArea}>
-            <h1 className={styles.pageTitle}>마이페이지</h1>
-          </header>
+    <>
+      <Helmet>
+        <title>마이페이지 | Akkaworkout</title>
+        <meta
+          name="description"
+          content="내 목표 예산, 운동 목표, 프로필 정보를 관리해 보세요."
+        />
+        <meta name="robots" content="noindex" />
+      </Helmet>
 
-          <div className={styles.grid}>
-            {/* === 왼쪽 카드: 개인 정보 수정 === */}
-            <div className={styles.leftCard}>
-              <Card
-                title="개인 정보 수정"
-                width={665}
-                height={783}
-                backgroundColor="#ffffff"
-                radius={20}
-              >
-                <div className={styles.profileArea}>
-                  <div className={styles.avatar}>
-                    <img
-                      className={styles.avatarImg}
-                      src={
-                        profilePreview ??
-                        (user?.profile_image_url &&
-                        user.profile_image_url.trim()
-                          ? `${API_BASE}${user.profile_image_url}`
-                          : DEFAULT_PROFILE)
-                      }
-                      alt="프로필"
-                      draggable={false}
+      <div className={styles.wrap}>
+        <div className={styles.main}>
+          <div className={styles.mainInner}>
+            <header className={styles.headerArea}>
+              <h1 className={styles.pageTitle}>마이페이지</h1>
+            </header>
+
+            <div className={styles.grid}>
+              {/* === 왼쪽 카드: 개인 정보 수정 === */}
+              <div className={styles.leftCard}>
+                <Card
+                  title="개인 정보 수정"
+                  width={665}
+                  height={783}
+                  backgroundColor="#ffffff"
+                  radius={20}
+                >
+                  <div className={styles.profileArea}>
+                    <div className={styles.avatar}>
+                      <img
+                        className={styles.avatarImg}
+                        src={
+                          profilePreview ??
+                          (user?.profile_image_url &&
+                            user.profile_image_url.trim()
+                            ? `${API_BASE}${user.profile_image_url}`
+                            : DEFAULT_PROFILE)
+                        }
+                        alt="프로필"
+                        draggable={false}
+                      />
+                      <button
+                        type="button"
+                        className={styles.editAvatarBtn}
+                        onClick={handlePickProfile}
+                      >
+                        <img src={editAvatar} alt="" draggable={false} />
+                      </button>
+                    </div>
+
+                    <input
+                      ref={fileRef}
+                      type="file"
+                      accept="image/*"
+                      className={styles.fileInput}
+                      onChange={handleProfileChange}
                     />
-                    <button
-                      type="button"
-                      className={styles.editAvatarBtn}
-                      onClick={handlePickProfile}
-                    >
-                      <img src={editAvatar} alt="" draggable={false} />
-                    </button>
+
+                    {profileError && (
+                      <p className={styles.profileError}>{profileError}</p>
+                    )}
                   </div>
 
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    accept="image/*"
-                    className={styles.fileInput}
-                    onChange={handleProfileChange}
-                  />
+                  <div className={styles.profileToFormGap} />
 
-                  {profileError && (
-                    <p className={styles.profileError}>{profileError}</p>
-                  )}
-                </div>
-
-                <div className={styles.profileToFormGap} />
-
-                <form
-                  className={styles.form}
-                  onSubmit={handleSubmit}
-                  autoComplete="off"
-                >
-                  {/* === 이메일, 닉네임 (map으로 렌더링) === */}
-                  {LEFT_FORM_FIELDS.map((field) => (
-                    <Input
-                      key={field.name}
-                      label={field.label}
-                      value={form.formData[field.name]}
-                      onChange={(e) =>
-                        handleFieldChange(field.name, e.target.value)
-                      }
-                      type={field.type}
-                      errorText={
-                        form.showError(field.name)
-                          ? form.errors[field.name]
-                          : undefined
-                      }
-                      rightButton={
-                        field.hasButton
-                          ? {
+                  <form
+                    className={styles.form}
+                    onSubmit={handleSubmit}
+                    autoComplete="off"
+                  >
+                    {/* === 이메일, 닉네임 (map으로 렌더링) === */}
+                    {LEFT_FORM_FIELDS.map((field) => (
+                      <Input
+                        key={field.name}
+                        label={field.label}
+                        value={form.formData[field.name]}
+                        onChange={(e) =>
+                          handleFieldChange(field.name, e.target.value)
+                        }
+                        type={field.type}
+                        errorText={
+                          form.showError(field.name)
+                            ? form.errors[field.name]
+                            : undefined
+                        }
+                        rightButton={
+                          field.hasButton
+                            ? {
                               label: field.buttonText,
                               onClick: () => handleCheck(field.name),
                               disabled:
                                 field.name === "email"
                                   ? !form.emailDirty ||
-                                    !validation.isEmailValid(
-                                      form.formData.email
-                                    )
+                                  !validation.isEmailValid(
+                                    form.formData.email
+                                  )
                                   : !form.nicknameDirty ||
-                                    !validation.isNicknameValid(
-                                      form.formData.nickname
-                                    ),
+                                  !validation.isNicknameValid(
+                                    form.formData.nickname
+                                  ),
                             }
+                            : undefined
+                        }
+                      />
+                    ))}
+
+                    {/* === 비밀번호 === */}
+                    <Input
+                      label="비밀번호"
+                      value={form.formData.password}
+                      onChange={(e) =>
+                        handlePasswordChange("password", e.target.value)
+                      }
+                      type="password"
+                      placeholder="비밀번호 (특수문자 포함, 8자 이상)"
+                      errorText={
+                        form.showError("password")
+                          ? form.errors.password
                           : undefined
                       }
+                      showPasswordToggle={true}
                     />
-                  ))}
 
-                  {/* === 비밀번호 === */}
-                  <Input
-                    label="비밀번호"
-                    value={form.formData.password}
-                    onChange={(e) =>
-                      handlePasswordChange("password", e.target.value)
-                    }
-                    type="password"
-                    placeholder="비밀번호 (특수문자 포함, 8자 이상)"
-                    errorText={
-                      form.showError("password")
-                        ? form.errors.password
-                        : undefined
-                    }
-                    showPasswordToggle={true}
-                  />
+                    {/* === 비밀번호 확인 === */}
+                    <Input
+                      label="비밀번호 확인"
+                      value={form.formData.passwordConfirm}
+                      onChange={(e) =>
+                        handlePasswordChange("passwordConfirm", e.target.value)
+                      }
+                      type="password"
+                      placeholder="비밀번호 확인"
+                      errorText={
+                        form.showError("passwordConfirm")
+                          ? form.errors.passwordConfirm
+                          : undefined
+                      }
+                      showPasswordToggle={true}
+                    />
 
-                  {/* === 비밀번호 확인 === */}
-                  <Input
-                    label="비밀번호 확인"
-                    value={form.formData.passwordConfirm}
-                    onChange={(e) =>
-                      handlePasswordChange("passwordConfirm", e.target.value)
-                    }
-                    type="password"
-                    placeholder="비밀번호 확인"
-                    errorText={
-                      form.showError("passwordConfirm")
-                        ? form.errors.passwordConfirm
-                        : undefined
-                    }
-                    showPasswordToggle={true}
-                  />
-
-                  {/* === Submit 버튼 === */}
-                  <div className={styles.submitArea}>
-                    <button
-                      type="submit"
-                      className={styles.submitBtn}
-                      disabled={!form.canSubmit}
-                    >
-                      완료
-                    </button>
-                  </div>
-                </form>
-              </Card>
-            </div>
-
-            {/* === 오른쪽 사이드 === */}
-            <aside className={styles.rightCol}>
-              {/* === 목표 설정 === */}
-              <div className={styles.rightCard}>
-                <Card
-                  title="개인 목표 설정"
-                  width={325}
-                  height={312}
-                  backgroundColor="#ffffff"
-                  radius={20}
-                >
-                  <div className={styles.rightInner}>
-                    {RIGHT_FORM_FIELDS.map((field) => (
-                      <div key={field.name} className={styles.goalBlock}>
-                        <div className={styles.goalLabel}>{field.label}</div>
-                        <div className={styles.unitLine}>
-                          <div className={styles.inputWrapRight}>
-                            <input
-                              className={`${styles.inputRight} ${
-                                form.showError(field.name)
-                                  ? styles.inputError
-                                  : ""
-                              }`}
-                              value={form.formData[field.name]}
-                              onChange={(e) =>
-                                handleFieldChange(field.name, e.target.value)
-                              }
-                              type="number"
-                            />
-                            {form.showError(field.name) && (
-                              <p className={styles.error}>
-                                {form.errors[field.name]}
-                              </p>
-                            )}
-                          </div>
-                          <span className={styles.unit}>{field.unit}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </Card>
-              </div>
-
-              {/* === 프리미엄 === */}
-              <div className={styles.premiumCard}>
-                <Card
-                  title="프리미엄"
-                  width={325}
-                  height={439}
-                  backgroundColor="#ffffff"
-                  radius={20}
-                >
-                  <div className={styles.premiumHeader}>
-                    <div className={styles.premiumPoint}>
-                      {initialData.premiumPoint}
+                    {/* === Submit 버튼 === */}
+                    <div className={styles.submitArea}>
+                      <button
+                        type="submit"
+                        className={styles.submitBtn}
+                        disabled={!form.canSubmit}
+                      >
+                        완료
+                      </button>
                     </div>
-                  </div>
-
-                  <img
-                    className={styles.premiumImg}
-                    src={premiumCard}
-                    alt="프리미엄 카드"
-                  />
+                  </form>
                 </Card>
               </div>
-            </aside>
+
+              {/* === 오른쪽 사이드 === */}
+              <aside className={styles.rightCol}>
+                {/* === 목표 설정 === */}
+                <div className={styles.rightCard}>
+                  <Card
+                    title="개인 목표 설정"
+                    width={325}
+                    height={312}
+                    backgroundColor="#ffffff"
+                    radius={20}
+                  >
+                    <div className={styles.rightInner}>
+                      {RIGHT_FORM_FIELDS.map((field) => (
+                        <div key={field.name} className={styles.goalBlock}>
+                          <div className={styles.goalLabel}>{field.label}</div>
+                          <div className={styles.unitLine}>
+                            <div className={styles.inputWrapRight}>
+                              <input
+                                className={`${styles.inputRight} ${form.showError(field.name)
+                                    ? styles.inputError
+                                    : ""
+                                  }`}
+                                value={form.formData[field.name]}
+                                onChange={(e) =>
+                                  handleFieldChange(field.name, e.target.value)
+                                }
+                                type="number"
+                              />
+                              {form.showError(field.name) && (
+                                <p className={styles.error}>
+                                  {form.errors[field.name]}
+                                </p>
+                              )}
+                            </div>
+                            <span className={styles.unit}>{field.unit}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                </div>
+
+                {/* === 프리미엄 === */}
+                <div className={styles.premiumCard}>
+                  <Card
+                    title="프리미엄"
+                    width={325}
+                    height={439}
+                    backgroundColor="#ffffff"
+                    radius={20}
+                  >
+                    <div className={styles.premiumHeader}>
+                      <div className={styles.premiumPoint}>
+                        {initialData.premiumPoint}
+                      </div>
+                    </div>
+
+                    <img
+                      className={styles.premiumImg}
+                      src={premiumCard}
+                      alt="프리미엄 카드"
+                    />
+                  </Card>
+                </div>
+              </aside>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
