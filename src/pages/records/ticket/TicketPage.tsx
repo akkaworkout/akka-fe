@@ -1,8 +1,9 @@
 // React / 외부 라이브러리
 import { useState, useRef, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 
 // hooks
-import { useTickets } from '@/hooks/useTickets'
+import { useTickets } from '../hooks/useTickets'
 
 // 컴포넌트
 import RecordLayout from '../layout/RecordLayout'
@@ -10,9 +11,9 @@ import TicketRow from './components/ticketRow/TicketRow'
 import Spinner from '@/components/spinner/Spinner'
 
 // 모달
-import ConfirmModal from './modal/ConfirmModal'
-import TicketEndModal from './modal/TicketEndModal'
-import TicketAddModal from './modal/TicketAddModal'
+import ConfirmModal from './modals/ConfirmModal'
+import TicketEndModal from './modals/TicketEndModal'
+import TicketAddModal from './modals/TicketAddModal'
 
 // 타입
 import { type Exercise } from '@/components/summaryCard/SummaryCard'
@@ -99,146 +100,157 @@ const TicketPage = () => {
   }, [])
 
   return (
-    <RecordLayout title="이용권 관리">
+    <>
+      <Helmet>
+        <title>이용권 관리 | Akkaworkout</title>
+        <meta
+          name="description"
+          content="운동 이용권의 기간, 횟수, 금액과 남은 이용 현황을 관리해 보세요."
+        />
+        <meta name="robots" content="noindex" />
+      </Helmet>
 
-      <div className={styles.write}>
-        {loading ? (
-          <Spinner />
-        ) : error ? (
-          <div className={styles.emptyText}>
-            티켓을 불러오지 못했어요
-          </div>
-        ) : ticketList.length === 0 ? (
-          <div className={styles.emptyText}>
-            등록된 티켓이 없어요
-          </div>
-        ) : (
-          ticketList.map((ticket, index) => {
-            const isActive = ticket.status === 'ACTIVE'
+      <RecordLayout title="이용권 관리">
 
-            return (
-              <TicketRow
-                key={ticket.id}
-                ticket={ticket}
-                index={index}
-                isActive={isActive}
-                openIndex={activeDropdownIndex}
-                onToggle={handleToggle}
-                onEnd={(i) => {
-                  setEndTargetIndex(i)
-                  setActiveDropdownIndex(null)
-                }}
-                onDelete={() => {
-                  setDeleteTargetIndex(ticket.id)
-                  setActiveDropdownIndex(null)
-                }}
-                onView={(i) => {
-                  setViewTargetIndex(i)
-                }}
-                dropdownRef={dropdownRef}
-              />
-            )
-          })
+        <div className={styles.write}>
+          {loading ? (
+            <Spinner />
+          ) : error ? (
+            <div className={styles.emptyText}>
+              티켓을 불러오지 못했어요
+            </div>
+          ) : ticketList.length === 0 ? (
+            <div className={styles.emptyText}>
+              등록된 티켓이 없어요
+            </div>
+          ) : (
+            ticketList.map((ticket, index) => {
+              const isActive = ticket.status === 'ACTIVE'
+
+              return (
+                <TicketRow
+                  key={ticket.id}
+                  ticket={ticket}
+                  index={index}
+                  isActive={isActive}
+                  openIndex={activeDropdownIndex}
+                  onToggle={handleToggle}
+                  onEnd={(i) => {
+                    setEndTargetIndex(i)
+                    setActiveDropdownIndex(null)
+                  }}
+                  onDelete={() => {
+                    setDeleteTargetIndex(ticket.id)
+                    setActiveDropdownIndex(null)
+                  }}
+                  onView={(i) => {
+                    setViewTargetIndex(i)
+                  }}
+                  dropdownRef={dropdownRef}
+                />
+              )
+            })
+          )}
+
+          <div
+            className={styles.addBtn}
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            +
+          </div>
+        </div>
+
+        {deleteTargetIndex !== null && (
+          <ConfirmModal
+            onCancel={() => setDeleteTargetIndex(null)}
+            onConfirm={async () => {
+              if (deleteTargetIndex === null) return
+
+              await handleDeleteTicket(
+                deleteTargetIndex,
+                () => {
+                  setDeleteTargetIndex(null)
+                },
+              )
+            }}
+          />
         )}
 
-        <div
-          className={styles.addBtn}
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          +
-        </div>
-      </div>
+        {endTargetIndex !== null && (
+          <TicketEndModal
+            ticket={ticketList[endTargetIndex]}
+            endReason={endReason}
+            setEndReason={setEndReason}
+            refundAmount={refundAmount}
+            setRefundAmount={setRefundAmount}
+            END_TYPES={END_TYPES}
+            onClose={handleEndClose}
+            onConfirm={async () => {
+              if (endTargetIndex === null) return
 
-      {deleteTargetIndex !== null && (
-        <ConfirmModal
-          onCancel={() => setDeleteTargetIndex(null)}
-          onConfirm={async () => {
-            if (deleteTargetIndex === null) return
+              const ticketId =
+                ticketList[endTargetIndex].id
 
-            await handleDeleteTicket(
-              deleteTargetIndex,
-              () => {
-                setDeleteTargetIndex(null)
-              },
-            )
-          }}
-        />
-      )}
+              await handleEndTicket(
+                ticketId,
+                endReason,
+                refundAmount,
+                () => {
+                  setEndTargetIndex(null)
+                  setEndReason(END_TYPES[0])
+                  setRefundAmount('')
+                },
+              )
+            }}
+          />
+        )}
 
-      {endTargetIndex !== null && (
-        <TicketEndModal
-          ticket={ticketList[endTargetIndex]}
-          endReason={endReason}
-          setEndReason={setEndReason}
-          refundAmount={refundAmount}
-          setRefundAmount={setRefundAmount}
-          END_TYPES={END_TYPES}
-          onClose={handleEndClose}
-          onConfirm={async () => {
-            if (endTargetIndex === null) return
+        {isAddModalOpen && (
+          <TicketAddModal
+            ticketType={ticketType}
+            setTicketType={setTicketType}
+            colorCode={colorCode}
+            setSelectedColor={setColorCode}
+            COLOR_OPTIONS={COLOR_OPTIONS}
+            onClose={handleAddClose}
+            onConfirm={handleCreateTicket}
+          />
+        )}
 
-            const ticketId =
-              ticketList[endTargetIndex].id
+        {viewTargetIndex !== null && (
+          <TicketAddModal
+            mode="view"
+            initialData={{
+              exerciseType: ticketList[viewTargetIndex].exercise_type,
+              colorCode: ticketList[viewTargetIndex].color_code,
+              ticketType: ticketList[viewTargetIndex].ticket_type,
+              targetCount: ticketList[viewTargetIndex].target_count ?? 0,
+              totalAmount: ticketList[viewTargetIndex].total_amount ?? 0,
+              startDate: ticketList[viewTargetIndex].start_date ?? '',
+              endDate: ticketList[viewTargetIndex].end_date ?? '',
+              refundAmount: ticketList[viewTargetIndex].refund_amount,
+            }}
+            ticketType={
+              ticketList[viewTargetIndex].ticket_type === 'COUNT'
+                ? '횟수권'
+                : '기간권'
+            }
+            setTicketType={setTicketType}
+            colorCode={ticketList[viewTargetIndex].color_code}
+            setSelectedColor={setColorCode}
+            COLOR_OPTIONS={COLOR_OPTIONS}
+            onClose={() => {
+              setViewTargetIndex(null)
+            }}
+            onConfirm={() => { }}
+            isRefunded={
+              ticketList[viewTargetIndex].status === 'ENDED'
+            }
+          />
+        )}
 
-            await handleEndTicket(
-              ticketId,
-              endReason,
-              refundAmount,
-              () => {
-                setEndTargetIndex(null)
-                setEndReason(END_TYPES[0])
-                setRefundAmount('')
-              },
-            )
-          }}
-        />
-      )}
-
-      {isAddModalOpen && (
-        <TicketAddModal
-          ticketType={ticketType}
-          setTicketType={setTicketType}
-          colorCode={colorCode}
-          setSelectedColor={setColorCode}
-          COLOR_OPTIONS={COLOR_OPTIONS}
-          onClose={handleAddClose}
-          onConfirm={handleCreateTicket}
-        />
-      )}
-
-      {viewTargetIndex !== null && (
-        <TicketAddModal
-          mode="view"
-          initialData={{
-            exerciseType: ticketList[viewTargetIndex].exercise_type,
-            colorCode: ticketList[viewTargetIndex].color_code,
-            ticketType: ticketList[viewTargetIndex].ticket_type,
-            targetCount: ticketList[viewTargetIndex].target_count ?? 0,
-            totalAmount: ticketList[viewTargetIndex].total_amount ?? 0,
-            startDate: ticketList[viewTargetIndex].start_date ?? '',
-            endDate: ticketList[viewTargetIndex].end_date ?? '',
-            refundAmount: ticketList[viewTargetIndex].refund_amount,
-          }}
-          ticketType={
-            ticketList[viewTargetIndex].ticket_type === 'COUNT'
-              ? '횟수권'
-              : '기간권'
-          }
-          setTicketType={setTicketType}
-          colorCode={ticketList[viewTargetIndex].color_code}
-          setSelectedColor={setColorCode}
-          COLOR_OPTIONS={COLOR_OPTIONS}
-          onClose={() => {
-            setViewTargetIndex(null)
-          }}
-          onConfirm={() => { }}
-          isRefunded={
-            ticketList[viewTargetIndex].status === 'ENDED'
-          }
-        />
-      )}
-
-    </RecordLayout>
+      </RecordLayout>
+    </>
   )
 }
 

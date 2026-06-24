@@ -140,11 +140,6 @@
   gap: 12px;
 }
 
-.fieldOnly {
-  display: flex;
-  align-items: start;
-}
-
 .inputWrap {
   position: relative;
   width: 333px;

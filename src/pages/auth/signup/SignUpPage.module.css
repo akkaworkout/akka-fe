@@ -34,18 +34,6 @@
   color: var(--black);
 }
 
-/* 페이지 */
-.page {
-  font-family: Nunito, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color: var(--black);
-  width: 100%;
-}
-
-/* 카드 */
-.cardWrap {
-  width: 100%;
-}
-
 .card {
   width: 100%;
   border-radius: 16px;
@@ -105,15 +93,6 @@
   gap: 33px;
   width: 619px;
   margin: auto;
-}
-
-.inputWithIcon {
-  position: relative;
-  width: 333px;
-}
-
-.inputWithIcon input {
-  padding-right: 54px;
 }
 
 .iconBtn {

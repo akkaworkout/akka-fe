@@ -10,8 +10,6 @@ import { getExerciseDetail } from '@/api/exerciseApi'
 
 export const useTodayItems = (
   navigate: ReturnType<typeof useNavigate>,
-  initialYear: number,
-  initialMonth: number,
   initialDay: number
 ) => {
   const [selectedDate, setSelectedDate] =

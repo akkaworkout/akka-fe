@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet-async'
 
 import styles from "./LoginPage.module.css";
 
@@ -93,7 +94,7 @@ export default function LoginPage() {
 
       console.log("Saved token:", token);
 
-      alert("로그인이 완료되었습니다");
+      alert("로그인이 완료되었어요");
 
       nav("/main");
     } catch (err) {
@@ -106,77 +107,90 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={styles.wrap}>
-      <div className={styles.mainPage}>
-        <div className={styles.mainInner}>
-          <section className={styles.card}>
-            <header className={styles.headerArea}>
-              <h1 className={styles.pageTitle}>로그인</h1>
-            </header>
+    <>
+      <Helmet>
+        <title>로그인 | Akkaworkout</title>
+        <meta
+          name="description"
+          content="Akkaworkout에 로그인하고 운동 기록과 이용권을 관리해 보세요."
+        />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+      
+      <div className={styles.wrap}>
+        <div className={styles.mainPage}>
+          <div className={styles.mainInner}>
+            <section className={styles.card}>
+              <header className={styles.headerArea}>
+                <h1 className={styles.pageTitle}>로그인</h1>
+              </header>
 
-            <form className={styles.form} onSubmit={handleSubmit}>
-              <Form
-                label="이메일"
-                value={email}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  setEmail(v);
-                  setErrors((prev) => ({
-                    ...prev,
-                    email:
-                      v && !isEmailValid(v)
-                        ? "올바른 이메일 형식이 아닙니다"
-                        : undefined,
-                  }));
-                }}
-                placeholder="이메일"
-                errorText={errors.email}
-              />
-
-              <div className={styles.passwordBlock}>
+              <form className={styles.form} onSubmit={handleSubmit}>
                 <Form
-                  label="비밀번호"
-                  type="password"
-                  value={password}
+                  label="이메일"
+                  id="login-email"
+                  value={email}
                   onChange={(e) => {
                     const v = e.target.value;
-                    setPassword(v);
-                    setErrors((prev) => ({ ...prev, password: undefined }));
+                    setEmail(v);
+                    setErrors((prev) => ({
+                      ...prev,
+                      email:
+                        v && !isEmailValid(v)
+                          ? "올바른 이메일 형식이 아닙니다"
+                          : undefined,
+                    }));
                   }}
-                  placeholder="비밀번호 (특수문자 포함, 8자 이상)"
-                  autoComplete="current-password"
-                  errorText={errors.password}
-                  showPasswordToggle
+                  placeholder="이메일"
+                  errorText={errors.email}
                 />
-              </div>
 
-              <div className={styles.submitRow}>
-                <div />
-                <div className={styles.submitArea}>
-                  <button
-                    type="submit"
-                    disabled={!canSubmit}
-                    className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
-                      }`}
-                  >
-                    로그인
-                  </button>
+                <div className={styles.passwordBlock}>
+                  <Form
+                    label="비밀번호"
+                    id="login-password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setPassword(v);
+                      setErrors((prev) => ({ ...prev, password: undefined }));
+                    }}
+                    placeholder="비밀번호 (특수문자 포함, 8자 이상)"
+                    autoComplete="current-password"
+                    errorText={errors.password}
+                    showPasswordToggle
+                  />
                 </div>
-              </div>
-            </form>
 
-            <p className={styles.signupGuide}>
-              아직 회원이 아니신가요?{" "}
-              <span
-                className={styles.signupLink}
-                onClick={() => nav("/signup")}
-              >
-                회원가입
-              </span>
-            </p>
-          </section>
+                <div className={styles.submitRow}>
+                  <div />
+                  <div className={styles.submitArea}>
+                    <button
+                      type="submit"
+                      disabled={!canSubmit}
+                      className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
+                        }`}
+                    >
+                      로그인
+                    </button>
+                  </div>
+                </div>
+              </form>
+
+              <p className={styles.signupGuide}>
+                아직 회원이 아니신가요?{" "}
+                <span
+                  className={styles.signupLink}
+                  onClick={() => nav("/signup")}
+                >
+                  회원가입
+                </span>
+              </p>
+            </section>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

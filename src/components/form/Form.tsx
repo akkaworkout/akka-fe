@@ -2,8 +2,8 @@ import { useState } from 'react'
 import type { ChangeEvent } from 'react'
 import styles from './Form.module.css'
 
-import eyeOn from '@/assets/icons/icon-eye-on.png'
-import eyeOff from '@/assets/icons/icon-eye-off.png'
+import eyeOn from '@/assets/icons/auth/eye-on.png'
+import eyeOff from '@/assets/icons/auth/eye-off.png'
 
 type RightButton = {
   label: string
@@ -13,6 +13,7 @@ type RightButton = {
 
 type Props = {
   label: string
+  id?: string
   value: string
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
 
@@ -30,6 +31,7 @@ type Props = {
 
 export default function Input({
   label,
+  id,
   value,
   onChange,
   type = 'text',
@@ -55,7 +57,9 @@ export default function Input({
   const Field = (
     <div className={styles.inputWrap}>
       <div className={styles.inputInner}>
+        <label className={styles.visuallyHidden}>{label}</label>
         <input
+          id={id}
           className={`${styles.input} ${hasError ? styles.inputError : ''}`}
           type={inputType}
           value={value}

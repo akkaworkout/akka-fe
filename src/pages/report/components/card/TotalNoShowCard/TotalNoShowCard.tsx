@@ -24,7 +24,6 @@ type Props = {
 const VISIBLE_COUNT = 3
 
 export default function TotalNoShowCard({
-  totalCount,
   lossAmount,
   items,
   exercises,

@@ -5,7 +5,7 @@ import DateSelect from '@/components/dateSelect/DateSelect'
 
 import styles from '@/pages/records/ticket/Ticket.module.css'
 
-import CheckIcon from '@/assets/icons/check.png'
+import CheckIcon from '@/assets/icons/common/check.png'
 
 type Payload = {
   exerciseType: string

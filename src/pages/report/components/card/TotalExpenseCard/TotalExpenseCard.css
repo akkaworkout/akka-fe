@@ -7,37 +7,6 @@
   overflow: hidden;
 }
 
-/* 헤더 */
-.card-header {
-  position: relative;
-  z-index: 2;
-}
-
-.card-title {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--black);
-}
-
-.detail-btn {
-  background: var(--primary);
-  color: var( --white);
-  border: none;
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 10px;
-  font-weight: 400;
-}
-
-/* 선 */
-.card-divider {
-  height: 1px;
-  background: #eeeeee;
-  margin-top: 13px; /* 헤더 아래 간격 */
-  pointer-events: none;
-}
-
 .expense-list {
   list-style: none;
   margin: 0;

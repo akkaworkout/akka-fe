@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import api from '../api/api'
+import api from '@/api/api'
 
 import {
   createTicket,
@@ -66,7 +66,7 @@ export const useTickets = () => {
     try {
       await createTicket(data)
 
-      alert('이용권 등록이 완료되었습니다.')
+      alert('이용권 등록이 완료되었어요')
 
       await getTickets()
 
@@ -76,7 +76,7 @@ export const useTickets = () => {
 
       alert(
         error?.response?.data?.message ??
-        '이용권 등록에 실패했습니다.'
+        '이용권 등록에 실패했어요'
       )
     }
   }
@@ -93,12 +93,12 @@ export const useTickets = () => {
         prev.filter(ticket => ticket.id !== ticketId),
       )
 
-      alert('이용권이 정상적으로 삭제되었습니다.')
+      alert('이용권이 성공적으로 삭제되었어요')
 
       onSuccess?.()
     } catch (error) {
       console.log('DELETE 실패:', error)
-      alert('이용권 삭제에 실패했습니다. 다시 시도해주세요.')
+      alert('이용권 삭제에 실패했어요. 다시 시도해주세요')
     }
   }
 
@@ -116,14 +116,14 @@ export const useTickets = () => {
         refundAmount,
       )
 
-      alert('이용권이 정상적으로 종료되었습니다.')
+      alert('이용권이 성공적으로 종료되었어요')
 
       await getTickets()
 
       onSuccess?.()
     } catch (error) {
       console.log('PATCH 실패:', error)
-      alert('이용권 종료에 실패했습니다. 다시 시도해주세요.')
+      alert('이용권 종료에 실패했어요. 다시 시도해주세요')
     }
   }
 

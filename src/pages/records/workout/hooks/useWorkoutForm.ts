@@ -101,7 +101,7 @@ export const useWorkoutForm = (
     try {
       await createExercise(form)
 
-      alert('운동 기록이 완료되었습니다.')
+      alert('운동 기록을 저장했어요')
 
       navigate('/calendar')
     } catch (error) {
@@ -115,7 +115,7 @@ export const useWorkoutForm = (
     try {
       await updateExercise(recordId, form)
 
-      alert('운동 기록이 수정되었습니다.')
+      alert('운동 기록이 수정되었어요')
 
       navigate('/calendar')
     } catch (error) {
@@ -135,7 +135,7 @@ export const useWorkoutForm = (
     try {
       await deleteExercise(recordId)
 
-      alert('운동 기록이 삭제되었습니다.')
+      alert('운동 기록이 삭제되었어요')
 
       navigate('/calendar')
     } catch (error) {

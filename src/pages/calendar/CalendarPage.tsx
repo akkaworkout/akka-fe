@@ -1,28 +1,27 @@
 // React / 외부 라이브러리
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet-async'
 
 // API / hooks / utils
-import { useCalendar } from "@/hooks/useCalendar";
-import { useGoals } from "@/hooks/useGoals";
-import { useSummary } from "@/hooks/useSummary";
-import { useTodayItems } from "@/hooks/useTodayItems";
+import { useCalendar } from "./hooks/useCalendar";
+import { useGoals } from "./hooks/useGoals";
+import { useSummary } from "./hooks/useSummary";
+import { useTodayItems } from "./hooks/useTodayItems";
 
 // 컴포넌트
-import Calendar from "./components/Calendar";
 import Card from "@/components/card/Card";
 import Spinner from "@/components/spinner/Spinner";
+import Calendar from "./components/Calendar";
 import TodayRecordSection from './components/TodayRecordSection'
 
 // 모달
-import TodayItemModal from "./modal/TodayItemModal";
+import TodayItemModal from "./modals/TodayItemModal";
 
 // 스타일 
 import styles from './Calendar.module.css'
 
-
 const CalenderPage = () => {
-  const now = new Date()
   const navigate = useNavigate()
 
   const {
@@ -50,7 +49,7 @@ const CalenderPage = () => {
     handleSelectDay,
     handleItemClick,
     handleCloseModal
-  } = useTodayItems(navigate, year, month, now.getDate())
+  } = useTodayItems(navigate, year)
 
   useEffect(() => {
     handleSelectDay(selectedDate, year, month)
@@ -58,6 +57,15 @@ const CalenderPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>운동 캘린더 | Akkaworkout</title>
+        <meta
+          name="description"
+          content="날짜별 운동 기록, 지출, 이용권 일정을 캘린더에서 확인해 보세요."
+        />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+
       <div className={styles.wrap}>
         <div className={styles.calendarPage}>
           <div className={styles.calendarInner}>

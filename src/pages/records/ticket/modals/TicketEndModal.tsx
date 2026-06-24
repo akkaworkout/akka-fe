@@ -2,7 +2,7 @@ import TicketModal from './TicketModal'
 
 import SummaryCard, { type Exercise } from '@/components/summaryCard/SummaryCard'
 
-import type { TicketItem } from '@/hooks/useTickets'
+import type { TicketItem } from '@/pages/records/hooks/useTickets'
 
 import styles from './TicketModal.module.css'
 

@@ -5,9 +5,9 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 import styles from './MainPage.module.css'
 
-import mainAkka from "@/assets/images/mainakka.png";
-import mainWorkout from "@/assets/images/mainworkout.png";
-import mainpage from "@/assets/images/mainpage.png";
+import mainAkka from "@/assets/brand/main-akka.png";
+import mainWorkout from "@/assets/brand/main-workout.png";
+import mainpage from "@/assets/brand/main-hero.webp";
 
 
 export default function MainPage() {
@@ -18,14 +18,18 @@ export default function MainPage() {
   return (
     <>
       <Helmet>
-        <title>Akkaworkout</title>
-
+        <title>Akkaworkout | 운동 노쇼 방지 기록 서비스</title>
         <meta
           name="description"
-          content="운동 기록과 이용권, 지출을 관리하고 노쇼 비용을 한눈에 확인하는 서비스"
+          content="Akkaworkout은 운동 기록, 지출, 이용권, 노쇼 손실을 한눈에 관리하는 운동 루틴 기록 서비스입니다."
+        />
+        <meta property="og:title" content="Akkaworkout | 운동 노쇼 방지 기록 서비스" />
+        <meta
+          property="og:description"
+          content="운동 기록과 지출, 이용권, 노쇼 손실을 Akkaworkout에서 한눈에 관리해 보세요."
         />
       </Helmet>
-      
+
       <div className={styles.wrap}>
         <div className={styles.mainPage}>
           <div className={styles.mainInner}>
@@ -69,7 +73,8 @@ export default function MainPage() {
                 <img
                   className={styles.illust}
                   src={mainpage}
-                  alt="메인 일러스트"
+                  alt="Akkaworkout 메인 일러스트"
+                  decoding="async"
                 />
               </div>
             </section>

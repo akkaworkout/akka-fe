@@ -1,5 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 
+import PrivateRoute from '@/routes/PrivateRoute'
+
 import { useSidebarStore } from '@/stores/useSidebarStore'
 
 import SideNav from '@/components/sideNav/SideNav'
@@ -22,7 +24,7 @@ import MyPage from '@/pages/mypage/MyPage'
 import styles from '@/App.module.css'
 
 function App() {
-  const { folded } = useSidebarStore()
+  const { folded } = useSidebarStore();
 
   return (
     <div className={styles.layout}>
@@ -34,19 +36,64 @@ function App() {
         <Routes>
           <Route path="/main" element={<Main />} />
           <Route path="/" element={<Navigate to="/main" replace />} />
-
-          <Route path="/write" element={<WorkoutPage />} />
-          <Route path="/expense" element={<ExpensePage />} />
-          <Route path="/ticket" element={<TicketPage />} />
-
-          <Route path="/report" element={<ReportPage />} />
-          <Route path="/calendar" element={<CalendarPage />} />
-
+          <Route
+            path="/write"
+            element={
+              <PrivateRoute>
+                <WorkoutPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/expense"
+            element={
+              <PrivateRoute>
+                <ExpensePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/ticket"
+            element={
+              <PrivateRoute>
+                <TicketPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/report"
+            element={
+              <PrivateRoute>
+                <ReportPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              <PrivateRoute>
+                <CalendarPage />
+              </PrivateRoute>
+            }
+          />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/signup/success" element={<SignUpSuccessPage />} />
-
-          <Route path="/mypage" element={<MyPage />} />
+          <Route
+            path="/signup/success"
+            element={<SignUpSuccessPage />}
+          />
+          <Route
+            path="/mypage"
+            element={
+              <PrivateRoute>
+                <MyPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="*"
+            element={<Navigate to="/main" replace />}
+          />
         </Routes>
       </main>
     </div>
