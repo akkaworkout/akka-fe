@@ -57,7 +57,12 @@ export default function Input({
   const Field = (
     <div className={styles.inputWrap}>
       <div className={styles.inputInner}>
-        <label className={styles.visuallyHidden}>{label}</label>
+        <label
+          className={styles.visuallyHidden}
+          htmlFor={id}
+        >
+          {label}
+        </label>
         <input
           id={id}
           className={`${styles.input} ${hasError ? styles.inputError : ''}`}
