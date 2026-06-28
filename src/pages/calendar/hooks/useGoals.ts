@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-import {
-  getGoals,
-  updateGoals as updateGoalsApi,
-} from '@/api/calendarApi'
+import { useGoalsQuery } from '@/hooks/queries/useCalendarQuery'
+import { useUpdateGoalsMutation } from '@/hooks/mutations/useGoalMutation'
 
 export const useGoals = (
   year: number,
   month: number
 ) => {
-  const [goals, setGoals] =
-    useState<string[]>([
-      '',
-      '',
-      '',
-    ])
+  const { data = ['', '', ''] } = useGoalsQuery(year, month);
+  const [goals, setGoals] = useState<string[]>(['', '', '']);
+  const updateGoalsMutation = useUpdateGoalsMutation()
+
+  useEffect(() => {
+    setGoals(data)
+  }, [data])
 
   // 목표 입력 변경
   const handleGoalChange = (
@@ -28,45 +27,31 @@ export const useGoals = (
     setGoals(updatedGoals)
   }
 
-  // 목표 조회
-  useEffect(() => {
-    const fetchGoals =
-      async () => {
-        try {
-          const data =
-            await getGoals(
-              year,
-              month
-            )
-
-          setGoals(data)
-        } catch (error) {
-          console.log(error)
-        }
-      }
-
-    fetchGoals()
-  }, [year, month])
-
   // 목표 저장
-  const updateGoals = async () => {
-    try {
-      await updateGoalsApi(
+  const handleupdateGoals = () => {
+    updateGoalsMutation.mutate(
+      {
         year,
         month,
-        goals
-      )
-
-      alert('저장이 완료되었어요')
-    } catch (error) {
-      console.log(error)
-    }
+        goals,
+      },
+      {
+        onSuccess: () => {
+          alert('저장이 완료되었어요')
+        },
+        onError: (error: unknown) => {
+          console.error(error)
+          alert('목표 저장에 실패했어요. 다시 시도해주세요.')
+        }
+      },
+    )
   }
 
   return {
     goals,
     setGoals,
     handleGoalChange,
-    updateGoals,
+    handleupdateGoals,
+    isUpdatingGoals: updateGoalsMutation.isPending,
   }
 }

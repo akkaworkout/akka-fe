@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import type { Exercise } from '@/components/summaryCard/SummaryCard'
-import type { TicketItem } from '@/pages/records/hooks/useTickets'
+import type { Ticket } from '@/api/ticketApi'
 
 const EXERCISES: Exercise[] = [
   { id: 1, label: '발레', color: 'rgb(252, 215, 255)' },
@@ -10,7 +10,7 @@ const EXERCISES: Exercise[] = [
 ]
 
 function isTicketIncludedInMonth(
-  ticket: TicketItem,
+  ticket: Ticket,
   year: number,
   month: number,
 ) {
@@ -26,7 +26,7 @@ function isTicketIncludedInMonth(
 }
 
 export const useExerciseOptions = (
-  tickets: TicketItem[],
+  tickets: Ticket[],
   year: number,
   month: number,
 ) => {

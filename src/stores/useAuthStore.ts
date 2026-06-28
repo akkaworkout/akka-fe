@@ -1,5 +1,15 @@
 import { create } from 'zustand'
 
+const getStoredToken = () => {
+  const token = localStorage.getItem('accessToken')
+
+  if (!token || token === 'undefined' || token === 'null') {
+    return null
+  }
+
+  return token
+}
+
 type AuthStore = {
   isLoggedIn: boolean
   token: string | null
@@ -8,10 +18,11 @@ type AuthStore = {
   logout: () => void
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  isLoggedIn: !!localStorage.getItem('accessToken'),
+const storedToken = getStoredToken()
 
-  token: localStorage.getItem('accessToken'),
+export const useAuthStore = create<AuthStore>((set) => ({
+  isLoggedIn: !!storedToken,
+  token: storedToken,
 
   login: (token) => {
     localStorage.setItem('accessToken', token)

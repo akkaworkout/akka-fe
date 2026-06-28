@@ -1,10 +1,10 @@
+import type { WorkoutFormSetter } from '../types/workoutTypes'
+
 import styles from '../Workout.module.css'
 
 type Props = {
   memo: string
-  setForm: React.Dispatch<
-    React.SetStateAction<any>
-  >
+  setForm: WorkoutFormSetter
 }
 
 const WorkoutMemoField = ({
@@ -20,7 +20,7 @@ const WorkoutMemoField = ({
         className={styles.input}
         value={memo}
         onChange={e => {
-          setForm((prev: any) => ({
+          setForm((prev) => ({
             ...prev,
             memo: e.target.value,
           }))

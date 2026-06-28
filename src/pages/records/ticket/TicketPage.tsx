@@ -125,7 +125,7 @@ const TicketPage = () => {
             </div>
           ) : (
             ticketList.map((ticket, index) => {
-              const isActive = ticket.status === 'ACTIVE'
+              const isActive = ticket.status === '진행 중'
 
               return (
                 <TicketRow

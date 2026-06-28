@@ -1,3 +1,5 @@
+import type { WorkoutFormSetter } from '../types/workoutTypes'
+
 import Button from '@/components/button/Button'
 
 import styles from '../Workout.module.css'
@@ -11,9 +13,7 @@ type Props = {
   setPreviewUrl: React.Dispatch<
     React.SetStateAction<string | null>
   >
-  setForm: React.Dispatch<
-    React.SetStateAction<any>
-  >
+  setForm: WorkoutFormSetter
 }
 
 const WorkoutImageField = ({
@@ -58,7 +58,7 @@ const WorkoutImageField = ({
             type="button"
             className={styles.removeImageBtn}
             onClick={() => {
-              setForm((prev: any) => ({
+              setForm((prev) => ({
                 ...prev,
                 imageFile: null,
               }))

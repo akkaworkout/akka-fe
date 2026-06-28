@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { QueryClient,QueryClientProvider } from '@tanstack/react-query'
 
+import ErrorBoundary from '@/components/errorBoundary/ErrorBoundary'
+
 import App from './App'
 import './index.css'
 
@@ -11,12 +13,14 @@ const queryClient = new QueryClient()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <ErrorBoundary>
       <HelmetProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </QueryClientProvider>
       </HelmetProvider>
-    </QueryClientProvider>
-  </StrictMode>
+    </ErrorBoundary>
+  </StrictMode>,
 )

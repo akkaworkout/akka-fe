@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { buildApiUrl } from '@/api/api'
+
 import Modal from '@/components/modal/Modal'
 
 import styles from './TodayItemModal.module.css'
@@ -21,7 +23,6 @@ type Props = {
 }
 
 const TodayItemModal = ({ item, onClose }: Props) => {
-  const API_BASE = import.meta.env.VITE_API_URL
   const [imageError, setImageError] = useState(false)
   const navigate = useNavigate()
 
@@ -76,7 +77,7 @@ const TodayItemModal = ({ item, onClose }: Props) => {
           <div className={styles.noImage}>이미지를 불러오지 못했습니다</div>
         ) : (
           <img
-            src={`${API_BASE}${item.image_url}`}
+            src={buildApiUrl(item.image_url)}
             alt="exercise"
             onError={() => setImageError(true)}
           />

@@ -1,0 +1,80 @@
+.wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(136, 166, 241, 0.35), transparent 34%),
+    linear-gradient(180deg, var(--primary-soft) 0%, var(--background) 100%);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 32px 36px;
+  border: 1px solid var(--primary-soft);
+  border-radius: 24px;
+  background: var(--white);
+  text-align: center;
+  box-shadow: 0 18px 45px rgba(56, 53, 157, 0.14);
+}
+
+.logo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin-bottom: 24px;
+}
+
+.title {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--black);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.description {
+  margin: 0;
+  color: #666a80;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.primaryButton,
+.secondaryButton {
+  flex: 1;
+  height: 46px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton {
+  border: 0;
+  background: var(--primary);
+  color: var(--white);
+}
+
+.primaryButton:hover {
+  background: var(--primary-dark);
+}
+
+.secondaryButton {
+  border: 1px solid var(--primary-light);
+  background: var(--white);
+  color: var(--primary-dark);
+}
+
+.secondaryButton:hover {
+  background: var(--primary-soft);
+}

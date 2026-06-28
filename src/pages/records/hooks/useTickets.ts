@@ -1,141 +1,107 @@
-import { useState, useEffect } from 'react'
+import type { TicketCreatePayload } from '@/api/ticketApi'
 
-import api from '@/api/api'
-
+import { useTicketsQuery } from '@/hooks/queries/useTicketQuery'
 import {
-  createTicket,
-  deleteTicket,
-  endTicket,
-} from '@/api/ticketApi'
+  useCreateTicketMutation,
+  useDeleteTicketMutation,
+  useEndTicketMutation,
+} from '@/hooks/mutations/useTicketMutation'
 
 import { type Exercise } from '@/components/summaryCard/SummaryCard'
 
-export type TicketItem = {
-  id: number
-  user_id: number
-  exercise_type: string
-  color_code: string
-  color?: string
-  ticket_type: 'COUNT' | 'PERIOD'
-  target_count?: number
-  total_amount?: number
-  refund_amount?: number
-  status?: string
-  end_reason?: string
-  created_at?: string
-  start_date?: string
-  end_date?: string
-  remaining_count?: number
-  forfeited_amount?: number
-}
-
 export const useTickets = () => {
-  const [tickets, setTickets] = useState<TicketItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const {
+    data: tickets = [],
+    isLoading: loading,
+    error,
+    refetch,
+  } = useTicketsQuery()
 
-  // 티켓 조회
-  const getTickets = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      const { data } = await api.get('/tickets')
-
-      const list = Array.isArray(data?.data)
-        ? data.data
-        : Array.isArray(data)
-          ? data
-          : []
-
-      setTickets(list)
-    } catch (error: any) {
-      console.error('티켓 조회 실패:', error)
-
-      setError('티켓 조회에 실패했습니다.')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const createTicketMutation = useCreateTicketMutation()
+  const deleteTicketMutation = useDeleteTicketMutation()
+  const endTicketMutation = useEndTicketMutation()
 
   // 티켓 생성
-  const handleCreateTicket = async (
-    data: any,
+  const handleCreateTicket = (
+    data: TicketCreatePayload,
     onSuccess?: () => void,
   ) => {
-    try {
-      await createTicket(data)
+    createTicketMutation.mutate(data, {
+      onSuccess: async () => {
+        alert('이용권 등록이 완료되었어요')
 
-      alert('이용권 등록이 완료되었어요')
+        await refetch()
 
-      await getTickets()
+        onSuccess?.()
+      },
+      onError: (error: unknown) => {
+        console.error('이용권 등록 실패:', error)
 
-      onSuccess?.()
-    } catch (error: any) {
-      console.error('이용권 등록 실패:', error)
-
-      alert(
-        error?.response?.data?.message ??
-        '이용권 등록에 실패했어요'
-      )
-    }
+        alert('이용권 등록에 실패했어요')
+      },
+    })
   }
 
   // 티켓 삭제
-  const handleDeleteTicket = async (
+  const handleDeleteTicket = (
     ticketId: number,
     onSuccess?: () => void,
   ) => {
-    try {
-      await deleteTicket(ticketId)
+    deleteTicketMutation.mutate(ticketId, {
+      onSuccess: async () => {
+        alert('이용권이 성공적으로 삭제되었어요')
 
-      setTickets(prev =>
-        prev.filter(ticket => ticket.id !== ticketId),
-      )
+        await refetch()
 
-      alert('이용권이 성공적으로 삭제되었어요')
+        onSuccess?.()
+      },
+      onError: (error: unknown) => {
+        console.error('DELETE 실패:', error)
 
-      onSuccess?.()
-    } catch (error) {
-      console.log('DELETE 실패:', error)
-      alert('이용권 삭제에 실패했어요. 다시 시도해주세요')
-    }
+        alert('이용권 삭제에 실패했어요. 다시 시도해주세요')
+      },
+    })
   }
 
   // 티켓 종료
-  const handleEndTicket = async (
+  const handleEndTicket = (
     ticketId: number,
     endReason: Exercise,
     refundAmount: string,
     onSuccess?: () => void,
   ) => {
-    try {
-      await endTicket(
+    endTicketMutation.mutate(
+      {
         ticketId,
         endReason,
         refundAmount,
-      )
+      },
+      {
+        onSuccess: async () => {
+          alert('이용권이 성공적으로 종료되었어요')
 
-      alert('이용권이 성공적으로 종료되었어요')
+          await refetch()
 
-      await getTickets()
+          onSuccess?.()
+        },
+        onError: (error: unknown) => {
+          console.error('PATCH 실패:', error)
 
-      onSuccess?.()
-    } catch (error) {
-      console.log('PATCH 실패:', error)
-      alert('이용권 종료에 실패했어요. 다시 시도해주세요')
-    }
+          alert('이용권 종료에 실패했어요. 다시 시도해주세요')
+        },
+      },
+    )
   }
-
-  useEffect(() => {
-    getTickets()
-  }, [])
 
   return {
     tickets,
     loading,
     error,
-    refetch: getTickets,
+    refetch,
+
+    isCreatingTicket: createTicketMutation.isPending,
+    isDeletingTicket: deleteTicketMutation.isPending,
+    isEndingTicket: endTicketMutation.isPending,
 
     handleCreateTicket,
     handleDeleteTicket,

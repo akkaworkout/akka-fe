@@ -1,42 +1,15 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
-import {
-  getActiveTickets,
-  getExerciseSummary,
-  createExercise,
-  updateExercise,
-  deleteExercise,
-  getExerciseDetail,
-} from '@/api/exerciseApi'
+import { buildApiUrl } from '@/api/api'
 
-import { type Exercise } from '@/components/summaryCard/SummaryCard'
+import { useExerciseDetailQuery } from '@/hooks/queries/useWorkoutQuery'
 
-type Ticket = {
-  id: number
-  exercise_type: string
-  color_code: string
-}
+import type { WorkoutForm } from '../types/workoutTypes'
+import { useWorkoutActions } from './useWorkoutActions'
+import { useWorkoutTickets } from './useWorkoutTickets'
 
-type FormType = {
-  date: Date
-  workoutResult: '성공' | '실패'
-  memo: string
-  failReason: string
-  exercise: {
-    id: number
-    label: string
-    color: string
-  }
-  imageFile: File | null
-}
-
-export const useWorkoutForm = (
-  recordId?: number
-) => {
-  const navigate = useNavigate()
-
-  const [form, setForm] = useState<FormType>({
+export const useWorkoutForm = (recordId?: number) => {
+  const [form, setForm] = useState<WorkoutForm>({
     date: new Date(),
     workoutResult: '성공',
     memo: '',
@@ -49,169 +22,82 @@ export const useWorkoutForm = (
     imageFile: null,
   })
 
-  const [ticketList, setTicketList] = useState<Ticket[]>([])
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [remainingCount, setRemainingCount] = useState<number | null>(null)
-  const [usedCount, setUsedCount] = useState<number | null>(null)
-  const [pricePerSession, setPricePerSession] = useState<number | null>(null)
 
-  const mappedTickets: Exercise[] =
-    ticketList.map(ticket => ({
-      id: ticket.id,
-      label: ticket.exercise_type,
-      color: ticket.color_code,
-    }))
+  const {
+    ticketList,
+    mappedTickets,
+    remainingCount,
+    usedCount,
+    pricePerSession,
+  } = useWorkoutTickets(form.exercise.id)
 
-  const getExercise = async () => {
-    try {
-      const tickets = await getActiveTickets()
+  const { data: exerciseDetail } = useExerciseDetailQuery(recordId)
 
-      const list = tickets.data ?? []
+  const {
+    handleSubmit,
+    handleUpdate,
+    handleDelete,
+  } = useWorkoutActions(form, recordId)
 
-      setTicketList(list)
+  useEffect(() => {
+    if (ticketList.length === 0) return
 
-      if (list.length > 0) {
-        setForm(prev => ({
-          ...prev,
-          exercise: {
-            id: list[0].id,
-            label: list[0].exercise_type,
-            color: list[0].color_code,
-          }
-        }))
+    setForm((prev) => {
+      if (prev.exercise.id !== 0) return prev
+
+      const firstTicket = ticketList[0]
+
+      return {
+        ...prev,
+        exercise: {
+          id: firstTicket.id,
+          label: firstTicket.exercise_type,
+          color: firstTicket.color_code,
+        },
       }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const getSummary = async (ticketId: number) => {
-    try {
-      const response = await getExerciseSummary(ticketId)
-
-      setRemainingCount(response.data.remainingCount)
-      setUsedCount(response.data.usedCount)
-      setPricePerSession(response.data.amountPerSession)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleSubmit = async () => {
-    try {
-      await createExercise(form)
-
-      alert('운동 기록을 저장했어요')
-
-      navigate('/calendar')
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleUpdate = async () => {
-    if (!recordId) return
-
-    try {
-      await updateExercise(recordId, form)
-
-      alert('운동 기록이 수정되었어요')
-
-      navigate('/calendar')
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleDelete = async () => {
-    if (!recordId) return
-
-    const ok = window.confirm(
-      '정말 삭제하시겠습니까?'
-    )
-
-    if (!ok) return
-
-    try {
-      await deleteExercise(recordId)
-
-      alert('운동 기록이 삭제되었어요')
-
-      navigate('/calendar')
-    } catch (error) {
-      console.log(error)
-    }
-  }
+    })
+  }, [ticketList])
 
   useEffect(() => {
-    getExercise()
-  }, [])
-
-  useEffect(() => {
-    if (!form.exercise.id) return
-
-    getSummary(form.exercise.id)
-  }, [form.exercise.id])
-
-  useEffect(() => {
-    if (!recordId || ticketList.length === 0) {
+    if (!exerciseDetail || ticketList.length === 0) {
       return
     }
 
-    const getRecord = async () => {
-      try {
-        const data =
-          await getExerciseDetail(recordId)
+    const isSuccess =
+      exerciseDetail.success === 1 ||
+      exerciseDetail.success === true
 
-        const isSuccess =
-          data.success === 1 ||
-          data.success === true
+    const exerciseDate =
+      exerciseDetail.exercise_date
+        ? new Date(exerciseDetail.exercise_date)
+        : new Date()
 
-        const exerciseDate =
-          data.exercise_date
-            ? new Date(data.exercise_date)
-            : new Date()
+    const ticket = ticketList.find(
+      (t) => t.id === exerciseDetail.ticket_id,
+    )
 
-        setForm(prev => ({
-          ...prev,
-          date: exerciseDate,
-          memo: data.memo ?? '',
-          workoutResult: isSuccess
-            ? '성공'
-            : '실패',
-          failReason: data.fail_reason ?? '',
-        }))
-
-        const ticket = ticketList.find(
-          t => t.id === data.ticket_id
-        )
-
-        if (ticket) {
-          setForm(prev => ({
-            ...prev,
-            exercise: {
-              id: ticket.id,
-              label: ticket.exercise_type,
-              color: ticket.color_code,
-            }
-          }))
+    setForm((prev) => ({
+      ...prev,
+      date: exerciseDate,
+      memo: exerciseDetail.memo ?? '',
+      workoutResult: isSuccess ? '성공' : '실패',
+      failReason: exerciseDetail.fail_reason ?? '',
+      exercise: ticket
+        ? {
+          id: ticket.id,
+          label: ticket.exercise_type,
+          color: ticket.color_code,
         }
+        : prev.exercise,
+    }))
 
-        if (data.image_url) {
-          setPreviewUrl(
-            `${import.meta.env.VITE_API_URL}${data.image_url}`
-          )
-        } else {
-          setPreviewUrl(null)
-        }
-
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    getRecord()
-  }, [recordId, ticketList])
+    setPreviewUrl(
+      exerciseDetail.image_url
+        ? buildApiUrl(exerciseDetail.image_url)
+        : null,
+    )
+  }, [exerciseDetail, ticketList])
 
   return {
     form,

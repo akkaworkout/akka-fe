@@ -2,12 +2,12 @@ import TicketModal from './TicketModal'
 
 import SummaryCard, { type Exercise } from '@/components/summaryCard/SummaryCard'
 
-import type { TicketItem } from '@/pages/records/hooks/useTickets'
+import type { Ticket } from '@/api/ticketApi'
 
 import styles from './TicketModal.module.css'
 
 type Props = {
-  ticket: TicketItem
+  ticket: Ticket
   endReason: Exercise
   setEndReason: (value: Exercise) => void
   refundAmount: string

@@ -35,7 +35,7 @@ const CalenderPage = () => {
   const {
     goals,
     handleGoalChange,
-    updateGoals
+    handleupdateGoals
   } = useGoals(year, month)
 
   const { summary } = useSummary(year, month)
@@ -49,10 +49,10 @@ const CalenderPage = () => {
     handleSelectDay,
     handleItemClick,
     handleCloseModal
-  } = useTodayItems(navigate, year)
+  } = useTodayItems(navigate, new Date().getDate(), year, month)
 
   useEffect(() => {
-    handleSelectDay(selectedDate, year, month)
+    handleSelectDay(selectedDate)
   }, [year, month])
 
   return (
@@ -80,7 +80,7 @@ const CalenderPage = () => {
               schedules={schedules}
               onPrevMonth={handlePrevMonth}
               onNextMonth={handleNextMonth}
-              onSelectDay={(day) => handleSelectDay(day, year, month)}
+              onSelectDay={(day) => handleSelectDay(day)}
             />
 
             <div className={styles.money}>
@@ -129,7 +129,7 @@ const CalenderPage = () => {
               <Card
                 title="이달의 목표"
                 buttonText="저장"
-                onButtonClick={updateGoals}
+                onButtonClick={handleupdateGoals}
                 width={445}
                 height={223}
               >

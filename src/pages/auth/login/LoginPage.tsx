@@ -2,11 +2,11 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from 'react-helmet-async'
 
-import styles from "./LoginPage.module.css";
-
 import { useAuthStore } from "@/stores/useAuthStore";
 
 import Form from "@/components/form/Form";
+
+import styles from "./LoginPage.module.css";
 
 type FieldErrors = Partial<{
   email: string;
@@ -89,7 +89,6 @@ export default function LoginPage() {
         return;
       }
 
-      localStorage.setItem("accessToken", token);
       login(token);
 
       console.log("Saved token:", token);
