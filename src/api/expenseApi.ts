@@ -13,8 +13,14 @@ export type ExpenseStats = {
   topCategory: string
 }
 
+type ExpenseStatsResponse = {
+  expenseCount: number
+  totalAmount: number
+  topCategory?: string | null
+}
+
 const mapExpenseStats = (
-  item: any
+  item: ExpenseStatsResponse
 ): ExpenseStats => {
   return {
     expenseCount: item.expenseCount,
@@ -24,6 +30,7 @@ const mapExpenseStats = (
   }
 }
 
+// 기타 지출 등록
 export const createExpense = async (
   data: ExpenseForm
 ) => {
@@ -42,11 +49,11 @@ export const createExpense = async (
   return response.data
 }
 
-export const getExpenseStats =
-  async (): Promise<ExpenseStats> => {
-    const { data } = await api.get(
-      '/expense/stats'
-    )
+// 이번달 지출 통계 조회
+export const getExpenseStats = async (): Promise<ExpenseStats> => {
+  const { data } = await api.get(
+    '/expense/stats'
+  )
 
-    return mapExpenseStats(data.data)
-  }
+  return mapExpenseStats(data.data)
+}

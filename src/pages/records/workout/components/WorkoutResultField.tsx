@@ -1,3 +1,5 @@
+import type { WorkoutFormSetter } from '../types/workoutTypes'
+
 import Button from '@/components/button/Button'
 
 import styles from '../Workout.module.css'
@@ -5,7 +7,7 @@ import styles from '../Workout.module.css'
 type Props = {
   workoutResult: '성공' | '실패'
   failReason: string
-  setForm: React.Dispatch<React.SetStateAction<any>>
+  setForm: WorkoutFormSetter
 }
 
 const WorkoutResultField = ({
@@ -34,7 +36,7 @@ const WorkoutResultField = ({
               if (!ok) return
             }
 
-            setForm((prev: any) => ({
+            setForm((prev) => ({
               ...prev,
               workoutResult: '성공',
               failReason: '',
@@ -49,7 +51,7 @@ const WorkoutResultField = ({
           active={workoutResult === '실패'}
           variant="red"
           onClick={() => {
-            setForm((prev: any) => ({
+            setForm((prev) => ({
               ...prev,
               workoutResult: '실패',
             }))

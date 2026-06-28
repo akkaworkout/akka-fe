@@ -1,6 +1,8 @@
 import { type FormEvent } from "react";
 import { Helmet } from 'react-helmet-async'
 
+import api, { buildApiUrl } from "@/api/api";
+
 import { useAuthStore } from "@/stores/useAuthStore";
 
 import Card from "@/components/card/Card";
@@ -9,7 +11,6 @@ import Input from "@/components/form/Form";
 import editAvatar from "@/assets/icons/auth/edit-avatar.png";
 import premiumCard from "@/assets/images/premium-card.png";
 
-import api from "@/api/api";
 import { useMyPageForm, type InitialData } from "./hooks/useMyPageForm";
 import { useProfileImage } from "./hooks/useProfileImage";
 import { useUserData } from "./hooks/useUserData";
@@ -17,7 +18,6 @@ import { useFormValidation } from "./hooks/useFormValidation";
 
 import styles from "./MyPage.module.css";
 
-const API_BASE = import.meta.env.VITE_API_URL;
 const DEFAULT_PROFILE = "https://placehold.co/120?text=Profile";
 
 // ===== FORM FIELDS CONFIG =====
@@ -250,10 +250,7 @@ export default function MyPage() {
       return api.patch("/users/me", formData);
     }
 
-    return apiFetch("/users/me", {
-      method: "PATCH",
-      body: JSON.stringify(payload),
-    });
+    return api.patch("/users/me", payload);
   };
 
   // === Submit ===
@@ -331,7 +328,7 @@ export default function MyPage() {
                           profilePreview ??
                           (user?.profile_image_url &&
                             user.profile_image_url.trim()
-                            ? `${API_BASE}${user.profile_image_url}`
+                            ? `${buildApiUrl}${user.profile_image_url}`
                             : DEFAULT_PROFILE)
                         }
                         alt="프로필"
@@ -469,8 +466,8 @@ export default function MyPage() {
                             <div className={styles.inputWrapRight}>
                               <input
                                 className={`${styles.inputRight} ${form.showError(field.name)
-                                    ? styles.inputError
-                                    : ""
+                                  ? styles.inputError
+                                  : ""
                                   }`}
                                 value={form.formData[field.name]}
                                 onChange={(e) =>

@@ -1,16 +1,14 @@
-import styles from '../Workout.module.css'
+import type { WorkoutFormSetter } from '../types/workoutTypes'
 
-import SummaryCard, {
-  type Exercise,
-} from '@/components/summaryCard/SummaryCard'
+import SummaryCard, { type Exercise } from '@/components/summaryCard/SummaryCard'
+
+import styles from '../Workout.module.css'
 
 type Props = {
   mappedTickets: Exercise[]
   selectedExercise: Exercise
   recordId: number
-  setForm: React.Dispatch<
-    React.SetStateAction<any>
-  >
+  setForm: WorkoutFormSetter
 }
 
 const WorkoutExerciseField = ({
@@ -31,7 +29,7 @@ const WorkoutExerciseField = ({
         onChange={(value) => {
           if (recordId) return
 
-          setForm((prev: any) => ({
+          setForm((prev) => ({
             ...prev,
             exercise: value,
           }))

@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useMemo, useState } from 'react'
 
-import {
-  getCalendar,
-  type Schedule,
-} from '@/api/calendarApi'
+import { type Schedule } from '@/api/calendarApi'
+import { useCalendarQuery } from '@/hooks/queries/useCalendarQuery'
 
 type CalendarDay = {
   date: string
@@ -14,38 +12,26 @@ type CalendarDay = {
 
 export const useCalendar = () => {
   const now = new Date()
+  const [year, setYear] = useState(now.getFullYear())
+  const [month, setMonth] = useState(now.getMonth() + 1)
 
-  const [year, setYear] = useState(
-    now.getFullYear()
-  )
+  const { data: schedules = [] } = useCalendarQuery(year, month)
 
-  const [month, setMonth] = useState(
-    now.getMonth()
-  )
-
-  const [schedules, setSchedules] =
-    useState<Schedule[]>([])
-
-  const [calendarMap, setCalendarMap] =
-    useState<
-      Record<string, CalendarDay>
-    >({})
-
-  // 이전 달
+  // 이전 달로 이동
   const handlePrevMonth = () => {
-    if (month === 0) {
+    if (month === 1) {
       setYear(prev => prev - 1)
-      setMonth(11)
+      setMonth(12)
     } else {
       setMonth(prev => prev - 1)
     }
   }
 
-  // 다음 달
+  // 다음 달로 이동
   const handleNextMonth = () => {
-    if (month === 11) {
+    if (month === 12) {
       setYear(prev => prev + 1)
-      setMonth(0)
+      setMonth(1)
     } else {
       setMonth(prev => prev + 1)
     }
@@ -91,28 +77,10 @@ export const useCalendar = () => {
     return map
   }
 
-  useEffect(() => {
-    const fetchCalendar =
-      async () => {
-        try {
-          const data =
-            await getCalendar(
-              year,
-              month
-            )
-
-          setSchedules(data)
-
-          setCalendarMap(
-            buildCalendarMap(data)
-          )
-        } catch (error) {
-          console.log(error)
-        }
-      }
-
-    fetchCalendar()
-  }, [year, month])
+  const calendarMap = useMemo(
+    () => buildCalendarMap(schedules),
+    [schedules]
+  )
 
   return {
     year,

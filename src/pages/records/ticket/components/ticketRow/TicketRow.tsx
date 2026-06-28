@@ -8,10 +8,10 @@ import MoreButton from '@/assets/icons/common/moreButton.png'
 import EditIcon from '@/assets/icons/common/edit.png'
 import DeleteIcon from '@/assets/icons/common/delete.png'
 
-import type { TicketItem } from '@/pages/records/hooks/useTickets'
+import type { Ticket } from '@/api/ticketApi'
 
 type TicketRowProps = {
-  ticket: TicketItem
+  ticket: Ticket
   index: number
   isActive: boolean
   openIndex: number | null
@@ -77,13 +77,7 @@ const TicketRow = ({
         className={styles.colStatus}
         onClick={() => onView(index)}
       >
-        {
-          ticket.status === 'ACTIVE'
-            ? '진행중'
-            : ticket.status === 'ENDED'
-              ? '종료'
-              : ticket.status
-        }
+        {ticket.status}
       </button>
 
       <div className={styles.colAction}>

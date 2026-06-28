@@ -1,13 +1,9 @@
 // React / 외부 라이브러리
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 
-// API / 로직
-import {
-  createExpense,
-  getExpenseStats,
-} from '@/api/expenseApi'
+// hooks
+import { useExpenseForm } from './hooks/useExpenseForm'
+import { useExpenseSummary } from './hooks/useExpenseSummary'
 
 // 컴포넌트 (UI)
 import RecordLayout from '../layout/RecordLayout'
@@ -20,8 +16,7 @@ import Button from '@/components/button/Button'
 
 // 스타일
 import styles from '../workout/Workout.module.css'
-
-const EXPENSES = [
+const EXPENSES: Expense[] = [
   {
     id: 1,
     value: '운동 용품',
@@ -43,58 +38,21 @@ const EXPENSES = [
 ]
 
 const ExpensePage = () => {
-  const navigate = useNavigate()
+  const {
+    form,
+    isFormValid,
+    isSubmitting,
+    handleDateChange,
+    handleCategoryChange,
+    handleItemChange,
+    handleAmountChange,
+    handleSubmit,
+  } = useExpenseForm(EXPENSES[0])
 
-  // 입력 상태
-  const [date, setDate] = useState<Date>(new Date())
-  const [selectedCategory, setSelectedCategory] = useState<Expense>(EXPENSES[0])
-  const [item, setItem] = useState('')
-  const [amount, setAmount] = useState('')
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
-
-  // 요약 데이터
-  const [monthlyExpenseCount, setMonthlyExpenseCount] = useState(0)
-  const [monthlyTotalExpense, setMonthlyTotalExpense] = useState(0)
-  const [topExpenseCategory, setTopExpenseCategory] = useState('기록 없음')
-
-  const isFormValid = item.trim() !== '' && amount.trim() !== ''
-
-  const formatDate = (date: Date) => date.toISOString().split('T')[0]
-
-  const handleSubmit = async () => {
-    try {
-      await createExpense({
-        category: selectedCategory.value,
-        title: item,
-        amount: Number(amount),
-        expense_date: formatDate(date),
-      })
-
-      alert('운동지출 기록이 완료되었어요')
-
-      navigate('/calendar')
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    const fetchExpenseSummary = async () => {
-      try {
-        const stats = await getExpenseStats()
-
-        setMonthlyExpenseCount(stats.expenseCount)
-        setMonthlyTotalExpense(stats.totalAmount)
-        setTopExpenseCategory(stats.topCategory)
-        setStatus('success')
-      } catch (error) {
-        console.log(error)
-        setStatus('error')
-      }
-    }
-
-    fetchExpenseSummary()
-  }, [])
+  const {
+    status,
+    summary,
+  } = useExpenseSummary()
 
   return (
     <>
@@ -109,58 +67,49 @@ const ExpensePage = () => {
 
       <RecordLayout title="기타 지출">
         <div className={styles.write}>
-          {/* 날짜 + 분류 */}
           <div className={styles.row}>
             <div className={styles.field}>
               <label>날짜*</label>
 
               <DateSelect
-                value={date}
-                onChange={setDate}
+                value={form.date}
+                onChange={handleDateChange}
               />
             </div>
 
             <div className={styles.field}>
               <label>지출 분류*</label>
+
               <SummaryCard
                 expenses={EXPENSES}
-                selected={selectedCategory}
-                onChange={setSelectedCategory}
+                selected={form.selectedCategory}
+                onChange={handleCategoryChange}
               />
             </div>
           </div>
 
-          {/* 항목 */}
           <div className={styles.field}>
-            <label htmlFor='itemName'>항목*</label>
+            <label htmlFor="expense-itemName">항목*</label>
+
             <input
-              id='itemName'
+              id="expense-itemName"
               className={styles.input}
-              value={item}
-              onChange={(e) =>
-                setItem(e.target.value)
-              }
+              value={form.item}
+              onChange={(e) => handleItemChange(e.target.value)}
               placeholder="단백질 쉐이크"
               maxLength={30}
             />
           </div>
 
-          {/* 금액 */}
           <div className={styles.field}>
-            <label htmlFor='amount'>금액*</label>
+            <label htmlFor="expense-amount">금액*</label>
+
             <div className={styles.priceInput}>
               <input
-                id='amount'
+                id="expense-amount"
                 className={styles.input}
-                value={amount}
-                onChange={(e) =>
-                  setAmount(
-                    e.target.value.replace(
-                      /[^0-9]/g,
-                      ''
-                    )
-                  )
-                }
+                value={form.amount}
+                onChange={(e) => handleAmountChange(e.target.value)}
                 placeholder="23,000"
                 maxLength={8}
               />
@@ -171,7 +120,6 @@ const ExpensePage = () => {
             </div>
           </div>
 
-          {/* 버튼 */}
           <div className={styles.footer}>
             <span className={styles.required}>
               *는 필수 입력사항입니다.
@@ -181,24 +129,23 @@ const ExpensePage = () => {
               variant="primary"
               onClick={handleSubmit}
               type="button"
-              disabled={!isFormValid}
+              disabled={!isFormValid || isSubmitting}
             >
-              완료
+              {isSubmitting ? '저장 중...' : '완료'}
             </Button>
           </div>
         </div>
 
-        {/* 요약 카드 */}
         <RecordSummaryCard
           title="이번 기록으로 이렇게 반영돼요"
           items={status === 'success' ? [
-            `이번 달 지출: ${monthlyExpenseCount}회`,
-            `이번 달 누적 지출금: ${monthlyTotalExpense.toLocaleString()}원`,
-            `가장 많이 쓴 항목: ${topExpenseCategory}`,
+            `이번 달 지출: ${summary.expenseCount}회`,
+            `이번 달 누적 지출금: ${summary.totalAmount.toLocaleString()}원`,
+            `가장 많이 쓴 항목: ${summary.topCategory}`,
           ] : [
-            `이번 달 지출: 조회에 실패했어요`,
-            `이번 달 누적 지출금: 조회에 실패했어요`,
-            `가장 많이 쓴 항목: 조회에 실패했어요`,
+            '이번 달 지출: 조회에 실패했어요',
+            '이번 달 누적 지출금: 조회에 실패했어요',
+            '가장 많이 쓴 항목: 조회에 실패했어요',
           ]}
         />
       </RecordLayout>

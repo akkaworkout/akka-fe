@@ -1,12 +1,12 @@
-import styles from '../Workout.module.css'
+import type { WorkoutFormSetter } from '../types/workoutTypes'
 
 import DateSelect from '@/components/dateSelect/DateSelect'
 
+import styles from '../Workout.module.css'
+
 type Props = {
-  date: Date
-  setForm: React.Dispatch<
-    React.SetStateAction<any>
-  >
+  date: Date,
+  setForm: WorkoutFormSetter
 }
 
 const WorkoutDateField = ({
@@ -20,7 +20,7 @@ const WorkoutDateField = ({
       <DateSelect
         value={date}
         onChange={(newDate) => {
-          setForm((prev: any) => ({
+          setForm((prev) => ({
             ...prev,
             date: newDate,
           }))

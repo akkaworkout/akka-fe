@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import api, { buildApiUrl } from '@/api/api'
+
 import { useSidebarStore } from "@/stores/useSidebarStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -29,6 +31,11 @@ import sidebarSettingActiveIcon from "@/assets/icons/sidebar/setting-active.png"
 
 import default_profile from "@/assets/icons/sidebar/default-profile.png";
 
+type SidebarUser = {
+  nickname: string
+  profile_image_url?: string | null
+}
+
 const SideNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,16 +46,13 @@ const SideNav = () => {
     setFolded,
   } = useSidebarStore();
 
-
   const {
     logout,
     token,
     isLoggedIn,
   } = useAuthStore();
 
-  const [user, setUser] = useState<any>(null);
-
-  const API_BASE = import.meta.env.VITE_API_URL;
+  const [user, setUser] = useState<SidebarUser | null>(null);
 
   const menuItems = [
     {
@@ -137,28 +141,21 @@ const SideNav = () => {
   /* 로그인 유저 */
   useEffect(() => {
     if (!token || !isLoggedIn) {
-      setUser(null);
       return;
     }
 
     const fetchUser = async () => {
       try {
-        const res = await fetch(`${API_BASE}/users/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const { data } = await api.get<{ data: SidebarUser }>('/users/me');
 
-        const json = await res.json();
-
-        setUser(json.data);
+        setUser(data.data);
       } catch (err) {
         console.error(err);
       }
     };
 
     fetchUser();
-  }, [API_BASE, token, isLoggedIn]);
+  }, [token, isLoggedIn]);
 
   /* 로그아웃 */
   const handleLogout = () => {
@@ -237,7 +234,7 @@ const SideNav = () => {
       </div>
 
       <div className={styles.sidebarProfileWrapper}>
-        {user ? (
+        {isLoggedIn && user ? (
           <div
             className={styles.sidebarProfile}
             onClick={() =>
@@ -247,7 +244,7 @@ const SideNav = () => {
             <img
               src={
                 user.profile_image_url
-                  ? `${API_BASE}${user.profile_image_url}`
+                  ? buildApiUrl(user.profile_image_url)
                   : default_profile
               }
               className={styles.sidebarProfileImg}
@@ -269,11 +266,11 @@ const SideNav = () => {
 
         {!folded && (
           <div className={styles.sidebarUser}>
-            {user?.nickname || "로그인"}
+            {isLoggedIn && user ? user.nickname : "로그인"}
           </div>
         )}
 
-        {user && !folded && (
+        {isLoggedIn && user && !folded && (
           <img
             src={akkaLogout}
             className={styles.sidebarLogout}

@@ -1,10 +1,10 @@
+import type { WorkoutFormSetter } from '../types/workoutTypes'
+
 import styles from '../Workout.module.css'
 
 type Props = {
   failReason: string
-  setForm: React.Dispatch<
-    React.SetStateAction<any>
-  >
+  setForm: WorkoutFormSetter
 }
 
 const WorkoutFailReasonField = ({
@@ -25,7 +25,7 @@ const WorkoutFailReasonField = ({
         className={styles.input}
         value={failReason}
         onChange={e => {
-          setForm((prev: any) => ({
+          setForm((prev) => ({
             ...prev,
             failReason: e.target.value,
           }))

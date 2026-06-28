@@ -1,84 +1,52 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import {
-  getTodayItems,
-  type TodayItem,
-} from '@/api/calendarApi'
+import { type TodayItem } from '@/api/calendarApi'
+import { useTodayItemsQuery } from '@/hooks/queries/useCalendarQuery'
 
-import { getExerciseDetail } from '@/api/exerciseApi'
+import { getExerciseDetail } from '@/api/workoutApi'
 
 export const useTodayItems = (
   navigate: ReturnType<typeof useNavigate>,
-  initialDay: number
+  initialDay: number,
+  year: number,
+  month: number
 ) => {
-  const [selectedDate, setSelectedDate] =
-    useState(initialDay)
+  const [selectedDay, setSelectedDay] = useState(initialDay)
+  const [selectedItem, setSelectedItem] = useState<TodayItem | null>(null)
 
-  const [selectedItem, setSelectedItem] =
-    useState<TodayItem | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const [isModalOpen, setIsModalOpen] =
-    useState(false)
+  const date = useMemo(() => {
+    const monthStr = String(month).padStart(2, '0')
+    const dayStr = String(selectedDay).padStart(2, '0')
 
-  const [todayItems, setTodayItems] =
-    useState<TodayItem[]>([])
+    return `${year}-${monthStr}-${dayStr}`
+  }, [year, month, selectedDay])
 
-  const [isLoading, setIsLoading] =
-    useState(false)
+  const { data: todayItems = [], isLoading } = useTodayItemsQuery(date)
 
-  const handleSelectDay = async (
-    day: number,
-    year: number,
-    month: number
-  ) => {
-    setSelectedDate(day)
-    setIsLoading(true)
-
-    try {
-      const monthStr = String(month + 1)
-        .padStart(2, '0')
-
-      const dayStr = String(day)
-        .padStart(2, '0')
-
-      const date =
-        `${year}-${monthStr}-${dayStr}`
-
-      const data =
-        await getTodayItems(date)
-
-      setTodayItems(data)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsLoading(false)
-    }
+  const handleSelectDay = (day: number) => {
+    setSelectedDay(day)
   }
 
-  const handleItemClick = async (
-    item: TodayItem
-  ) => {
+  const handleItemClick = async (item: TodayItem) => {
     if (item.status === '이용권 등록') {
       navigate('/ticket')
-
       return
     }
 
     try {
-      const record =
-        await getExerciseDetail(item.id)
+      const record = await getExerciseDetail(item.id)
 
       const modalItem: TodayItem = {
         id: record.record_id,
         date: record.exercise_date,
         name: item.name,
-
         status:
           record.success === 1
             ? '성공'
             : '실패',
-
         color: record.color,
         amount: record.cost,
         memo: record.memo,
@@ -88,7 +56,8 @@ export const useTodayItems = (
       setSelectedItem(modalItem)
       setIsModalOpen(true)
     } catch (error) {
-      console.log(error)
+      console.error(error)
+      alert('이용권 등록에 실패했어요. 다시 시도해주세요.')
     }
   }
 
@@ -98,12 +67,12 @@ export const useTodayItems = (
   }
 
   return {
-    selectedDate,
+    selectedDate: selectedDay,
     selectedItem,
     isModalOpen,
     todayItems,
     isLoading,
-    setSelectedDate,
+    setSelectedDate: setSelectedDay,
     handleSelectDay,
     handleItemClick,
     handleCloseModal,
