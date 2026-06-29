@@ -55,7 +55,6 @@ const WorkoutPage = () => {
           name="description"
           content="오늘의 운동 성공 여부와 메모, 사진을 기록해 보세요."
         />
-        <meta name="robots" content="noindex" />
       </Helmet>
       
       <RecordLayout title="운동 기록">

@@ -107,7 +107,6 @@ const TicketPage = () => {
           name="description"
           content="운동 이용권의 기간, 횟수, 금액과 남은 이용 현황을 관리해 보세요."
         />
-        <meta name="robots" content="noindex" />
       </Helmet>
 
       <RecordLayout title="이용권 관리">

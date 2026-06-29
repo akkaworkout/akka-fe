@@ -113,7 +113,6 @@ export default function ReportPage() {
           name="description"
           content="운동 횟수, 노쇼 손실, 운동 지출을 리포트로 확인해 보세요."
         />
-        <meta name="robots" content="noindex" />
       </Helmet>
       
       <div className={styles.wrap}>

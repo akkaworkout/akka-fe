@@ -15,7 +15,10 @@ export default function SignUpSuccessPage() {
     <>
       <Helmet>
         <title>가입 완료 | Akkaworkout</title>
-        <meta name="robots" content="noindex" />
+        <meta
+          name="description"
+          content="회원가입이 완료되었습니다. 지금 로그인하고 운동 기록, 지출 관리, 이용권 관리를 시작해 보세요."
+        />
       </Helmet>
 
       <div className={styles.wrap}>

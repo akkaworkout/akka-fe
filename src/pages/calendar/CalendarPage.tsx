@@ -63,7 +63,6 @@ const CalenderPage = () => {
           name="description"
           content="날짜별 운동 기록, 지출, 이용권 일정을 캘린더에서 확인해 보세요."
         />
-        <meta name="robots" content="noindex" />
       </Helmet>
 
       <div className={styles.wrap}>
