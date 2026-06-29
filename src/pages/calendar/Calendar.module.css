@@ -129,8 +129,8 @@
     color: inherit;
 }
 
-.day:disabled {
-    cursor: default;
+.emptyDay {
+    pointer-events: none;
 }
 
 .date {
