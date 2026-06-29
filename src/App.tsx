@@ -34,8 +34,8 @@ function App() {
         className={`${styles.main} ${folded ? styles.mainFolded : ''}`}
       >
         <Routes>
-          <Route path="/main" element={<Main />} />
-          <Route path="/" element={<Navigate to="/main" replace />} />
+          <Route path="/" element={<Main />} />
+          <Route path="/main" element={<Navigate to="/" replace />} />
           <Route
             path="/write"
             element={
