@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import styles from './Form.module.css'
 
@@ -42,6 +42,8 @@ export default function Input({
   rightButton,
   showPasswordToggle = false,
 }: Props) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   const hasError = Boolean(errorText)
   const [isVisible, setIsVisible] = useState(false)
 
@@ -59,12 +61,13 @@ export default function Input({
       <div className={styles.inputInner}>
         <label
           className={styles.visuallyHidden}
-          htmlFor={id}
+          htmlFor={inputId}
         >
           {label}
         </label>
+
         <input
-          id={id}
+          id={inputId}
           className={`${styles.input} ${hasError ? styles.inputError : ''}`}
           type={inputType}
           value={value}
@@ -79,10 +82,12 @@ export default function Input({
             type="button"
             className={styles.eyeBtn}
             onClick={() => setIsVisible(v => !v)}
+            aria-label={isVisible ? '비밀번호 숨기기' : '비밀번호 보기'}
           >
             <img
               src={isVisible ? eyeOn : eyeOff}
-              alt="비밀번호 표시 토글"
+              alt=""
+              aria-hidden="true"
             />
           </button>
         )}
@@ -96,7 +101,9 @@ export default function Input({
 
   return (
     <div className={styles.row}>
-      <label className={styles.label}>{label}</label>
+      <label className={styles.label} htmlFor={inputId}>
+        {label}
+      </label>
 
       {rightButton ? (
         <div className={styles.fieldLine}>

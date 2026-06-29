@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 // 이미지
 import arrowIcon from '@/assets/icons/common/chevron-left.png'
 import ticketIcon from '@/assets/images/ticket.png'
@@ -37,9 +39,39 @@ const Calendar = ({
     onSelectDay,
     isLoading = false,
 }: CalendarProps) => {
-    const firstDay = new Date(year, month, 1).getDay()
-    const totalDays = new Date(year, month + 1, 0).getDate()
-    const displayMonth = String(month + 1).padStart(2, '0')
+    const monthIndex = month - 1
+    const firstDay = new Date(year, monthIndex, 1).getDay()
+    const totalDays = new Date(year, month, 0).getDate()
+    const displayMonth = String(month).padStart(2, '0')
+
+    const getScheduleDay = (date: string) => {
+        const parsedDate = new Date(date)
+
+        if (!Number.isNaN(parsedDate.getTime())) {
+            return parsedDate.getDate()
+        }
+
+        const parts = date.split(/[-.]/)
+        return Number(parts[2])
+    }
+
+    const schedulesByDay = useMemo(() => {
+        return schedules.reduce<Record<number, Schedule[]>>((acc, schedule) => {
+            const day = getScheduleDay(schedule.date)
+
+            if (!day) {
+                return acc
+            }
+
+            if (!acc[day]) {
+                acc[day] = []
+            }
+
+            acc[day].push(schedule)
+
+            return acc
+        }, {})
+    }, [schedules])
 
     const days: (number | null)[] = [
         ...Array(firstDay).fill(null),
@@ -54,8 +86,33 @@ const Calendar = ({
                 </span>
 
                 <div className={styles.arrow}>
-                    <img className={styles.arrowBtn} onClick={onPrevMonth} src={arrowIcon} />
-                    <img className={`${styles.arrowBtn} ${styles.rotate}`} onClick={onNextMonth} src={arrowIcon} />
+                    <button
+                        type="button"
+                        className={styles.arrowButton}
+                        onClick={onPrevMonth}
+                        aria-label="이전 달로 이동"
+                    >
+                        <img
+                            className={styles.arrowBtn}
+                            src={arrowIcon}
+                            alt="prev-button"
+                            aria-hidden="true"
+                        />
+                    </button>
+
+                    <button
+                        type="button"
+                        className={styles.arrowButton}
+                        onClick={onNextMonth}
+                        aria-label="다음 달로 이동"
+                    >
+                        <img
+                            className={`${styles.arrowBtn} ${styles.rotate}`}
+                            src={arrowIcon}
+                            alt="next-button"
+                            aria-hidden="true"
+                        />
+                    </button>
                 </div>
             </div>
 
@@ -66,95 +123,95 @@ const Calendar = ({
             </div>
 
             <div className={styles.days}>
-                {days.map((day, i) => (
-                    <div
-                        key={i}
-                        className={`${styles.day} ${day === selectedDate &&
-                            year === selectedYear &&
-                            month === selectedMonth
-                            ? styles.activeDay
-                            : ''
-                            }`}
-                        onClick={() => {
-                            if (!day) return
+                {days.map((day, i) => {
+                    const isSelected =
+                        day === selectedDate &&
+                        year === selectedYear &&
+                        month === selectedMonth
 
-                            if (
-                                day === selectedDate &&
-                                year === selectedYear &&
-                                month === selectedMonth
-                            ) return
+                    return (
+                        <button
+                            key={i}
+                            type="button"
+                            disabled={!day}
+                            className={`${styles.day} ${isSelected ? styles.activeDay : ''}`}
+                            onClick={() => {
+                                if (!day) return
+                                if (isSelected) return
 
-                            onSelectDay(day)
-                        }}
-                    >
-                        {day && (() => {
-                            const daySchedules = schedules.filter(
-                                s => new Date(s.date).getDate() === day
-                            )
+                                onSelectDay(day)
+                            }}
+                            aria-pressed={isSelected}
+                            aria-label={day ? `${year}년 ${month}월 ${day}일 선택` : undefined}
+                        >
+                            {day && (() => {
+                                const daySchedules = schedulesByDay[day] ?? []
 
-                            const tickets: Schedule[] = []
-                            const normalSchedules: Schedule[] = []
+                                const tickets: Schedule[] = []
+                                const normalSchedules: Schedule[] = []
 
-                            daySchedules.forEach(s => {
-                                if (s.type === 'ticket') {
-                                    tickets.push(s)
-                                } else {
-                                    normalSchedules.push(s)
-                                }
-                            })
+                                daySchedules.forEach(s => {
+                                    if (s.type === 'ticket') {
+                                        tickets.push(s)
+                                    } else {
+                                        normalSchedules.push(s)
+                                    }
+                                })
 
-                            const ticketTooltip = tickets.map(t => t.label).join(', ')
-                            const visibleDots = normalSchedules.slice(0, 3)
-                            const hiddenCount = normalSchedules.length - 3
+                                const ticketTooltip = tickets.map(t => t.label).join(', ')
+                                const visibleDots = normalSchedules.slice(0, 3)
+                                const hiddenCount = normalSchedules.length - 3
 
-                            return (
-                                <>
-                                    {!isLoading && tickets.length > 0 && (
-                                        <div className={styles.ticketWrapper}>
-                                            <img src={ticketIcon} className={styles.ticketIcon} />
-                                            <div className={styles.ticketTooltip}>
-                                                {ticketTooltip}
+                                return (
+                                    <>
+                                        {!isLoading && tickets.length > 0 && (
+                                            <div className={styles.ticketWrapper}>
+                                                <img
+                                                    src={ticketIcon}
+                                                    className={styles.ticketIcon}
+                                                    alt=""
+                                                    aria-hidden="true"
+                                                />
+                                                <div className={styles.ticketTooltip}>
+                                                    {ticketTooltip}
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
-
-                                    <span
-                                        className={`${styles.date} ${day === selectedDate &&
-                                            year === selectedYear &&
-                                            month === selectedMonth
-                                            ? styles.activeDate
-                                            : ''
-                                            }`}
-                                    >
-                                        {String(day).padStart(2, '0')}
-                                    </span>
-
-                                    <div className={styles.dotContainer}>
-                                        {isLoading ? (
-                                            <div className={styles.skeletonDots} />
-                                        ) : (
-                                            <>
-                                                {visibleDots.map((s, idx) => (
-                                                    <span
-                                                        key={`${s.date}-${idx}`}
-                                                        className={styles.dot}
-                                                        style={{ backgroundColor: s.color }}
-                                                    />
-                                                ))}
-
-                                                {hiddenCount > 0 && (
-                                                    <span className={styles.moreDot}>
-                                                        +{hiddenCount}
-                                                    </span>
-                                                )}
-                                            </>
                                         )}
-                                    </div>
-                                </>
-                            )
-                        })()}
-                    </div>
-                ))}
+
+                                        <span
+                                            className={`${styles.date} ${isSelected ? styles.activeDate : ''
+                                                }`}
+                                        >
+                                            {String(day).padStart(2, '0')}
+                                        </span>
+
+                                        <div className={styles.dotContainer}>
+                                            {isLoading ? (
+                                                <div className={styles.skeletonDots} />
+                                            ) : (
+                                                <>
+                                                    {visibleDots.map((s, idx) => (
+                                                        <span
+                                                            key={`${s.date}-${idx}`}
+                                                            className={styles.dot}
+                                                            style={{ backgroundColor: s.color }}
+                                                        />
+                                                    ))}
+
+                                                    {hiddenCount > 0 && (
+                                                        <span className={styles.moreDot}>
+                                                            +{hiddenCount}
+                                                        </span>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+                                    </>
+                                )
+                            })()}
+                        </button>
+                    )
+                })}
             </div>
         </div>
     )

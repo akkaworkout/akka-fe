@@ -337,8 +337,9 @@ export default function MyPage() {
                         type="button"
                         className={styles.editAvatarBtn}
                         onClick={handlePickProfile}
+                        aria-label="프로필 이미지 변경"
                       >
-                        <img src={editAvatar} alt="" draggable={false} />
+                        <img src={editAvatar} alt="profile-img-edit" draggable={false} />
                       </button>
                     </div>
 
@@ -458,32 +459,34 @@ export default function MyPage() {
                     radius={20}
                   >
                     <div className={styles.rightInner}>
-                      {RIGHT_FORM_FIELDS.map((field) => (
-                        <div key={field.name} className={styles.goalBlock}>
-                          <div className={styles.goalLabel}>{field.label}</div>
-                          <div className={styles.unitLine}>
-                            <div className={styles.inputWrapRight}>
-                              <input
-                                className={`${styles.inputRight} ${form.showError(field.name)
-                                  ? styles.inputError
-                                  : ""
-                                  }`}
-                                value={form.formData[field.name]}
-                                onChange={(e) =>
-                                  handleFieldChange(field.name, e.target.value)
-                                }
-                                type="number"
-                              />
-                              {form.showError(field.name) && (
-                                <p className={styles.error}>
-                                  {form.errors[field.name]}
-                                </p>
-                              )}
+                      {RIGHT_FORM_FIELDS.map((field) => {
+                        const inputId = `mypage-${field.name}`
+
+                        return (
+                          <div key={field.name} className={styles.goalBlock}>
+                            <label className={styles.goalLabel} htmlFor={inputId}>
+                              {field.label}
+                            </label>
+
+                            <div className={styles.unitLine}>
+                              <div className={styles.inputWrapRight}>
+                                <input
+                                  id={inputId}
+                                  className={`${styles.inputRight} ${form.showError(field.name) ? styles.inputError : ''
+                                    }`}
+                                  value={form.formData[field.name]}
+                                  onChange={(e) =>
+                                    handleFieldChange(field.name, e.target.value)
+                                  }
+                                  type="number"
+                                />
+                              </div>
+
+                              <span className={styles.unit}>{field.unit}</span>
                             </div>
-                            <span className={styles.unit}>{field.unit}</span>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </Card>
                 </div>

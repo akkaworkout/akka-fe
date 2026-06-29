@@ -318,7 +318,7 @@ export default function SignUpPage() {
                     onClick={handlePickProfile}
                     aria-label="프로필 사진 수정"
                   >
-                    <img src={editAvatar} alt="" draggable={false} />
+                    <img src={editAvatar} alt="profile-img-edit" draggable={false} />
                   </button>
                 </div>
 

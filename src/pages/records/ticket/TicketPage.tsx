@@ -154,6 +154,7 @@ const TicketPage = () => {
           <div
             className={styles.addBtn}
             onClick={() => setIsAddModalOpen(true)}
+            aria-label="이용권 추가"
           >
             +
           </div>
