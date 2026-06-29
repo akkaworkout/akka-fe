@@ -23,6 +23,9 @@ https://github.com/akkaworkout/akka-fe
 🛠️ **Backend Repository**  
 https://github.com/akkaworkout/akka-be
 
+🎨 **Figma Design** 
+https://www.figma.com/design/f63s7HXAd3yt2Bfl02IAhT/AKKA-WORKOUT?node-id=16-1487&t=2wx48f81o1SdkvtI-1
+
 ---
 
 ## Test Account
