@@ -28,10 +28,11 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const canSubmit = useMemo(() => {
-    return email.trim() !== "" && password.trim() !== "";
-  }, [email, password]);
+    return email.trim() !== "" && password.trim() !== "" && !isLoading;
+  }, [email, password, isLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +49,8 @@ export default function LoginPage() {
 
     setErrors(next);
     if (Object.keys(next).length > 0) return;
+
+    setIsLoading(true);
 
     try {
       const res = await fetch(`${API_BASE}/auth/login`, {
@@ -102,6 +105,8 @@ export default function LoginPage() {
         ...prev,
         email: "네트워크 오류가 발생했습니다. 서버/주소를 확인해주세요.",
       }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -170,7 +175,7 @@ export default function LoginPage() {
                       className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
                         }`}
                     >
-                      로그인
+                      {isLoading ? "로그인 중..." : "로그인"}
                     </button>
                   </div>
                 </div>
