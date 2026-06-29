@@ -242,15 +242,6 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 - 로그인 성공 시 JWT accessToken 저장
 - 인증 상태에 따른 라우팅 흐름 처리
 
-### Calendar: 수정 예정
-
-<img width="1918" height="1028" alt="image" src="https://github.com/user-attachments/assets/0e8a1232-58c3-4412-8ea9-a486e56106cd" />
-
-- 월별 운동 기록, 지출 기록, 이용권 일정 조회
-- 날짜 선택 시 해당 날짜의 기록 목록 표시
-- 월별 목표 조회 및 수정 기능 구현
-- React Query 기반 캘린더 데이터 조회 hook 분리
-
 ### Records - 운동기록 / 기타지출 / 이용권관리
 
 <img width="1918" height="1028" alt="image" src="https://github.com/user-attachments/assets/ec3b8c4d-1c80-43ad-8853-4a46fe811821" />
@@ -276,7 +267,16 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 - 운동 기록, 지출 기록, 노쇼 관련 지표 표시
 - 상세 모달을 통한 기록 확인 흐름 구현
 
-### My Page: 수정 예정
+### Calendar: 수정 예정
+
+<img width="1918" height="1028" alt="image" src="https://github.com/user-attachments/assets/0e8a1232-58c3-4412-8ea9-a486e56106cd" />
+
+- 월별 운동 기록, 지출 기록, 이용권 일정 조회
+- 날짜 선택 시 해당 날짜의 기록 목록 표시
+- 월별 목표 조회 및 수정 기능 구현
+- React Query 기반 캘린더 데이터 조회 hook 분리
+
+### MyPage: 수정 예정
 
 <img width="1918" height="1031" alt="image" src="https://github.com/user-attachments/assets/d349bea7-28c2-42ab-8a19-8ee69570844c" />
 
@@ -296,6 +296,33 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 - `BrowserRouter`를 적용해 클라이언트 라우팅 구조 구성
 - Zustand를 활용해 사이드바 접힘 상태 전역 관리
 - Zustand를 활용해 로그인 여부와 accessToken 상태 관리
+
+- ---
+
+## Lighthouse
+
+### Main
+<img width="503" height="165" alt="image" src="https://github.com/user-attachments/assets/f2731d36-00ed-49a7-a645-5b435939250d" />
+
+### Auth - 로그인
+<img width="506" height="163" alt="image" src="https://github.com/user-attachments/assets/125ce5ea-a801-41b4-a283-8975df9fae5a" />
+
+### Auth - 회원가입
+<img width="506" height="163" alt="image" src="https://github.com/user-attachments/assets/73c1aa7b-d3c5-4d2b-bf24-81482511d23a" />
+
+### Records - 운동기록 / 기타지출 / 이용권관리
+<img width="505" height="167" alt="image" src="https://github.com/user-attachments/assets/356d6f16-8cb8-4eb9-9384-df2ea814cd08" />
+<img width="497" height="162" alt="image" src="https://github.com/user-attachments/assets/a1891924-b9f8-4634-a3e3-494428fe488d" />
+<img width="497" height="162" alt="image" src="https://github.com/user-attachments/assets/2d3b261b-fbaf-4e0a-a3e9-f6d6066b1a2d" />
+
+### Report
+<img width="506" height="165" alt="image" src="https://github.com/user-attachments/assets/8047a4fe-17a8-466c-8eff-f9527ff8d44a" />
+
+### Calendar
+<img width="510" height="171" alt="image" src="https://github.com/user-attachments/assets/a99974c9-2421-41d3-ae38-c20abb4cf095" />
+
+### MyPage
+<img width="502" height="166" alt="image" src="https://github.com/user-attachments/assets/fcefce9f-706a-4c26-bbd1-7c28f4b1aa2f" />
 
 ---
 
