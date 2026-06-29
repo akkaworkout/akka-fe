@@ -1,8 +1,8 @@
 .row {
   display: grid;
   grid-template-columns: 200px 449px;
-  /* 라벨 / (333+16+100) */
   align-items: center;
+  transform: translateX(40px);
 }
 
 .label {

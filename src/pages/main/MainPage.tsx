@@ -1,20 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import { Helmet } from 'react-helmet-async'
+import { Helmet } from "react-helmet-async";
 
-import { useAuthStore } from "@/stores/useAuthStore";
-
-import styles from './MainPage.module.css'
+import styles from "./MainPage.module.css";
 
 import mainAkka from "@/assets/brand/main-akka.png";
 import mainWorkout from "@/assets/brand/main-workout.png";
 import mainpage from "@/assets/brand/main-hero.webp";
 
-
 export default function MainPage() {
-  const navigate = useNavigate();
-
-  const { isLoggedIn } = useAuthStore();
-
   return (
     <>
       <Helmet>
@@ -34,7 +26,6 @@ export default function MainPage() {
         <div className={styles.mainPage}>
           <div className={styles.mainInner}>
             <section className={styles.hero}>
-              {/* 왼쪽 텍스트 */}
               <div className={styles.copy}>
                 <p className={styles.kicker}>
                   운동 안 가면, 돈도 사라집니다
@@ -45,30 +36,11 @@ export default function MainPage() {
                 </h1>
 
                 <div className={styles.brand}>
-                  <img
-                    className={styles.brandAkka}
-                    src={mainAkka}
-                    alt="akka"
-                  />
-
-                  <img
-                    className={styles.brandWorkout}
-                    src={mainWorkout}
-                    alt="workout"
-                  />
+                  <img className={styles.brandAkka} src={mainAkka} alt="akka" />
+                  <img className={styles.brandWorkout} src={mainWorkout} alt="workout" />
                 </div>
-
-                {!isLoggedIn && (
-                  <button
-                    className={styles.loginButton}
-                    onClick={() => navigate("/login")}
-                  >
-                    로그인 시작하기
-                  </button>
-                )}
               </div>
 
-              {/* 오른쪽 일러스트 */}
               <div className={styles.illustWrap}>
                 <img
                   className={styles.illust}
