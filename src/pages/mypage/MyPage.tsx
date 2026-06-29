@@ -300,7 +300,6 @@ export default function MyPage() {
           name="description"
           content="내 목표 예산, 운동 목표, 프로필 정보를 관리해 보세요."
         />
-        <meta name="robots" content="noindex" />
       </Helmet>
 
       <div className={styles.wrap}>

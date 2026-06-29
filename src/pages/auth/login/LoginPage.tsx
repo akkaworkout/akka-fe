@@ -113,7 +113,6 @@ export default function LoginPage() {
           name="description"
           content="Akkaworkout에 로그인하고 운동 기록과 이용권을 관리해 보세요."
         />
-        <meta name="robots" content="noindex" />
       </Helmet>
       
       <div className={styles.wrap}>

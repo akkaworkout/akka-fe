@@ -62,7 +62,6 @@ const ExpensePage = () => {
           name="description"
           content="운동과 관련된 지출을 기록하고 월별 사용 금액을 관리해 보세요."
         />
-        <meta name="robots" content="noindex" />
       </Helmet>
 
       <RecordLayout title="기타 지출">
