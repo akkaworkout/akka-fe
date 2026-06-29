@@ -124,6 +124,13 @@
     flex-direction: column;
     align-items: center;
     padding-top: 8px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+}
+
+.day:disabled {
+    cursor: default;
 }
 
 .date {
@@ -161,7 +168,7 @@
 }
 
 .current {
-    color: #f0b429;
+    color: var(--secondary);
 }
 
 .total {
@@ -224,7 +231,8 @@
     align-items: center;
     height: 100%;
     line-height: 38px;
-    color: #919191;
+    color: var(--black);
+    opacity: 0.65;
 }
 
 .goalItem:has(input:not(:placeholder-shown)) span {
@@ -245,7 +253,8 @@
 
 .goalItem input::placeholder {
     line-height: 38px;
-    color: #919191;
+    color: var(--black);
+    opacity: 0.65;
     transform: translateY(1.5px);
 }
 
@@ -288,16 +297,59 @@
 }
 
 .item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 53px;
-    padding-right: 10px;
-    cursor: pointer;
+    list-style: none;
 }
 
 .item:not(:last-child) {
     border-bottom: 1px solid #f0f0f0;
+}
+
+.itemButton {
+    width: 100%;
+    height: 53px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px 0 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.stateItem {
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+}
+
+.arrowButton {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.arrowButton:hover {
+    background-color: #F2F2F4;
+}
+
+.itemButton:focus-visible,
+.addBtn:focus-visible,
+.arrowButton:focus-visible,
+.day:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 
 .left {
@@ -331,7 +383,8 @@
 
 .status {
     font-size: 12px;
-    opacity: 0.5;
+    color: var(--black);
+    opacity: 0.65;
 }
 
 .success {
@@ -346,7 +399,7 @@
 }
 
 .purchase {
-    color: var(--secondary-dark);
+    color: var(--primary-dark);
     font-weight: 600;
 }
 
@@ -357,7 +410,7 @@
     background: #F2F2F4;
     border: none;
     font-size: 24px;
-    color: #919191;
+    color: var(--black);
     cursor: pointer;
     line-height: 27px;
 }

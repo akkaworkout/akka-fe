@@ -32,63 +32,64 @@ const TodayRecordSection = ({
         radius={20}
       >
         <div className={styles.summary}>
-          <ul className={styles.list}>
+          <ul className={styles.list} aria-live="polite">
             {isLoading ? (
-              <Spinner />
+              <li className={styles.stateItem}>
+                <Spinner />
+              </li>
             ) : todayItems.length === 0 ? (
-              <div className={styles.empty}>
+              <li className={`${styles.stateItem} ${styles.empty}`}>
                 아직 기록이 없어요
-              </div>
+              </li>
             ) : (
               todayItems.map((item) => (
-                <li
-                  key={item.id}
-                  className={`
-                    ${styles.item}
-                    ${
-                      item.status === '이용권 등록'
-                        ? styles.ticketItem
-                        : ''
-                    }
-                  `}
-                  onClick={() => onItemClick(item)}
-                >
-                  <div className={styles.left}>
-                    <span
-                      className={styles.dot}
-                      style={{
-                        backgroundColor: item.color,
-                      }}
-                    />
+                <li key={item.id} className={styles.item}>
+                  <button
+                    type="button"
+                    className={styles.itemButton}
+                    onClick={() => onItemClick(item)}
+                  >
+                    <div className={styles.left}>
+                      <span
+                        className={styles.dot}
+                        style={{
+                          backgroundColor: item.color,
+                        }}
+                      />
 
-                    <div>
-                      <div className={styles.name}>
-                        {item.name}
-                      </div>
+                      <div>
+                        <div className={styles.name}>
+                          {item.name}
+                        </div>
 
-                      <div className={styles.status}>
-                        {item.status}
+                        <div className={styles.status}>
+                          {item.status}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <span
-                    className={
-                      item.status === '성공'
-                        ? styles.success
-                        : item.status === '실패'
-                          ? styles.fail
-                          : styles.purchase
-                    }
-                  >
-                    {(item.amount ?? 0).toLocaleString()}원
-                  </span>
+                    <span
+                      className={
+                        item.status === '성공'
+                          ? styles.success
+                          : item.status === '실패'
+                            ? styles.fail
+                            : styles.purchase
+                      }
+                    >
+                      {(item.amount ?? 0).toLocaleString()}원
+                    </span>
+                  </button>
                 </li>
               ))
             )}
           </ul>
 
-          <button className={styles.addBtn}>
+          <button
+            type="button"
+            className={styles.addBtn}
+            aria-label="기록 추가"
+          >
             +
           </button>
         </div>
