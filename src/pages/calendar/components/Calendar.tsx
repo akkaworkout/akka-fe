@@ -124,6 +124,16 @@ const Calendar = ({
 
             <div className={styles.days}>
                 {days.map((day, i) => {
+                    if (!day) {
+                        return (
+                            <div
+                                key={`empty-${i}`}
+                                className={`${styles.day} ${styles.emptyDay}`}
+                                aria-hidden="true"
+                            />
+                        )
+                    }
+
                     const isSelected =
                         day === selectedDate &&
                         year === selectedYear &&
@@ -131,20 +141,18 @@ const Calendar = ({
 
                     return (
                         <button
-                            key={i}
+                            key={`${year}-${month}-${day}`}
                             type="button"
-                            disabled={!day}
                             className={`${styles.day} ${isSelected ? styles.activeDay : ''}`}
                             onClick={() => {
-                                if (!day) return
                                 if (isSelected) return
 
                                 onSelectDay(day)
                             }}
                             aria-pressed={isSelected}
-                            aria-label={day ? `${year}년 ${month}월 ${day}일 선택` : undefined}
+                            aria-label={`${year}년 ${month}월 ${day}일 선택`}
                         >
-                            {day && (() => {
+                            {(() => {
                                 const daySchedules = schedulesByDay[day] ?? []
 
                                 const tickets: Schedule[] = []
