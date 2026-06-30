@@ -36,19 +36,25 @@ export const useTodayItems = (
       return
     }
 
+    if (item.status === '구매') {
+      setSelectedItem(item)
+      setIsModalOpen(true)
+      return
+    }
+
     try {
       const record = await getExerciseDetail(item.id)
 
       const modalItem: TodayItem = {
-        id: record.record_id,
+        id: record.id,
         date: record.exercise_date,
         name: item.name,
         status:
-          record.success === 1
+          record.is_success === 1
             ? '성공'
             : '실패',
-        color: record.color,
-        amount: record.cost,
+        color_code: record.color_code,
+        amount: record.exercise_amount,
         memo: record.memo,
         image_url: record.image_url,
       }

@@ -1,7 +1,6 @@
 .images {
   overflow-x: auto;
   margin-top: 14px;
-  margin-bottom: 15px;
 }
 
 .images img {
@@ -16,7 +15,8 @@
   border-radius: 10px;
   line-height: 42px;
   padding-left: 17px;
-  margin-bottom: 25px;
+
+  margin: 25px 0;
   font-weight: 700;
 }
 

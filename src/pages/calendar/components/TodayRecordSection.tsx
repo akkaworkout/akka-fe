@@ -1,7 +1,9 @@
-import Card from '@/components/card/Card'
-import Spinner from '@/components/spinner/Spinner'
+import { useNavigate } from 'react-router-dom'
 
 import type { TodayItem } from '@/api/calendarApi'
+
+import Card from '@/components/card/Card'
+import Spinner from '@/components/spinner/Spinner'
 
 import styles from '../Calendar.module.css'
 
@@ -22,6 +24,8 @@ const TodayRecordSection = ({
   isLoading,
   onItemClick,
 }: Props) => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.today}>
       <Card
@@ -39,7 +43,7 @@ const TodayRecordSection = ({
               </li>
             ) : todayItems.length === 0 ? (
               <li className={`${styles.stateItem} ${styles.empty}`}>
-                아직 기록이 없어요
+                아직 기록이 없어요. <br/> 하단 버튼을 클릭하고 운동 기록을 작성해보세요!
               </li>
             ) : (
               todayItems.map((item) => (
@@ -53,7 +57,7 @@ const TodayRecordSection = ({
                       <span
                         className={styles.dot}
                         style={{
-                          backgroundColor: item.color,
+                          backgroundColor: item.color_code,
                         }}
                       />
 
@@ -89,6 +93,7 @@ const TodayRecordSection = ({
             type="button"
             className={styles.addBtn}
             aria-label="기록 추가"
+            onClick={() => navigate('/write')}
           >
             +
           </button>

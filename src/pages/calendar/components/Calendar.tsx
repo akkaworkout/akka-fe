@@ -10,7 +10,7 @@ import styles from '../Calendar.module.css'
 type Schedule = {
     date: string
     label: string
-    color: string
+    color_code: string
     type: string
 }
 
@@ -202,7 +202,7 @@ const Calendar = ({
                                                         <span
                                                             key={`${s.date}-${idx}`}
                                                             className={styles.dot}
-                                                            style={{ backgroundColor: s.color }}
+                                                            style={{ backgroundColor: s.color_code }}
                                                         />
                                                     ))}
 

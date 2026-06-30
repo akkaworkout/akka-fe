@@ -51,6 +51,8 @@ const CalenderPage = () => {
     handleCloseModal
   } = useTodayItems(navigate, new Date().getDate(), year, month)
 
+  const isOverBudget = Number(summary?.totalAmount ?? 0) > Number(summary?.targetBudget ?? 0)
+
   useEffect(() => {
     handleSelectDay(selectedDate)
   }, [year, month])
@@ -87,19 +89,22 @@ const CalenderPage = () => {
                 <Card
                   title={
                     <div className={styles.moneyMain}>
-                      {Number.isNaN(Number(summary.totalAmount))
-                        ? <span className={styles.label}>아직 이번 달 기록이 없어요</span>
-                        :
+                      {Number.isNaN(Number(summary.totalAmount)) ? (
+                        <span className={styles.label}>아직 이번 달 기록이 없어요</span>
+                      ) : (
                         <>
                           <span className={styles.label}>금액:</span>
-                          <span className={styles.current}>
+                          <span
+                            className={`${styles.current} ${isOverBudget ? styles.overBudget : ''
+                              }`}
+                          >
                             {Number(summary.totalAmount).toLocaleString()}
                           </span>
                           <span className={styles.total}>
                             &nbsp;/ {Number(summary.targetBudget ?? 0).toLocaleString()}원
                           </span>
                         </>
-                      }
+                      )}
                     </div>
                   }
                   width={445}
@@ -109,11 +114,13 @@ const CalenderPage = () => {
                 >
                   <div className={styles.badges}>
                     <div className={styles.badgeYellow}>
-                      이번달 날린 금액: <strong>{Number(summary.failAmount ?? 0).toLocaleString()}원</strong>
+                      이번달 날린 금액:{' '}
+                      <strong>{Number(summary.failAmount ?? 0).toLocaleString()}원</strong>
                     </div>
 
                     <div className={styles.badgeBlue}>
-                      운동 횟수: <strong>{summary.exerciseCount ?? 0}</strong> / {summary.targetExerciseCount ?? 0}회
+                      운동 횟수: <strong>{summary.exerciseCount ?? 0}</strong> /{' '}
+                      {summary.targetExerciseCount ?? 0}회
                     </div>
                   </div>
                 </Card>
@@ -135,11 +142,10 @@ const CalenderPage = () => {
                 <div className={styles.goalList}>
                   {(goals.length > 0 ? goals : ["", "", ""]).map((goal, index) => (
                     <div key={index} className={styles.goalItem}>
-                      <span>{index + 1}.</span>
                       <input
                         value={goal}
                         onChange={(e) => handleGoalChange(index, e.target.value)}
-                        placeholder="목표를 입력해주세요."
+                        placeholder={`${index + 1}. 목표를 입력해주세요.`}
                       />
                     </div>
                   ))}

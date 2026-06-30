@@ -36,7 +36,7 @@ const formatDate = (date: Date) => {
 export const getExerciseDetail = async (recordId: number) => {
   const { data } = await api.get(`/exercise-record/${recordId}`)
 
-  return data
+  return data.data
 }
 
 // 운동 기록 등록

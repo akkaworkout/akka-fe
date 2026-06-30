@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 import TicketModal from './TicketModal'
 import DateSelect from '@/components/dateSelect/DateSelect'
@@ -46,13 +46,21 @@ const TicketAddModal = ({
   const isViewMode = mode === 'view'
 
   const [step, setStep] = useState(1)
-  const [form, setForm] = useState({
-    exerciseType: '',
-    startDate: new Date(),
-    endDate: new Date(),
-    targetCount: '',
-    totalAmount: '',
-  })
+  const [form, setForm] = useState(() => ({
+    exerciseType: initialData?.exerciseType ?? '',
+    startDate: initialData?.startDate
+      ? new Date(initialData.startDate)
+      : new Date(),
+    endDate: initialData?.endDate
+      ? new Date(initialData.endDate)
+      : new Date(),
+    targetCount: initialData?.targetCount
+      ? String(initialData.targetCount)
+      : '',
+    totalAmount: initialData?.totalAmount
+      ? String(initialData.totalAmount)
+      : '',
+  }))
 
   const getOnlyNumber = (value: string) => value.replace(/[^0-9]/g, '')
 
@@ -119,18 +127,6 @@ const TicketAddModal = ({
 
     onClose()
   }
-
-  useEffect(() => {
-    if (!isViewMode || !initialData) return
-
-    setForm({
-      exerciseType: initialData.exerciseType,
-      targetCount: String(initialData.targetCount),
-      totalAmount: String(initialData.totalAmount),
-      startDate: new Date(initialData.startDate),
-      endDate: new Date(initialData.endDate),
-    })
-  }, [isViewMode, initialData])
 
   return (
     <TicketModal
