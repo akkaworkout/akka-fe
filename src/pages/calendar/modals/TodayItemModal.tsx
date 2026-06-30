@@ -70,19 +70,19 @@ const TodayItemModal = ({ item, onClose }: Props) => {
         </button>
       }
     >
-      <div className={styles.images}>
-        {!item.image_url ? (
-          <div className={styles.noImage}>이미지가 없습니다</div>
-        ) : imageError ? (
-          <div className={styles.noImage}>이미지를 불러오지 못했습니다</div>
-        ) : (
-          <img
-            src={buildApiUrl(item.image_url)}
-            alt="exercise"
-            onError={() => setImageError(true)}
-          />
-        )}
-      </div>
+      {item.image_url && (
+        <div className={styles.images}>
+          {imageError ? (
+            <div className={styles.noImage}>이미지를 불러오지 못했어요</div>
+          ) : (
+            <img
+              src={buildApiUrl(item.image_url)}
+              alt="exercise"
+              onError={() => setImageError(true)}
+            />
+          )}
+        </div>
+      )}
 
       <div className={`${styles.alert} ${alertClassMap[item.status]}`}>
         {alertText}

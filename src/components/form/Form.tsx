@@ -21,6 +21,7 @@ type Props = {
   placeholder?: string
   autoComplete?: string
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode']
+  variant?: string
 
   errorText?: string
   rightButton?: RightButton
@@ -38,6 +39,7 @@ export default function Input({
   placeholder,
   autoComplete,
   inputMode,
+  variant,
   errorText,
   rightButton,
   showPasswordToggle = false,
@@ -100,8 +102,13 @@ export default function Input({
   )
 
   return (
-    <div className={styles.row}>
-      <label className={styles.label} htmlFor={inputId}>
+    <div
+      className={`${styles.row} ${variant === 'profile' ? styles.profileRow : ''}`}
+    >
+      <label
+        className={styles.label}
+        htmlFor={inputId}
+      >
         {label}
       </label>
 

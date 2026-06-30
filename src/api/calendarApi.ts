@@ -3,7 +3,7 @@ import api from '@/api/api'
 export type Schedule = {
   date: string
   label: string
-  color: string
+  color_code: string
   type: string
 }
 
@@ -24,7 +24,7 @@ export type TodayItem = {
   | '실패'
   | '구매'
   | '이용권 등록'
-  color: string
+  color_code: string
   amount: number
   memo?: string
   image_url?: string
@@ -33,7 +33,7 @@ export type TodayItem = {
 type CalendarRecordResponse = {
   date: string
   name: string
-  color: string
+  color_code: string
   type: string
 }
 
@@ -43,10 +43,12 @@ type TodayItemResponse = {
   type: 'exercise' | 'expense' | 'ticket'
   exercise_type?: string
   success?: 1 | 0 | boolean
-  color: string
-  cost?: number
+  color?: string
+  color_code?: string
+  exercise_amount?: number
   memo?: string
-  title?: string
+  image_url?: string
+  item_name?: string
   amount?: number
 }
 
@@ -55,25 +57,29 @@ const mapSchedule = (
 ): Schedule => ({
   date: item.date.slice(0, 10),
   label: item.name,
-  color: item.color,
+  color_code: item.color_code,
   type: item.type,
 })
 
 const mapTodayItem = (
   item: TodayItemResponse
 ): TodayItem | null => {
+  const color_code = item.color_code ?? item.color ?? ''
+  const success = item.success
+
   if (item.type === 'exercise') {
     return {
       id: item.id,
       date: item.date,
       name: item.exercise_type ?? '',
       status:
-        item.success === 1
+        success === 1 || success === true
           ? '성공'
           : '실패',
-      color: item.color,
-      amount: item.cost ?? 0,
+      color_code,
+      amount: item.exercise_amount ?? 0,
       memo: item.memo,
+      image_url: item.image_url,
     }
   }
 
@@ -81,9 +87,9 @@ const mapTodayItem = (
     return {
       id: item.id,
       date: item.date,
-      name: item.title ?? '',
+      name: item.item_name ?? '',
       status: '구매',
-      color: item.color,
+      color_code,
       amount: item.amount ?? 0,
     }
   }
@@ -94,7 +100,7 @@ const mapTodayItem = (
       date: item.date,
       name: item.exercise_type ?? '',
       status: '이용권 등록',
-      color: item.color,
+      color_code,
       amount: 0,
     }
   }
@@ -178,7 +184,7 @@ export const getTodayItems = async (
     `/calendar/${date}`
   )
 
-  return data.data.records
+  return (data.data?.records ?? [])
     .map(mapTodayItem)
     .filter(Boolean) as TodayItem[]
 }

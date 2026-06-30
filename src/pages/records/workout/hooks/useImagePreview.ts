@@ -13,9 +13,7 @@ type FormType = {
   imageFile: File | null
 }
 
-type SetFormType = React.Dispatch<
-  React.SetStateAction<FormType>
->
+type SetFormType = React.Dispatch<React.SetStateAction<FormType>>
 
 export const useImagePreview = (
   setForm: SetFormType,
@@ -23,8 +21,9 @@ export const useImagePreview = (
     value: string | null
   ) => void
 ) => {
-  const fileInputRef =
-    useRef<HTMLInputElement | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const previewObjectUrlRef = useRef<string | null>(null)
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -33,24 +32,25 @@ export const useImagePreview = (
 
     if (!file) return
 
+    if (previewObjectUrlRef.current) {
+      URL.revokeObjectURL(previewObjectUrlRef.current)
+    }
+
+    const objectUrl = URL.createObjectURL(file)
+    previewObjectUrlRef.current = objectUrl
+
     setForm(prev => ({
       ...prev,
       imageFile: file,
     }))
 
-    setPreviewUrl(
-      URL.createObjectURL(file)
-    )
+    setPreviewUrl(objectUrl)
   }
 
   useEffect(() => {
     return () => {
-      if (
-        fileInputRef.current?.value
-      ) {
-        URL.revokeObjectURL(
-          fileInputRef.current.value
-        )
+      if (previewObjectUrlRef.current) {
+        URL.revokeObjectURL(previewObjectUrlRef.current)
       }
     }
   }, [])

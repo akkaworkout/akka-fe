@@ -171,6 +171,10 @@
     color: var(--secondary);
 }
 
+.current.overBudget {
+    color: var(--error);
+}
+
 .total {
     color: var(--black);
 }
@@ -324,6 +328,7 @@
     align-items: center;
     justify-content: center;
     list-style: none;
+    text-align: center;
 }
 
 .arrowButton {
