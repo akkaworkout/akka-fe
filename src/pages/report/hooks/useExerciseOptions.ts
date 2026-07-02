@@ -2,12 +2,6 @@ import { useMemo } from 'react'
 import type { Exercise } from '@/components/summaryCard/SummaryCard'
 import type { Ticket } from '@/api/ticketApi'
 
-const EXERCISES: Exercise[] = [
-  { id: 1, label: '발레', color: 'rgb(252, 215, 255)' },
-  { id: 2, label: '헬스', color: '#DAD7FF' },
-  { id: 3, label: '필라테스', color: '#FFE6CC' },
-  { id: 4, label: '수영', color: '#E0F0FF' },
-]
 
 function isTicketIncludedInMonth(
   ticket: Ticket,
@@ -51,6 +45,6 @@ export const useExerciseOptions = (
 
     const exercises = Array.from(unique.values())
 
-    return exercises.length ? exercises : EXERCISES
+    return exercises
   }, [tickets, year, month])
 }
