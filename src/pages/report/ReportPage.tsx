@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Helmet } from 'react-helmet-async'
+import { Helmet } from "react-helmet-async";
 
 import SummaryCard, {
   type Exercise,
@@ -21,22 +21,15 @@ import styles from "@/pages/report/Report.module.css";
 
 import MemoDetailModal from "@/pages/report/modals/MemoDetailModal";
 
-import { useTickets } from '@/pages/records/hooks/useTickets';
+import { useTickets } from "@/pages/records/hooks/useTickets";
 import { useReportData } from "./hooks/useReportData";
 import { useExerciseOptions } from "./hooks/useExerciseOptions";
 import { useInsightCalculations } from "./hooks/useInsightCalculations";
 import { useReportMetrics } from "./hooks/useReportMetrics";
 
-const EXERCISES: Exercise[] = [
-  { id: 1, label: "발레", color: "rgb(252, 215, 255)" },
-  { id: 2, label: "헬스", color: "#DAD7FF" },
-  { id: 3, label: "필라테스", color: "#FFE6CC" },
-  { id: 4, label: "수영", color: "#E0F0FF" },
-];
-
 export default function ReportPage() {
-  const [selectedExercise, setSelectedExercise] = useState<Exercise>(
-    EXERCISES[0],
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
+    null,
   );
   const [openMemo, setOpenMemo] = useState(false);
 
@@ -44,31 +37,33 @@ export default function ReportPage() {
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
 
-  // === 데이터 로드 ===
-  const { tickets, loading: ticketsLoading } = useTickets();
-  const { reportData, loading: reportLoading } = useReportData(
-    year,
-    month,
-    selectedExercise.label,
-  );
+  const {
+    tickets,
+    loading: ticketsLoading,
+    error: ticketsError,
+  } = useTickets();
 
-  // === 첫 로드 vs 부분 로딩 구분 ===
+  const exerciseOptions = useExerciseOptions(tickets, year, month);
+
+  const currentExercise =
+    exerciseOptions.find(
+      (exercise) => exercise.label === selectedExercise?.label,
+    ) ??
+    exerciseOptions[0] ??
+    null;
+
+  const {
+    reportData,
+    loading: reportLoading,
+    error: reportError,
+  } = useReportData(year, month, currentExercise?.label);
+
   const isInitialLoad = ticketsLoading;
   const isPartialLoading = reportLoading && !isInitialLoad;
 
-  // === 계산 훅 ===
-  const exerciseOptions = useExerciseOptions(tickets, year, month);
   const insights = useInsightCalculations(reportData);
   const metrics = useReportMetrics(reportData);
 
-  // === 현재 선택된 운동 (유효성 검증) ===
-  const currentExercise = exerciseOptions.some(
-    (exercise) => exercise.label === selectedExercise.label,
-  )
-    ? selectedExercise
-    : exerciseOptions[0];
-
-  // === 월 네비게이션 ===
   const handlePrevMonth = () => {
     setMonth((prev) => {
       if (prev === 1) {
@@ -89,7 +84,6 @@ export default function ReportPage() {
     });
   };
 
-  // === 첫 로드일 때만 전체 로딩 ===
   if (isInitialLoad) {
     return (
       <div
@@ -114,7 +108,7 @@ export default function ReportPage() {
           content="운동 횟수, 노쇼 손실, 운동 지출을 리포트로 확인해 보세요."
         />
       </Helmet>
-      
+
       <div className={styles.wrap}>
         <div className={styles.reportPage}>
           <section className={styles.reportInner}>
@@ -128,6 +122,22 @@ export default function ReportPage() {
               noShowCount={metrics.noShowCount}
             />
 
+            {ticketsError && (
+              <div className={styles.errorMessage}>
+                이용권 정보를 불러오지 못했습니다.
+              </div>
+            )}
+
+            {reportError && (
+              <div className={styles.errorMessage}>{reportError}</div>
+            )}
+
+            {!currentExercise && (
+              <div className={styles.emptyMessage}>
+                해당 월에 등록된 이용권이 없습니다.
+              </div>
+            )}
+
             <div className={styles.reportGrid}>
               <div className={styles.summarySection}>
                 <Card
@@ -137,17 +147,25 @@ export default function ReportPage() {
                   radius={20}
                   backgroundColor="#ffffff"
                 >
-                  <SummaryCard
-                    expenses={exerciseOptions}
-                    selected={currentExercise}
-                    onChange={setSelectedExercise}
-                  />
-                  {isPartialLoading ? (
-                    <div className={styles.goalLoadingContainer}>
-                      <Spinner size={30} />
-                    </div>
+                  {currentExercise ? (
+                    <>
+                      <SummaryCard
+                        expenses={exerciseOptions}
+                        selected={currentExercise}
+                        onChange={setSelectedExercise}
+                      />
+                      {isPartialLoading ? (
+                        <div className={styles.goalLoadingContainer}>
+                          <Spinner size={30} />
+                        </div>
+                      ) : (
+                        <RingChart percent={metrics.ringPercent} />
+                      )}
+                    </>
                   ) : (
-                    <RingChart percent={metrics.ringPercent} />
+                    <div className={styles.emptyMessage}>
+                      이용권을 등록하면 리포트를 확인할 수 있습니다.
+                    </div>
                   )}
                 </Card>
               </div>

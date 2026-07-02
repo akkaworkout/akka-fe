@@ -34,14 +34,23 @@ export type ReportData = {
 export const useReportData = (
   year: number,
   month: number,
-  exerciseType: string
+  exerciseType?: string,
 ) => {
   const [reportData, setReportData] = useState<ReportData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const getReportData = async () => {
+    if (!exerciseType) {
+      setReportData(null)
+      setLoading(false)
+      setError(null)
+      return
+    }
+
     try {
       setLoading(true)
+      setError(null)
 
       const { data } = await api.get('/reports', {
         params: {
@@ -54,7 +63,7 @@ export const useReportData = (
       setReportData(data?.data ?? null)
     } catch (error) {
       console.error('리포트 조회 실패:', error)
-      setReportData(null)
+      setError('리포트 데이터를 불러오지 못했습니다.')
     } finally {
       setLoading(false)
     }
@@ -67,6 +76,7 @@ export const useReportData = (
   return {
     reportData,
     loading,
+    error,
     refetch: getReportData,
   }
 }
