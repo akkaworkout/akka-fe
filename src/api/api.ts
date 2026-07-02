@@ -2,7 +2,9 @@ import axios from 'axios'
 
 import { useAuthStore } from '@/stores/useAuthStore'
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL.replace(/\/$/, '')
+export const API_BASE_URL = (
+  import.meta.env.VITE_API_URL || 'https://api.akkaworkout.store'
+).replace(/\/$/, '')
 
 export const buildApiUrl = (path: string) => {
   if (!path) return API_BASE_URL
@@ -16,6 +18,7 @@ export const buildApiUrl = (path: string) => {
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true,
 })
 
 api.interceptors.request.use((config) => {

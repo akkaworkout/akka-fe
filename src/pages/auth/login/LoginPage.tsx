@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Helmet } from 'react-helmet-async'
+import { Helmet } from "react-helmet-async";
 
 import { useAuthStore } from "@/stores/useAuthStore";
+import { authApi } from "@/api/authApi";
 
 import Form from "@/components/form/Form";
 
@@ -16,10 +18,6 @@ type FieldErrors = Partial<{
 const isEmailValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 const hasSpecialChar = (v: string) => /[^A-Za-z0-9]/.test(v);
 const isPasswordValid = (v: string) => v.length >= 8 && hasSpecialChar(v);
-
-// 환경변수 있으면 그거 쓰고, 없으면 배포 도메인 fallback
-const API_BASE =
-  import.meta.env.VITE_API_BASE?.trim() || "https://api.akkaworkout.store";
 
 export default function LoginPage() {
   const nav = useNavigate();
@@ -53,36 +51,11 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          email: email.trim(),
-          password,
-        }),
-      });
+      const res = await authApi.login(email, password);
 
-      const data = await res.json().catch(() => ({}));
+      console.log("LOGIN response:", res.data);
 
-      console.log("LOGIN status:", res.status);
-      console.log("LOGIN response:", data);
-
-      if (!res.ok) {
-        const msg =
-          data?.message ||
-          (res.status === 401
-            ? "이메일 또는 비밀번호가 올바르지 않습니다."
-            : "로그인 실패");
-        setErrors((prev) => ({
-          ...prev,
-          email: msg,
-          password: msg,
-        }));
-        return;
-      }
-
-      const token = data?.data?.accessToken;
+      const token = res.data?.data?.accessToken;
 
       if (!token) {
         setErrors((prev) => ({
@@ -99,11 +72,25 @@ export default function LoginPage() {
       alert("로그인이 완료되었어요");
 
       nav("/main");
-    } catch (err) {
-      console.error("LOGIN fetch error:", err);
+    } catch (err: unknown) {
+      console.error("LOGIN error:", err);
+
+      let message = "로그인 실패";
+
+      if (axios.isAxiosError(err)) {
+        const status = err.response?.status;
+
+        message =
+          err.response?.data?.message ||
+          (status === 401
+            ? "이메일 또는 비밀번호가 올바르지 않습니다."
+            : "로그인 실패");
+      }
+
       setErrors((prev) => ({
         ...prev,
-        email: "네트워크 오류가 발생했습니다. 서버/주소를 확인해주세요.",
+        email: message,
+        password: message,
       }));
     } finally {
       setIsLoading(false);
@@ -119,7 +106,7 @@ export default function LoginPage() {
           content="Akkaworkout에 로그인하고 운동 기록과 이용권을 관리해 보세요."
         />
       </Helmet>
-      
+
       <div className={styles.wrap}>
         <div className={styles.mainPage}>
           <div className={styles.mainInner}>
@@ -172,8 +159,11 @@ export default function LoginPage() {
                     <button
                       type="submit"
                       disabled={!canSubmit}
-                      className={`${styles.submitBtn} ${!canSubmit ? styles.submitDisabled : styles.submitActive
-                        }`}
+                      className={`${styles.submitBtn} ${
+                        !canSubmit
+                          ? styles.submitDisabled
+                          : styles.submitActive
+                      }`}
                     >
                       {isLoading ? "로그인 중..." : "로그인"}
                     </button>
