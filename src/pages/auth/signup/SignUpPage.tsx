@@ -1,4 +1,3 @@
-import React, { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 
@@ -8,7 +7,7 @@ import profileDefault from '@/assets/icons/auth/profile-default.png'
 import editAvatar from '@/assets/icons/auth/edit-avatar.png'
 
 import Form from '@/components/form/Form'
-import { useSignUpForm } from '@/hooks/useSignUpForm'
+import { useSignUpForm } from "./hooks/useSignUpForm";
 import { authApi } from '@/api/authApi'
 
 export default function SignUpPage() {
