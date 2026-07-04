@@ -1,24 +1,23 @@
-import { type FormEvent } from "react";
-import { Helmet } from 'react-helmet-async'
+import { Helmet } from "react-helmet-async";
 
-import api, { buildApiUrl } from "@/api/api";
+import styles from "./MyPage.module.css";
 
-import { useAuthStore } from "@/stores/useAuthStore";
+import editAvatar from "@/assets/icons/auth/edit-avatar.png";
+import profileDefault from "@/assets/icons/auth/profile-default.png";
+import premiumCard from "@/assets/images/premium-card.png";
+
+import { buildApiUrl } from "@/api/api";
 
 import Card from "@/components/card/Card";
 import Input from "@/components/form/Form";
 
-import editAvatar from "@/assets/icons/auth/edit-avatar.png";
-import premiumCard from "@/assets/images/premium-card.png";
-
-import { useMyPageForm, type InitialData } from "./hooks/useMyPageForm";
+import { useFormValidation } from "./hooks/useFormValidation";
+import { useMyPageForm } from "./hooks/useMyPageForm";
+import { useMyPageHandlers } from "./hooks/useMyPageHandlers";
 import { useProfileImage } from "./hooks/useProfileImage";
 import { useUserData } from "./hooks/useUserData";
-import { useFormValidation } from "./hooks/useFormValidation";
 
-import styles from "./MyPage.module.css";
-
-const DEFAULT_PROFILE = "https://placehold.co/120?text=Profile";
+import { getMyPageInitialData } from "./utils/getMyPageInitialData";
 
 // ===== FORM FIELDS CONFIG =====
 type FormFieldConfig = {
@@ -79,218 +78,18 @@ export default function MyPage() {
   const validation = useFormValidation();
 
   // 초기값 계산
-  const initialData: InitialData = {
-    email: user?.email ?? "",
-    nickname: user?.nickname ?? "",
-    budget:
-      user?.target_budget === null || user?.target_budget === undefined
-        ? ""
-        : String(user.target_budget),
-    exerciseGoal:
-      user?.target_exercise_count === null ||
-        user?.target_exercise_count === undefined
-        ? ""
-        : String(user.target_exercise_count),
-    premiumPoint: user?.premium_point ? `${user.premium_point}P` : "0P",
-  };
+  const initialData = getMyPageInitialData(user)
 
   const form = useMyPageForm(initialData);
+  const { handleFieldChange, handlePasswordChange, handleCheck, handleSubmit } =
+    useMyPageHandlers({
+      form,
+      validation,
+      fileRef,
+      resetProfile,
+      fetchMe,
+    });
 
-  // === 통합 handleFieldChange ===
-  const handleFieldChange = (
-    fieldName: "email" | "nickname" | "budget" | "exerciseGoal",
-    value: string
-  ) => {
-    form.setFormData((prev) => ({
-      ...prev,
-      [fieldName]: value,
-    }));
-
-    // 중복확인 상태 초기화
-    if (fieldName === "email") {
-      form.setEmailChecked(false);
-    } else if (fieldName === "nickname") {
-      form.setNicknameChecked(false);
-    }
-
-    // touched 업데이트
-    form.setTouched((t) => ({ ...t, [fieldName]: true }));
-
-    // validation 에러 업데이트
-    if (!value.trim()) {
-      form.setErrors((prev) => ({ ...prev, [fieldName]: undefined }));
-      return;
-    }
-
-    let errorMsg: string | undefined;
-    switch (fieldName) {
-      case "email":
-        errorMsg = !validation.isEmailValid(value)
-          ? "올바른 이메일 형식이 아니에요"
-          : undefined;
-        break;
-      case "nickname":
-        errorMsg = !validation.isNicknameValid(value)
-          ? "5글자 이내로 입력해주세요"
-          : undefined;
-        break;
-      case "budget":
-        errorMsg = !validation.isBudgetValid(value)
-          ? "숫자만 입력 가능해요"
-          : undefined;
-        break;
-      case "exerciseGoal":
-        errorMsg = !validation.isExerciseValid(value)
-          ? "숫자만 입력 가능해요"
-          : undefined;
-        break;
-    }
-
-    form.setErrors((prev) => ({ ...prev, [fieldName]: errorMsg }));
-  };
-
-  // === 비번 변경 ===
-  const handlePasswordChange = (
-    fieldName: "password" | "passwordConfirm",
-    value: string
-  ) => {
-    form.setFormData((prev) => ({
-      ...prev,
-      [fieldName]: value,
-    }));
-    form.setTouched((t) => ({ ...t, [fieldName]: true }));
-
-    let errorMsg: string | undefined;
-
-    if (fieldName === "password") {
-      if (!value.trim()) {
-        errorMsg = undefined;
-      } else if (!validation.isPasswordValid(value)) {
-        errorMsg = "비밀번호는 특수문자 포함 8자 이상이어야 합니다.";
-      }
-
-      // 비번 변경 시 확인도 체크
-      if (
-        form.formData.passwordConfirm.trim() &&
-        value !== form.formData.passwordConfirm
-      ) {
-        form.setErrors((prev) => ({
-          ...prev,
-          password: errorMsg,
-          passwordConfirm: "비밀번호가 일치하지 않습니다.",
-        }));
-        return;
-      }
-    } else if (fieldName === "passwordConfirm") {
-      if (!form.formData.password.trim() && value.trim()) {
-        errorMsg = "비밀번호를 먼저 입력해주세요.";
-      } else if (form.formData.password.trim() && !value.trim()) {
-        errorMsg = "비밀번호 확인을 입력해주세요.";
-      } else if (
-        form.formData.password.trim() &&
-        value !== form.formData.password
-      ) {
-        errorMsg = "비밀번호가 일치하지 않습니다.";
-      }
-    }
-
-    form.setErrors((prev) => ({ ...prev, [fieldName]: errorMsg }));
-  };
-
-  // === 중복 확인 핸들러 ===
-  const handleCheck = (fieldName: "email" | "nickname") => {
-    if (fieldName === "email") {
-      if (!form.emailDirty || !validation.isEmailValid(form.formData.email)) {
-        form.setErrors((prev) => ({
-          ...prev,
-          email: "올바른 이메일 형식이 아니에요",
-        }));
-        form.setTouched((t) => ({ ...t, email: true }));
-        return;
-      }
-      alert("이메일 중복 확인이 완료되었어요");
-      form.setEmailChecked(true);
-    } else if (fieldName === "nickname") {
-      if (!form.nicknameDirty) {
-        form.setErrors((prev) => ({
-          ...prev,
-          nickname: "닉네임을 입력해주세요",
-        }));
-        form.setTouched((t) => ({ ...t, nickname: true }));
-        return;
-      }
-      if (!validation.isNicknameValid(form.formData.nickname)) {
-        form.setErrors((prev) => ({
-          ...prev,
-          nickname: "5글자 이내로 입력해주세요",
-        }));
-        form.setTouched((t) => ({ ...t, nickname: true }));
-        return;
-      }
-      alert("닉네임 중복 확인이 완료되었어요");
-      form.setNicknameChecked(true);
-    }
-  };
-
-  // === API: updateMe ===
-  const updateMe = async (
-    payload: Record<string, string | number>,
-    file?: File
-  ) => {
-    const token = useAuthStore.getState().token;
-    if (!token) throw new Error("토큰 없음");
-
-    if (file) {
-      const formData = new FormData();
-      Object.entries(payload).forEach(([key, value]) => {
-        formData.append(key, String(value));
-      });
-      formData.append("profile", file);
-
-      return api.patch("/users/me", formData);
-    }
-
-    return api.patch("/users/me", payload);
-  };
-
-  // === Submit ===
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    form.setSubmitted(true);
-
-    if (!form.canSubmit) {
-      form.validate();
-      return;
-    }
-
-    if (!form.validate()) return;
-
-    const payload: Record<string, string | number> = {};
-    if (form.emailDirty) payload.email = form.formData.email.trim();
-    if (form.nicknameDirty) payload.nickname = form.formData.nickname.trim();
-    if (form.budgetDirty) payload.target_budget = Number(form.formData.budget);
-    if (form.exerciseDirty)
-      payload.target_exercise_count = Number(form.formData.exerciseGoal);
-    if (form.formData.password.trim())
-      payload.password = form.formData.password;
-
-    if (Object.keys(payload).length === 0) {
-      alert("바뀐 내용이 없어요");
-      return;
-    }
-
-    try {
-      const file = fileRef.current?.files?.[0];
-      await updateMe(payload, file);
-      alert("바뀐 내용을 저장했어요");
-      form.reset();
-      resetProfile();
-      await fetchMe();
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "수정에 실패했어요";
-      alert(errorMsg);
-    }
-  };
 
   return (
     <>
@@ -325,10 +124,9 @@ export default function MyPage() {
                         className={styles.avatarImg}
                         src={
                           profilePreview ??
-                          (user?.profile_image_url &&
-                            user.profile_image_url.trim()
-                            ? `${buildApiUrl}${user.profile_image_url}`
-                            : DEFAULT_PROFILE)
+                          (user?.profile_image_url?.trim()
+                            ? buildApiUrl(user.profile_image_url)
+                            : profileDefault)
                         }
                         alt="프로필"
                         draggable={false}
@@ -339,7 +137,11 @@ export default function MyPage() {
                         onClick={handlePickProfile}
                         aria-label="프로필 이미지 변경"
                       >
-                        <img src={editAvatar} alt="profile-img-edit" draggable={false} />
+                        <img
+                          src={editAvatar}
+                          alt="프로필 이미지 수정"
+                          draggable={false}
+                        />
                       </button>
                     </div>
 
@@ -367,13 +169,14 @@ export default function MyPage() {
                     {LEFT_FORM_FIELDS.map((field) => (
                       <Input
                         key={field.name}
+                        id={`mypage-${field.name}`}
                         label={field.label}
                         value={form.formData[field.name]}
                         onChange={(e) =>
                           handleFieldChange(field.name, e.target.value)
                         }
                         type={field.type}
-                        variant='profile'
+                        variant="profile"
                         errorText={
                           form.showError(field.name)
                             ? form.errors[field.name]
@@ -382,19 +185,19 @@ export default function MyPage() {
                         rightButton={
                           field.hasButton
                             ? {
-                              label: field.buttonText,
-                              onClick: () => handleCheck(field.name),
-                              disabled:
-                                field.name === "email"
-                                  ? !form.emailDirty ||
-                                  !validation.isEmailValid(
-                                    form.formData.email
-                                  )
-                                  : !form.nicknameDirty ||
-                                  !validation.isNicknameValid(
-                                    form.formData.nickname
-                                  ),
-                            }
+                                label: field.buttonText,
+                                onClick: () => handleCheck(field.name),
+                                disabled:
+                                  field.name === "email"
+                                    ? !form.emailDirty ||
+                                      !validation.isEmailValid(
+                                        form.formData.email,
+                                      )
+                                    : !form.nicknameDirty ||
+                                      !validation.isNicknameValid(
+                                        form.formData.nickname,
+                                      ),
+                              }
                             : undefined
                         }
                       />
@@ -402,13 +205,14 @@ export default function MyPage() {
 
                     {/* === 비밀번호 === */}
                     <Input
+                      id="mypage-password"
                       label="비밀번호"
                       value={form.formData.password}
                       onChange={(e) =>
                         handlePasswordChange("password", e.target.value)
                       }
                       type="password"
-                      variant='profile'
+                      variant="profile"
                       placeholder="비밀번호 (특수문자 포함, 8자 이상)"
                       errorText={
                         form.showError("password")
@@ -420,13 +224,14 @@ export default function MyPage() {
 
                     {/* === 비밀번호 확인 === */}
                     <Input
+                      id="mypage-password-confirm"
                       label="비밀번호 확인"
                       value={form.formData.passwordConfirm}
                       onChange={(e) =>
                         handlePasswordChange("passwordConfirm", e.target.value)
                       }
                       type="password"
-                      variant='profile'
+                      variant="profile"
                       placeholder="비밀번호 확인"
                       errorText={
                         form.showError("passwordConfirm")
@@ -463,11 +268,14 @@ export default function MyPage() {
                   >
                     <div className={styles.rightInner}>
                       {RIGHT_FORM_FIELDS.map((field) => {
-                        const inputId = `mypage-${field.name}`
+                        const inputId = `mypage-${field.name}`;
 
                         return (
                           <div key={field.name} className={styles.goalBlock}>
-                            <label className={styles.goalLabel} htmlFor={inputId}>
+                            <label
+                              className={styles.goalLabel}
+                              htmlFor={inputId}
+                            >
                               {field.label}
                             </label>
 
@@ -475,11 +283,17 @@ export default function MyPage() {
                               <div className={styles.inputWrapRight}>
                                 <input
                                   id={inputId}
-                                  className={`${styles.inputRight} ${form.showError(field.name) ? styles.inputError : ''
-                                    }`}
+                                  className={`${styles.inputRight} ${
+                                    form.showError(field.name)
+                                      ? styles.inputError
+                                      : ""
+                                  }`}
                                   value={form.formData[field.name]}
                                   onChange={(e) =>
-                                    handleFieldChange(field.name, e.target.value)
+                                    handleFieldChange(
+                                      field.name,
+                                      e.target.value,
+                                    )
                                   }
                                   type="number"
                                 />
@@ -488,7 +302,7 @@ export default function MyPage() {
                               <span className={styles.unit}>{field.unit}</span>
                             </div>
                           </div>
-                        )
+                        );
                       })}
                     </div>
                   </Card>
