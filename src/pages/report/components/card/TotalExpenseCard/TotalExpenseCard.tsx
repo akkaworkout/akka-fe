@@ -1,5 +1,7 @@
 import { useState } from 'react'
+
 import './TotalExpenseCard.css'
+
 import Card from '@/components/card/Card'
 import ExpenseDetailModal from '@/pages/report/modals/ExpenseDetailModal'
 
@@ -13,10 +15,11 @@ type Props = {
   items: Item[]
 }
 
-export default function TotalExpenseCard({ totalAmount, items }: Props) {
+const normalizeLabel = (label: string) => label.replace(/\s/g, '')
+
+export default function TotalExpenseCard({ items }: Props) {
   const [openExpense, setOpenExpense] = useState(false)
 
-  // 항상 4개 고정
   const baseItems: Item[] = [
     { label: '운동비', amount: 0 },
     { label: '운동용품비', amount: 0 },
@@ -24,24 +27,25 @@ export default function TotalExpenseCard({ totalAmount, items }: Props) {
     { label: '기타', amount: 0 },
   ]
 
-  // label 키워드 매칭으로 API 값 덮어쓰기
   const safeItems = baseItems.map(base => {
-    const keyword = base.label.replace('비', '').replace(/\s/g, '')
-
-    const found = items?.find(i =>
-      i.label.replace(/\s/g, '').includes(keyword)
+    const found = items?.find(
+      item => normalizeLabel(item.label) === normalizeLabel(base.label),
     )
 
-    return found
-      ? { ...base, amount: found.amount }
-      : base
+    return {
+      ...base,
+      amount: found?.amount ?? 0,
+    }
   })
 
-  const maxAmount = safeItems.length
-    ? Math.max(...safeItems.map(item => item.amount))
-    : 0
+  const maxAmount = Math.max(...safeItems.map(item => item.amount), 0)
 
   const maxItem = safeItems.find(item => item.amount === maxAmount)
+
+  const displayTotalAmount = safeItems.reduce(
+    (sum, item) => sum + Number(item.amount ?? 0),
+    0,
+  )
 
   return (
     <>
@@ -78,7 +82,7 @@ export default function TotalExpenseCard({ totalAmount, items }: Props) {
             <p className="summary-main">
               총{' '}
               <span className="summary-number">
-                {totalAmount.toLocaleString()}
+                {displayTotalAmount.toLocaleString()}
               </span>
               원 사용했어요.
             </p>

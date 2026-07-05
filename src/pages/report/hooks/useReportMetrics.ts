@@ -16,7 +16,6 @@ export type ReportMetrics = {
 export const useReportMetrics = (reportData: ReportData | null) => {
   return useMemo(() => {
     const totalExerciseCount = reportData?.kpi?.totalExerciseCount ?? 0
-    const totalExpenseAmount = reportData?.kpi?.totalExpenseAmount ?? 0
     const noShowCount = reportData?.kpi?.noShowCount ?? 0
     const noshowLossAmount = reportData?.kpi?.noshowLossAmount ?? 0
     const ringPercent = Number(reportData?.goal?.exerciseAchievementRate ?? 0)
@@ -25,12 +24,24 @@ export const useReportMetrics = (reportData: ReportData | null) => {
     const noshowItems = reportData?.breakdown?.noshow ?? []
     const expenseItems = reportData?.breakdown?.expense ?? []
 
+    const totalExpenseAmount = expenseItems.reduce(
+      (sum, item) => sum + Number(item.amount ?? 0),
+      0,
+    )
+
+    const selectedExerciseType = reportData?.goal?.exerciseType ?? ''
+
     const failMemoRows =
-      reportData?.breakdown?.failMemo?.map((m) => ({
-        date: m.date,
-        label: m.category,
-        reason: m.reason,
-      })) ?? []
+      reportData?.breakdown?.failMemo
+        ?.filter((memo) => {
+          if (!selectedExerciseType) return true
+          return memo.category === selectedExerciseType
+        })
+        .map((memo) => ({
+          date: memo.date,
+          label: memo.category,
+          reason: memo.reason,
+        })) ?? []
 
     return {
       totalExerciseCount,

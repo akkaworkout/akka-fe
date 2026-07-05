@@ -132,11 +132,6 @@ export default function ReportPage() {
               <div className={styles.errorMessage}>{reportError}</div>
             )}
 
-            {!currentExercise && (
-              <div className={styles.emptyMessage}>
-                해당 월에 등록된 이용권이 없습니다.
-              </div>
-            )}
 
             <div className={styles.reportGrid}>
               <div className={styles.summarySection}>
@@ -163,8 +158,11 @@ export default function ReportPage() {
                       )}
                     </>
                   ) : (
-                    <div className={styles.emptyMessage}>
-                      이용권을 등록하면 리포트를 확인할 수 있습니다.
+                    <div className={styles.emptyState}>
+                      <strong>등록된 이용권이 없어요</strong>
+                      <p>
+                        이용권을 등록하면 운동별 목표 달성률을 확인할 수 있어요.
+                      </p>
                     </div>
                   )}
                 </Card>
