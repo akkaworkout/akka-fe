@@ -5,15 +5,17 @@ type RingChartProps = {
 }
 
 export default function RingChart({ percent }: RingChartProps) {
+  const safePercent = Math.min(Math.max(percent, 0), 100)
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.ringWrap}>
         <div
           className={styles.ring}
-          style={{ '--p': percent } as React.CSSProperties}
+          style={{ '--p': safePercent } as React.CSSProperties}
         >
           <div className={styles.ringCenter}>
-            <div className={styles.percent}>{percent}%</div>
+            <div className={styles.percent}>{safePercent}%</div>
             <div className={styles.sub}>이번 달 목표 달성률</div>
           </div>
         </div>

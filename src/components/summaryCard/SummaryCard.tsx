@@ -1,11 +1,8 @@
-// React / 외부 라이브러리
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-// 이미지
 import arrow from '@/assets/icons/common/arrow-down.png'
 
-// 스타일
 import styles from './SummaryCard.module.css'
 
 export interface Expense {
@@ -31,7 +28,7 @@ type SummaryCardProps<T extends { id: number; label: string; color: string }> = 
 }
 
 export default function SummaryCard<
-  T extends { id: number; label: string; color: string }
+  T extends { id: number; label: string; color: string },
 >({
   expenses,
   selected,
@@ -43,6 +40,8 @@ export default function SummaryCard<
   const [isOpen, setIsOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const navigate = useNavigate()
+
+  const canSelect = expenses.length > 1 && !disabled
 
   useEffect(() => {
     if (!isOpen) return
@@ -57,6 +56,7 @@ export default function SummaryCard<
     }
 
     document.addEventListener('mousedown', handleClickOutside)
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
@@ -66,12 +66,14 @@ export default function SummaryCard<
     return (
       <div className={styles.summaryCard}>
         <button
+          type="button"
           className={styles.select}
           onClick={() => {
             const ok = window.confirm(
-              '작성 중인 내용이 사라집니다. 이동할까요?'
+              '작성 중인 내용이 사라집니다. 이동할까요?',
             )
             if (!ok) return
+
             navigate(addPath)
           }}
         >
@@ -87,8 +89,9 @@ export default function SummaryCard<
         type="button"
         className={styles.select}
         onClick={() => {
-          if (disabled) return
-          setIsOpen(prev => !prev)
+          if (!canSelect) return
+
+          setIsOpen((prev) => !prev)
         }}
       >
         <span
@@ -97,7 +100,7 @@ export default function SummaryCard<
         />
         <span className={styles.text}>{selected.label}</span>
 
-        {!disabled && (
+        {canSelect && (
           <img
             className={`${styles.arrow} ${isOpen ? styles.open : ''}`}
             src={arrow}
@@ -106,13 +109,14 @@ export default function SummaryCard<
         )}
       </button>
 
-      {!disabled && isOpen && (
+      {canSelect && isOpen && (
         <div className={styles.dropdown}>
           {expenses
-            .filter(item => item.id !== selected.id)
-            .map(item => (
+            .filter((item) => item.id !== selected.id)
+            .map((item) => (
               <button
                 key={item.id}
+                type="button"
                 className={styles.dropdownItem}
                 onClick={() => {
                   onChange(item)
@@ -129,10 +133,11 @@ export default function SummaryCard<
 
           {showAddButton && (
             <button
+              type="button"
               className={styles.addButton}
               onClick={() => {
                 const ok = window.confirm(
-                  '작성 중인 내용이 사라집니다. 이동하시겠습니까?'
+                  '작성 중인 내용이 사라집니다. 이동하시겠습니까?',
                 )
                 if (!ok) return
 

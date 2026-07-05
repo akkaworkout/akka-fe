@@ -13,19 +13,26 @@
 }
 
 .reportInner {
-  position: relative;
   width: 100%;
   max-width: 1008px;
   margin-bottom: 32px;
+  padding-top: 32px;
+}
+
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 56px;
 }
 
 .reportGrid {
-  position: absolute;
-  top: 98px;
   display: grid;
   grid-template-columns: 291px 330px 330px;
   gap: 18px;
   align-items: start;
+  margin-top: 24px;
 }
 
 .summarySection {
@@ -54,9 +61,7 @@
 }
 
 .monthArea {
-  position: absolute;
   color: var(--black);
-  top: 37px;
   font-size: 24px;
   font-weight: 700;
   display: flex;
@@ -79,10 +84,7 @@
 }
 
 .summaryArea {
-  position: absolute;
   color: var(--black);
-  top: 37px;
-  right: 68px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -116,4 +118,33 @@
   align-items: center;
   width: 100%;
   height: 200px;
+}
+
+.emptyMessage {
+  font-size: 14px;
+  color: #666;
+}
+
+.emptyState {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  color: var(--black);
+}
+
+.emptyState strong {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.emptyState p {
+  margin: 0;
+  width: 200px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #666;
 }

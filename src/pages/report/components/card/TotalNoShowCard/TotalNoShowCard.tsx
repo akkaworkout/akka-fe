@@ -31,7 +31,6 @@ export default function TotalNoShowCard({
 }: Props) {
   const [openDetail, setOpenDetail] = useState(false)
 
-  // 등록된 운동 기준으로 노쇼 데이터 매칭
   const safeItems: Item[] =
     exercises && exercises.length
       ? exercises.map(ex => {
@@ -49,6 +48,10 @@ export default function TotalNoShowCard({
   const maxCount = safeItems.length
     ? Math.max(...safeItems.map(i => i.count))
     : 0
+
+  const totalNoShowCount = safeItems.reduce((sum, item) => sum + item.count, 0)
+
+  const displayLossAmount = totalNoShowCount > 0 ? lossAmount : 0
 
   const maxItem = safeItems.find(i => i.count === maxCount)
   const maxLabel = maxItem?.label
@@ -103,7 +106,7 @@ export default function TotalNoShowCard({
             <p className="summary-main">
               총{' '}
               <span className="summary-number">
-                {lossAmount.toLocaleString()}
+                {displayLossAmount.toLocaleString()}
               </span>
               원 잃었어요.
             </p>
