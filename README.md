@@ -347,6 +347,19 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 
 ---
 
+## CI 검증
+
+<img width="1030" height="562" alt="image" src="https://github.com/user-attachments/assets/24be4af8-e919-4ff4-a1fa-37b5b9f3eba3" />
+
+- npm ci
+- Prettier
+- ESLint
+- TypeScript
+- Dead code
+- Build
+
+---
+
 ## Project Structure
 
 ### Frontend
