@@ -14,7 +14,7 @@
 /* ===== Modal Box (공통) ===== */
 .modal {
   position: relative;
-  background: var( --white);
+  background: var(--white);
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   overflow: hidden;
@@ -46,8 +46,7 @@
 
   border: 0;
   background: var(--primary);
-  color: var( --white);
-
+  color: var(--white);
 
   display: flex;
   align-items: center;
@@ -57,11 +56,11 @@
 }
 
 .closeBtn::before {
-  content: "×";
-  font-size: 32px;    
-  font-weight: 300;  
-  line-height: 1;  
-  transform: translateY(-2px); 
+  content: '×';
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+  transform: translateY(-2px);
 }
 
 /* 기존 버튼 안에 × 텍스트는 숨김 */
@@ -69,10 +68,9 @@
   font-size: 0;
 }
 
-
 /* ===== Optional Header ===== */
 .header {
-  padding: 22px 66px 0 22px; 
+  padding: 22px 66px 0 22px;
   font-size: 14px;
   font-weight: 700;
   color: var(--black);

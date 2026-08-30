@@ -15,7 +15,6 @@ type UpdateGoalsPayload = {
 
 export const useUpdateGoalsMutation = () => {
   return useMutation<unknown, AxiosError<ErrorResponse>, UpdateGoalsPayload>({
-    mutationFn: ({ year, month, goals }) =>
-      updateGoals(year, month, goals),
+    mutationFn: ({ year, month, goals }) => updateGoals(year, month, goals),
   })
 }

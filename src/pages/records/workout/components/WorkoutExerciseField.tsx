@@ -11,12 +11,7 @@ type Props = {
   setForm: WorkoutFormSetter
 }
 
-const WorkoutExerciseField = ({
-  mappedTickets,
-  selectedExercise,
-  recordId,
-  setForm,
-}: Props) => {
+const WorkoutExerciseField = ({ mappedTickets, selectedExercise, recordId, setForm }: Props) => {
   return (
     <div className={styles.field}>
       <label>운동 종목*</label>

@@ -10,7 +10,7 @@ const Spinner = ({ size = 30 }: SpinnerProps) => {
       className={styles.spinner}
       style={{
         width: size,
-        height: size
+        height: size,
       }}
     />
   )

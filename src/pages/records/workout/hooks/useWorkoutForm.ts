@@ -24,21 +24,12 @@ export const useWorkoutForm = (recordId?: number) => {
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-  const {
-    ticketList,
-    mappedTickets,
-    remainingCount,
-    usedCount,
-    pricePerSession,
-  } = useWorkoutTickets(form.exercise.id)
+  const { ticketList, mappedTickets, remainingCount, usedCount, pricePerSession } =
+    useWorkoutTickets(form.exercise.id)
 
   const { data: exerciseDetail } = useExerciseDetailQuery(recordId)
 
-  const {
-    handleSubmit,
-    handleUpdate,
-    handleDelete,
-  } = useWorkoutActions(form, recordId)
+  const { handleSubmit, handleUpdate, handleDelete } = useWorkoutActions(form, recordId)
 
   useEffect(() => {
     if (ticketList.length === 0) return
@@ -64,18 +55,13 @@ export const useWorkoutForm = (recordId?: number) => {
       return
     }
 
-    const isSuccess =
-      exerciseDetail.success === 1 ||
-      exerciseDetail.success === true
+    const isSuccess = exerciseDetail.success === 1 || exerciseDetail.success === true
 
-    const exerciseDate =
-      exerciseDetail.exercise_date
-        ? new Date(exerciseDetail.exercise_date)
-        : new Date()
+    const exerciseDate = exerciseDetail.exercise_date
+      ? new Date(exerciseDetail.exercise_date)
+      : new Date()
 
-    const ticket = ticketList.find(
-      (t) => t.id === exerciseDetail.ticket_id,
-    )
+    const ticket = ticketList.find((t) => t.id === exerciseDetail.ticket_id)
 
     setForm((prev) => ({
       ...prev,
@@ -85,18 +71,14 @@ export const useWorkoutForm = (recordId?: number) => {
       failReason: exerciseDetail.fail_reason ?? '',
       exercise: ticket
         ? {
-          id: ticket.id,
-          label: ticket.exercise_type,
-          color: ticket.color_code,
-        }
+            id: ticket.id,
+            label: ticket.exercise_type,
+            color: ticket.color_code,
+          }
         : prev.exercise,
     }))
 
-    setPreviewUrl(
-      exerciseDetail.image_url
-        ? buildApiUrl(exerciseDetail.image_url)
-        : null,
-    )
+    setPreviewUrl(exerciseDetail.image_url ? buildApiUrl(exerciseDetail.image_url) : null)
   }, [exerciseDetail, ticketList])
 
   return {

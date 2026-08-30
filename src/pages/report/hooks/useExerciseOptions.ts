@@ -2,12 +2,7 @@ import { useMemo } from 'react'
 import type { Exercise } from '@/components/summaryCard/SummaryCard'
 import type { Ticket } from '@/api/ticketApi'
 
-
-function isTicketIncludedInMonth(
-  ticket: Ticket,
-  year: number,
-  month: number,
-) {
+function isTicketIncludedInMonth(ticket: Ticket, year: number, month: number) {
   if (!ticket.start_date || !ticket.end_date) return false
 
   const monthStart = new Date(year, month - 1, 1)
@@ -19,15 +14,9 @@ function isTicketIncludedInMonth(
   return ticketStart <= monthEnd && ticketEnd >= monthStart
 }
 
-export const useExerciseOptions = (
-  tickets: Ticket[],
-  year: number,
-  month: number,
-) => {
+export const useExerciseOptions = (tickets: Ticket[], year: number, month: number) => {
   return useMemo(() => {
-    const monthlyTickets = tickets.filter((ticket) =>
-      isTicketIncludedInMonth(ticket, year, month),
-    )
+    const monthlyTickets = tickets.filter((ticket) => isTicketIncludedInMonth(ticket, year, month))
 
     const unique = new Map<string, Exercise>()
 

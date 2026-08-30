@@ -23,18 +23,13 @@ type Props = {
 
 const VISIBLE_COUNT = 3
 
-export default function TotalNoShowCard({
-  lossAmount,
-  items,
-  exercises,
-  onOpenMemo,
-}: Props) {
+export default function TotalNoShowCard({ lossAmount, items, exercises, onOpenMemo }: Props) {
   const [openDetail, setOpenDetail] = useState(false)
 
   const safeItems: Item[] =
     exercises && exercises.length
-      ? exercises.map(ex => {
-          const found = items.find(i => i.label === ex.label)
+      ? exercises.map((ex) => {
+          const found = items.find((i) => i.label === ex.label)
 
           return {
             label: ex.label,
@@ -45,15 +40,13 @@ export default function TotalNoShowCard({
 
   const restCount = Math.max(safeItems.length - VISIBLE_COUNT, 0)
 
-  const maxCount = safeItems.length
-    ? Math.max(...safeItems.map(i => i.count))
-    : 0
+  const maxCount = safeItems.length ? Math.max(...safeItems.map((i) => i.count)) : 0
 
   const totalNoShowCount = safeItems.reduce((sum, item) => sum + item.count, 0)
 
   const displayLossAmount = totalNoShowCount > 0 ? lossAmount : 0
 
-  const maxItem = safeItems.find(i => i.count === maxCount)
+  const maxItem = safeItems.find((i) => i.count === maxCount)
   const maxLabel = maxItem?.label
 
   return (
@@ -81,9 +74,7 @@ export default function TotalNoShowCard({
                     <span className="label">{item.label}</span>
                   </span>
 
-                  <span className={`count ${isMax ? 'count-red' : ''}`}>
-                    {item.count}회
-                  </span>
+                  <span className={`count ${isMax ? 'count-red' : ''}`}>{item.count}회</span>
                 </li>
               )
             })}
@@ -91,11 +82,7 @@ export default function TotalNoShowCard({
 
           {restCount > 0 && (
             <>
-              <button
-                className="more-btn"
-                type="button"
-                onClick={() => setOpenDetail(true)}
-              >
+              <button className="more-btn" type="button" onClick={() => setOpenDetail(true)}>
                 나머지 {restCount}개 항목 보기
               </button>
               <div className="more-underline" />
@@ -104,17 +91,12 @@ export default function TotalNoShowCard({
 
           <footer className="card-footer">
             <p className="summary-main">
-              총{' '}
-              <span className="summary-number">
-                {displayLossAmount.toLocaleString()}
-              </span>
-              원 잃었어요.
+              총 <span className="summary-number">{displayLossAmount.toLocaleString()}</span>원
+              잃었어요.
             </p>
 
             {maxCount > 0 && maxLabel && (
-              <p className="summary-sub">
-                {maxLabel}에서 노쇼 발생률이 높아요.
-              </p>
+              <p className="summary-sub">{maxLabel}에서 노쇼 발생률이 높아요.</p>
             )}
           </footer>
         </section>

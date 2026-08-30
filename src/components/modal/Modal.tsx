@@ -20,25 +20,16 @@ const Modal = ({ title, children, onClose, footer }: Props) => {
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div
-        className={styles.modal}
-        onClick={e => e.stopPropagation()}
-      >
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <button className={styles.close} onClick={onClose}>
           ✕
         </button>
 
         {title && <div className={styles.header}>{title}</div>}
 
-        <div className={styles.content}>
-          {children}
-        </div>
+        <div className={styles.content}>{children}</div>
 
-        {footer && (
-          <div className={styles.footer}>
-            {footer}
-          </div>
-        )}
+        {footer && <div className={styles.footer}>{footer}</div>}
       </div>
     </div>
   )

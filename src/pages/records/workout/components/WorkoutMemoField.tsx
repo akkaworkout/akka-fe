@@ -7,19 +7,16 @@ type Props = {
   setForm: WorkoutFormSetter
 }
 
-const WorkoutMemoField = ({
-  memo,
-  setForm,
-}: Props) => {
+const WorkoutMemoField = ({ memo, setForm }: Props) => {
   return (
     <div className={styles.field}>
-      <label htmlFor='memo'>메모</label>
+      <label htmlFor="memo">메모</label>
 
       <input
-        id='memo'
+        id="memo"
         className={styles.input}
         value={memo}
-        onChange={e => {
+        onChange={(e) => {
           setForm((prev) => ({
             ...prev,
             memo: e.target.value,

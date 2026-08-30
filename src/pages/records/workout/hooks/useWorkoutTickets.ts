@@ -14,10 +14,7 @@ export const useWorkoutTickets = (ticketId: number) => {
   const { data: activeTickets } = useActiveTicketsQuery()
   const { data: ticketSummary } = useTicketSummaryQuery(ticketId)
 
-  const ticketList: Ticket[] = useMemo(
-    () => activeTickets ?? [],
-    [activeTickets],
-  )
+  const ticketList: Ticket[] = useMemo(() => activeTickets ?? [], [activeTickets])
 
   const mappedTickets: Exercise[] = useMemo(
     () =>

@@ -1,6 +1,6 @@
 type CheckIconProps = {
-  size?: number;
-};
+  size?: number
+}
 
 export default function CheckIcon({ size = 20 }: CheckIconProps) {
   return (
@@ -19,5 +19,5 @@ export default function CheckIcon({ size = 20 }: CheckIconProps) {
         strokeLinejoin="round"
       />
     </svg>
-  );
+  )
 }

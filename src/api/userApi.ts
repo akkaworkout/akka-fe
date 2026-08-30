@@ -2,10 +2,7 @@ import api from './api'
 
 export type UpdateMePayload = Record<string, string | number>
 
-export const updateMe = async (
-  payload: UpdateMePayload,
-  file?: File
-) => {
+export const updateMe = async (payload: UpdateMePayload, file?: File) => {
   if (file) {
     const formData = new FormData()
 

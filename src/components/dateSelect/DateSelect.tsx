@@ -28,7 +28,7 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null)
 
   const [currentMonth, setCurrentMonth] = useState(
-    new Date(value.getFullYear(), value.getMonth(), 1)
+    new Date(value.getFullYear(), value.getMonth(), 1),
   )
 
   const year = currentMonth.getFullYear()
@@ -48,10 +48,7 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
     if (!isOpen) return
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
-      ) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
         setIsOpen(false)
       }
     }
@@ -69,32 +66,19 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
         type="button"
         disabled={disabled}
         className={styles.selectBox}
-        onClick={() => setIsOpen(prev => !prev)}
+        onClick={() => setIsOpen((prev) => !prev)}
       >
-        <img
-          className={styles.calendarIcon}
-          src={calendarIcon}
-          alt="calendar_icon"
-        />
+        <img className={styles.calendarIcon} src={calendarIcon} alt="calendar_icon" />
 
         <div>{formatDate(value)}</div>
 
-        <img
-          className={`${styles.arrow} ${isOpen ? styles.open : ''}`}
-          src={arrow}
-          alt="arrow"
-        />
+        <img className={`${styles.arrow} ${isOpen ? styles.open : ''}`} src={arrow} alt="arrow" />
       </button>
 
       {isOpen && (
         <div className={styles.calendar}>
           <div className={styles.calendarHeader}>
-            <button
-              type="button"
-              onClick={() =>
-                setCurrentMonth(new Date(year, month - 1, 1))
-              }
-            >
+            <button type="button" onClick={() => setCurrentMonth(new Date(year, month - 1, 1))}>
               ‹
             </button>
 
@@ -102,18 +86,13 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
               {year}년 {month + 1}월
             </span>
 
-            <button
-              type="button"
-              onClick={() =>
-                setCurrentMonth(new Date(year, month + 1, 1))
-              }
-            >
+            <button type="button" onClick={() => setCurrentMonth(new Date(year, month + 1, 1))}>
               ›
             </button>
           </div>
 
           <div className={styles.weekdays}>
-            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => (
+            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => (
               <span key={d}>{d}</span>
             ))}
           </div>
@@ -124,9 +103,7 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
                 <button
                   key={idx}
                   type="button"
-                  className={`${styles.day} ${
-                    isSameDate(date, value) ? styles.active : ''
-                  }`}
+                  className={`${styles.day} ${isSameDate(date, value) ? styles.active : ''}`}
                   onClick={() => {
                     onChange?.(date)
                     setIsOpen(false)
@@ -136,7 +113,7 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
                 </button>
               ) : (
                 <div key={idx} />
-              )
+              ),
             )}
           </div>
         </div>

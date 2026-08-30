@@ -7,12 +7,8 @@ import styles from '../Workout.module.css'
 type Props = {
   previewUrl: string | null
   fileInputRef: React.RefObject<HTMLInputElement | null>
-  handleFileChange: (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => void
-  setPreviewUrl: React.Dispatch<
-    React.SetStateAction<string | null>
-  >
+  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  setPreviewUrl: React.Dispatch<React.SetStateAction<string | null>>
   setForm: WorkoutFormSetter
 }
 
@@ -25,10 +21,10 @@ const WorkoutImageField = ({
 }: Props) => {
   return (
     <div className={styles.field}>
-      <label htmlFor='imageFile'>사진 첨부</label>
+      <label htmlFor="imageFile">사진 첨부</label>
 
       <input
-        id='imageFile'
+        id="imageFile"
         type="file"
         accept="image/*"
         ref={fileInputRef}
@@ -37,22 +33,12 @@ const WorkoutImageField = ({
       />
 
       {!previewUrl ? (
-        <Button
-          type="button"
-          variant="file"
-          onClick={() =>
-            fileInputRef.current?.click()
-          }
-        >
+        <Button type="button" variant="file" onClick={() => fileInputRef.current?.click()}>
           파일 업로드
         </Button>
       ) : (
         <div className={styles.imagePreviewBox}>
-          <img
-            src={previewUrl}
-            alt="preview"
-            className={styles.previewImage}
-          />
+          <img src={previewUrl} alt="preview" className={styles.previewImage} />
 
           <button
             type="button"

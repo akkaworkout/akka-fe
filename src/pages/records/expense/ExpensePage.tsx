@@ -8,9 +8,7 @@ import { useExpenseSummary } from './hooks/useExpenseSummary'
 // 컴포넌트 (UI)
 import RecordLayout from '../layout/RecordLayout'
 import DateSelect from '@/components/dateSelect/DateSelect'
-import SummaryCard, {
-  type Expense,
-} from '@/components/summaryCard/SummaryCard'
+import SummaryCard, { type Expense } from '@/components/summaryCard/SummaryCard'
 import RecordSummaryCard from '../components/RecordSummaryCard'
 import Button from '@/components/button/Button'
 
@@ -49,10 +47,7 @@ const ExpensePage = () => {
     handleSubmit,
   } = useExpenseForm(EXPENSES[0])
 
-  const {
-    status,
-    summary,
-  } = useExpenseSummary()
+  const { status, summary } = useExpenseSummary()
 
   return (
     <>
@@ -70,10 +65,7 @@ const ExpensePage = () => {
             <div className={styles.field}>
               <label>날짜*</label>
 
-              <DateSelect
-                value={form.date}
-                onChange={handleDateChange}
-              />
+              <DateSelect value={form.date} onChange={handleDateChange} />
             </div>
 
             <div className={styles.field}>
@@ -113,16 +105,12 @@ const ExpensePage = () => {
                 maxLength={8}
               />
 
-              <span className={styles.unit}>
-                원
-              </span>
+              <span className={styles.unit}>원</span>
             </div>
           </div>
 
           <div className={styles.footer}>
-            <span className={styles.required}>
-              *는 필수 입력사항입니다.
-            </span>
+            <span className={styles.required}>*는 필수 입력사항입니다.</span>
 
             <Button
               variant="primary"
@@ -137,15 +125,19 @@ const ExpensePage = () => {
 
         <RecordSummaryCard
           title="이번 기록으로 이렇게 반영돼요"
-          items={status === 'success' ? [
-            `이번 달 지출: ${summary.expenseCount}회`,
-            `이번 달 누적 지출금: ${summary.totalAmount.toLocaleString()}원`,
-            `가장 많이 쓴 항목: ${summary.topCategory}`,
-          ] : [
-            '이번 달 지출: 조회에 실패했어요',
-            '이번 달 누적 지출금: 조회에 실패했어요',
-            '가장 많이 쓴 항목: 조회에 실패했어요',
-          ]}
+          items={
+            status === 'success'
+              ? [
+                  `이번 달 지출: ${summary.expenseCount}회`,
+                  `이번 달 누적 지출금: ${summary.totalAmount.toLocaleString()}원`,
+                  `가장 많이 쓴 항목: ${summary.topCategory}`,
+                ]
+              : [
+                  '이번 달 지출: 조회에 실패했어요',
+                  '이번 달 누적 지출금: 조회에 실패했어요',
+                  '가장 많이 쓴 항목: 조회에 실패했어요',
+                ]
+          }
         />
       </RecordLayout>
     </>

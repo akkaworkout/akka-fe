@@ -8,25 +8,13 @@ type Props = {
   items: string[]
 }
 
-const RecordSummaryCard = ({
-  title,
-  items,
-}: Props) => {
+const RecordSummaryCard = ({ title, items }: Props) => {
   return (
     <div className={styles.currentRecord}>
-      <Card
-        title={title}
-        width="100%"
-        height={227}
-        radius={20}
-        backgroundColor="#ffffff"
-      >
+      <Card title={title} width="100%" height={227} radius={20} backgroundColor="#ffffff">
         <ul className={styles.recordPreview}>
           {items.map((item, index) => (
-            <li
-              key={index}
-              className={styles.recordItem}
-            >
+            <li key={index} className={styles.recordItem}>
               <span className={styles.checkIcon}>
                 <CheckIcon size={20} />
               </span>

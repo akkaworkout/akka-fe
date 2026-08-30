@@ -46,13 +46,7 @@ type Params = {
   fetchMe: () => Promise<void>
 }
 
-export const useMyPageHandlers = ({
-  form,
-  validation,
-  fileRef,
-  resetProfile,
-  fetchMe,
-}: Params) => {
+export const useMyPageHandlers = ({ form, validation, fileRef, resetProfile, fetchMe }: Params) => {
   const handleFieldChange = (fieldName: FieldName, value: string) => {
     form.setFormData((prev) => ({
       ...prev,
@@ -76,34 +70,23 @@ export const useMyPageHandlers = ({
 
     switch (fieldName) {
       case 'email':
-        errorMsg = !validation.isEmailValid(value)
-          ? '올바른 이메일 형식이 아니에요'
-          : undefined
+        errorMsg = !validation.isEmailValid(value) ? '올바른 이메일 형식이 아니에요' : undefined
         break
       case 'nickname':
-        errorMsg = !validation.isNicknameValid(value)
-          ? '5글자 이내로 입력해주세요'
-          : undefined
+        errorMsg = !validation.isNicknameValid(value) ? '5글자 이내로 입력해주세요' : undefined
         break
       case 'budget':
-        errorMsg = !validation.isBudgetValid(value)
-          ? '숫자만 입력 가능해요'
-          : undefined
+        errorMsg = !validation.isBudgetValid(value) ? '숫자만 입력 가능해요' : undefined
         break
       case 'exerciseGoal':
-        errorMsg = !validation.isExerciseValid(value)
-          ? '숫자만 입력 가능해요'
-          : undefined
+        errorMsg = !validation.isExerciseValid(value) ? '숫자만 입력 가능해요' : undefined
         break
     }
 
     form.setErrors((prev) => ({ ...prev, [fieldName]: errorMsg }))
   }
 
-  const handlePasswordChange = (
-    fieldName: PasswordFieldName,
-    value: string,
-  ) => {
+  const handlePasswordChange = (fieldName: PasswordFieldName, value: string) => {
     form.setFormData((prev) => ({
       ...prev,
       [fieldName]: value,
@@ -120,10 +103,7 @@ export const useMyPageHandlers = ({
         errorMsg = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
       }
 
-      if (
-        form.formData.passwordConfirm.trim() &&
-        value !== form.formData.passwordConfirm
-      ) {
+      if (form.formData.passwordConfirm.trim() && value !== form.formData.passwordConfirm) {
         form.setErrors((prev) => ({
           ...prev,
           password: errorMsg,
@@ -136,10 +116,7 @@ export const useMyPageHandlers = ({
         errorMsg = '비밀번호를 먼저 입력해주세요.'
       } else if (form.formData.password.trim() && !value.trim()) {
         errorMsg = '비밀번호 확인을 입력해주세요.'
-      } else if (
-        form.formData.password.trim() &&
-        value !== form.formData.password
-      ) {
+      } else if (form.formData.password.trim() && value !== form.formData.password) {
         errorMsg = '비밀번호가 일치하지 않습니다.'
       }
     }

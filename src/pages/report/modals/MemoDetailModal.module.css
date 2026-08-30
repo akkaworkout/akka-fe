@@ -28,7 +28,6 @@
   color: var(--black);
 }
 
-
 .thickDivider {
   margin-top: 22px;
   height: 11px;
@@ -43,12 +42,12 @@
   overflow: auto;
 
   /* 스크롤바 숨김 */
-  scrollbar-width: none;      /* Firefox */
-  -ms-overflow-style: none;   /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
 
 .body::-webkit-scrollbar {
-  display: none;              /* Chrome/Safari */
+  display: none; /* Chrome/Safari */
 }
 
 /* 데이터 행 */
@@ -63,11 +62,11 @@
 
 /* 행 아래 실선 */
 .dataRow::after {
-  content: "";
+  content: '';
   display: block;
   width: 433px;
   height: 1px;
-  background: rgba(44,44,44,0.2);
+  background: rgba(44, 44, 44, 0.2);
   margin-top: 22px;
 }
 

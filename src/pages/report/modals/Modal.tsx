@@ -16,13 +16,7 @@ type Props = {
   title?: string
 }
 
-export default function Modal({
-  open,
-  onClose,
-  children,
-  size = 'sm',
-  title,
-}: Props) {
+export default function Modal({ open, onClose, children, size = 'sm', title }: Props) {
   const container = useMemo(() => {
     // SSR 대비 (근데 보통 CRA/Vite면 필요 없긴 함)
     if (typeof document === 'undefined') return null
@@ -50,12 +44,7 @@ export default function Modal({
         aria-label={title ?? 'modal'}
       >
         {/* X 버튼은 무조건 고정 */}
-        <button
-          type="button"
-          className={styles.closeBtn}
-          onClick={onClose}
-          aria-label="닫기"
-        />
+        <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="닫기" />
 
         {/* 타이틀 있으면 헤더 */}
         {title ? <div className={styles.header}>{title}</div> : null}
@@ -64,6 +53,6 @@ export default function Modal({
         <div className={styles.body}>{children}</div>
       </div>
     </div>,
-    container
+    container,
   )
 }

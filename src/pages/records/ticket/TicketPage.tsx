@@ -18,7 +18,7 @@ import TicketAddModal from './modals/TicketAddModal'
 // 타입
 import { type Exercise } from '@/components/summaryCard/SummaryCard'
 
-// 스타일 
+// 스타일
 import styles from './Ticket.module.css'
 
 const END_TYPES: Exercise[] = [
@@ -62,11 +62,11 @@ const TicketPage = () => {
     handleDeleteTicket,
     handleEndTicket,
     loading,
-    error
+    error,
   } = useTickets()
 
   const handleToggle = (index: number) => {
-    setActiveDropdownIndex(prev => (prev === index ? null : index))
+    setActiveDropdownIndex((prev) => (prev === index ? null : index))
   }
 
   const handleAddClose = () => {
@@ -85,10 +85,7 @@ const TicketPage = () => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setActiveDropdownIndex(null)
       }
     }
@@ -110,18 +107,13 @@ const TicketPage = () => {
       </Helmet>
 
       <RecordLayout title="이용권 관리">
-
         <div className={styles.write}>
           {loading ? (
             <Spinner />
           ) : error ? (
-            <div className={styles.emptyText}>
-              티켓을 불러오지 못했어요
-            </div>
+            <div className={styles.emptyText}>티켓을 불러오지 못했어요</div>
           ) : ticketList.length === 0 ? (
-            <div className={styles.emptyText}>
-              등록된 티켓이 없어요
-            </div>
+            <div className={styles.emptyText}>등록된 티켓이 없어요</div>
           ) : (
             ticketList.map((ticket, index) => {
               const isActive = ticket.status === '진행 중'
@@ -166,12 +158,9 @@ const TicketPage = () => {
             onConfirm={async () => {
               if (deleteTargetIndex === null) return
 
-              await handleDeleteTicket(
-                deleteTargetIndex,
-                () => {
-                  setDeleteTargetIndex(null)
-                },
-              )
+              await handleDeleteTicket(deleteTargetIndex, () => {
+                setDeleteTargetIndex(null)
+              })
             }}
           />
         )}
@@ -188,19 +177,13 @@ const TicketPage = () => {
             onConfirm={async () => {
               if (endTargetIndex === null) return
 
-              const ticketId =
-                ticketList[endTargetIndex].id
+              const ticketId = ticketList[endTargetIndex].id
 
-              await handleEndTicket(
-                ticketId,
-                endReason,
-                refundAmount,
-                () => {
-                  setEndTargetIndex(null)
-                  setEndReason(END_TYPES[0])
-                  setRefundAmount('')
-                },
-              )
+              await handleEndTicket(ticketId, endReason, refundAmount, () => {
+                setEndTargetIndex(null)
+                setEndReason(END_TYPES[0])
+                setRefundAmount('')
+              })
             }}
           />
         )}
@@ -230,11 +213,7 @@ const TicketPage = () => {
               endDate: ticketList[viewTargetIndex].end_date ?? '',
               refundAmount: ticketList[viewTargetIndex].refund_amount,
             }}
-            ticketType={
-              ticketList[viewTargetIndex].ticket_type === 'COUNT'
-                ? '횟수권'
-                : '기간권'
-            }
+            ticketType={ticketList[viewTargetIndex].ticket_type === 'COUNT' ? '횟수권' : '기간권'}
             setTicketType={setTicketType}
             colorCode={ticketList[viewTargetIndex].color_code}
             setSelectedColor={setColorCode}
@@ -242,13 +221,10 @@ const TicketPage = () => {
             onClose={() => {
               setViewTargetIndex(null)
             }}
-            onConfirm={() => { }}
-            isRefunded={
-              ticketList[viewTargetIndex].status === 'ENDED'
-            }
+            onConfirm={() => {}}
+            isRefunded={ticketList[viewTargetIndex].status === 'ENDED'}
           />
         )}
-
       </RecordLayout>
     </>
   )

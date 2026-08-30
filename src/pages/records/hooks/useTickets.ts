@@ -10,22 +10,14 @@ import {
 import { type Exercise } from '@/components/summaryCard/SummaryCard'
 
 export const useTickets = () => {
-  const {
-    data: tickets = [],
-    isLoading: loading,
-    error,
-    refetch,
-  } = useTicketsQuery()
+  const { data: tickets = [], isLoading: loading, error, refetch } = useTicketsQuery()
 
   const createTicketMutation = useCreateTicketMutation()
   const deleteTicketMutation = useDeleteTicketMutation()
   const endTicketMutation = useEndTicketMutation()
 
   // 티켓 생성
-  const handleCreateTicket = (
-    data: TicketCreatePayload,
-    onSuccess?: () => void,
-  ) => {
+  const handleCreateTicket = (data: TicketCreatePayload, onSuccess?: () => void) => {
     createTicketMutation.mutate(data, {
       onSuccess: async () => {
         alert('이용권 등록이 완료되었어요')
@@ -43,10 +35,7 @@ export const useTickets = () => {
   }
 
   // 티켓 삭제
-  const handleDeleteTicket = (
-    ticketId: number,
-    onSuccess?: () => void,
-  ) => {
+  const handleDeleteTicket = (ticketId: number, onSuccess?: () => void) => {
     deleteTicketMutation.mutate(ticketId, {
       onSuccess: async () => {
         alert('이용권이 성공적으로 삭제되었어요')

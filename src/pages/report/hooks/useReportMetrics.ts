@@ -1,19 +1,7 @@
 import { useMemo } from 'react'
 import type { ReportData } from './useReportData'
 
-export type ReportMetrics = {
-  totalExerciseCount: number
-  totalExpenseAmount: number
-  noShowCount: number
-  noshowLossAmount: number
-  ringPercent: number
-  exerciseItems: { label: string; count: number }[]
-  noshowItems: { label: string; count: number }[]
-  failMemoRows: { date: string; label: string; reason: string }[]
-  expenseItems: { label: string; amount: number }[]
-}
-
-export const useReportMetrics = (reportData: ReportData | null) => {
+export const useReportMetrics = (reportData: ReportData | null, selectedExerciseType?: string) => {
   return useMemo(() => {
     const totalExerciseCount = reportData?.kpi?.totalExerciseCount ?? 0
     const noShowCount = reportData?.kpi?.noShowCount ?? 0
@@ -24,12 +12,7 @@ export const useReportMetrics = (reportData: ReportData | null) => {
     const noshowItems = reportData?.breakdown?.noshow ?? []
     const expenseItems = reportData?.breakdown?.expense ?? []
 
-    const totalExpenseAmount = expenseItems.reduce(
-      (sum, item) => sum + Number(item.amount ?? 0),
-      0,
-    )
-
-    const selectedExerciseType = reportData?.goal?.exerciseType ?? ''
+    const totalExpenseAmount = expenseItems.reduce((sum, item) => sum + Number(item.amount ?? 0), 0)
 
     const failMemoRows =
       reportData?.breakdown?.failMemo
@@ -54,5 +37,5 @@ export const useReportMetrics = (reportData: ReportData | null) => {
       failMemoRows,
       expenseItems,
     }
-  }, [reportData])
+  }, [reportData, selectedExerciseType])
 }

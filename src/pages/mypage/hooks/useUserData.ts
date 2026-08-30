@@ -21,7 +21,7 @@ export const useUserData = () => {
   const [loading, setLoading] = useState(true)
 
   const fetchMe = useCallback(async () => {
-    const token = useAuthStore.getState().token;
+    const token = useAuthStore.getState().token
 
     if (!token) {
       setLoading(false)

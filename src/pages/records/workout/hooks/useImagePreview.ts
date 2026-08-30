@@ -17,17 +17,13 @@ type SetFormType = React.Dispatch<React.SetStateAction<FormType>>
 
 export const useImagePreview = (
   setForm: SetFormType,
-  setPreviewUrl: (
-    value: string | null
-  ) => void
+  setPreviewUrl: (value: string | null) => void,
 ) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const previewObjectUrlRef = useRef<string | null>(null)
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
 
     if (!file) return
@@ -39,7 +35,7 @@ export const useImagePreview = (
     const objectUrl = URL.createObjectURL(file)
     previewObjectUrlRef.current = objectUrl
 
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
       imageFile: file,
     }))

@@ -1,102 +1,92 @@
-import { useState } from "react";
-import { Helmet } from "react-helmet-async";
+import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 
-import SummaryCard, {
-  type Exercise,
-} from "@/components/summaryCard/SummaryCard";
+import SummaryCard, { type Exercise } from '@/components/summaryCard/SummaryCard'
 
-import BarChart from "./components/charts/BarChart";
-import RingChart from "./components/charts/RingChart";
+import BarChart from './components/charts/BarChart'
+import RingChart from './components/charts/RingChart'
 
-import Card from "@/components/card/Card";
-import Spinner from "@/components/spinner/Spinner";
+import Card from '@/components/card/Card'
+import Spinner from '@/components/spinner/Spinner'
 
-import ReportHeader from "./components/ReportHeader";
-import InsightCard from "./components/card/InsightCard";
-import TotalExpenseCard from "./components/card/TotalExpenseCard/TotalExpenseCard";
-import TotalExerciseCard from "./components/card/TotalExerciseCard/TotalExerciseCard";
-import TotalNoShowCard from "./components/card/TotalNoShowCard/TotalNoShowCard";
+import ReportHeader from './components/ReportHeader'
+import InsightCard from './components/card/InsightCard'
+import TotalExpenseCard from './components/card/TotalExpenseCard/TotalExpenseCard'
+import TotalExerciseCard from './components/card/TotalExerciseCard/TotalExerciseCard'
+import TotalNoShowCard from './components/card/TotalNoShowCard/TotalNoShowCard'
 
-import styles from "@/pages/report/Report.module.css";
+import styles from '@/pages/report/Report.module.css'
 
-import MemoDetailModal from "@/pages/report/modals/MemoDetailModal";
+import MemoDetailModal from '@/pages/report/modals/MemoDetailModal'
 
-import { useTickets } from "@/pages/records/hooks/useTickets";
-import { useReportData } from "./hooks/useReportData";
-import { useExerciseOptions } from "./hooks/useExerciseOptions";
-import { useInsightCalculations } from "./hooks/useInsightCalculations";
-import { useReportMetrics } from "./hooks/useReportMetrics";
+import { useTickets } from '@/pages/records/hooks/useTickets'
+import { useReportData } from './hooks/useReportData'
+import { useExerciseOptions } from './hooks/useExerciseOptions'
+import { useInsightCalculations } from './hooks/useInsightCalculations'
+import { useReportMetrics } from './hooks/useReportMetrics'
 
 export default function ReportPage() {
-  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
-    null,
-  );
-  const [openMemo, setOpenMemo] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
+  const [openMemo, setOpenMemo] = useState(false)
 
-  const today = new Date();
-  const [year, setYear] = useState(today.getFullYear());
-  const [month, setMonth] = useState(today.getMonth() + 1);
+  const today = new Date()
+  const [year, setYear] = useState(today.getFullYear())
+  const [month, setMonth] = useState(today.getMonth() + 1)
 
-  const {
-    tickets,
-    loading: ticketsLoading,
-    error: ticketsError,
-  } = useTickets();
+  const { tickets, loading: ticketsLoading, error: ticketsError } = useTickets()
 
-  const exerciseOptions = useExerciseOptions(tickets, year, month);
+  const exerciseOptions = useExerciseOptions(tickets, year, month)
 
   const currentExercise =
-    exerciseOptions.find(
-      (exercise) => exercise.label === selectedExercise?.label,
-    ) ??
+    exerciseOptions.find((exercise) => exercise.label === selectedExercise?.label) ??
     exerciseOptions[0] ??
-    null;
+    null
 
   const {
     reportData,
     loading: reportLoading,
     error: reportError,
-  } = useReportData(year, month, currentExercise?.label);
+  } = useReportData(year, month, currentExercise?.label)
 
-  const isInitialLoad = ticketsLoading;
-  const isPartialLoading = reportLoading && !isInitialLoad;
+  const isInitialLoad = ticketsLoading
+  const isPartialLoading = reportLoading && !isInitialLoad
 
-  const insights = useInsightCalculations(reportData);
-  const metrics = useReportMetrics(reportData);
+  const insights = useInsightCalculations(reportData)
+  const metrics = useReportMetrics(reportData, currentExercise?.label)
 
   const handlePrevMonth = () => {
     setMonth((prev) => {
       if (prev === 1) {
-        setYear((y) => y - 1);
-        return 12;
+        setYear((y) => y - 1)
+        return 12
       }
-      return prev - 1;
-    });
-  };
+      return prev - 1
+    })
+  }
 
   const handleNextMonth = () => {
     setMonth((prev) => {
       if (prev === 12) {
-        setYear((y) => y + 1);
-        return 1;
+        setYear((y) => y + 1)
+        return 1
       }
-      return prev + 1;
-    });
-  };
+      return prev + 1
+    })
+  }
 
   if (isInitialLoad) {
     return (
       <div
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
         }}
       >
         <Spinner size={50} />
       </div>
-    );
+    )
   }
 
   return (
@@ -123,15 +113,10 @@ export default function ReportPage() {
             />
 
             {ticketsError && (
-              <div className={styles.errorMessage}>
-                이용권 정보를 불러오지 못했습니다.
-              </div>
+              <div className={styles.errorMessage}>이용권 정보를 불러오지 못했습니다.</div>
             )}
 
-            {reportError && (
-              <div className={styles.errorMessage}>{reportError}</div>
-            )}
-
+            {reportError && <div className={styles.errorMessage}>{reportError}</div>}
 
             <div className={styles.reportGrid}>
               <div className={styles.summarySection}>
@@ -160,9 +145,7 @@ export default function ReportPage() {
                   ) : (
                     <div className={styles.emptyState}>
                       <strong>등록된 이용권이 없어요</strong>
-                      <p>
-                        이용권을 등록하면 운동별 목표 달성률을 확인할 수 있어요.
-                      </p>
+                      <p>이용권을 등록하면 운동별 목표 달성률을 확인할 수 있어요.</p>
                     </div>
                   )}
                 </Card>
@@ -186,7 +169,7 @@ export default function ReportPage() {
               >
                 <BarChart
                   values={insights.exerciseByDow}
-                  labels={["월", "화", "수", "목", "금", "토", "일"]}
+                  labels={['월', '화', '수', '목', '금', '토', '일']}
                   unit="회"
                   activeColor="#4F46E5"
                   normalColor="#C7D2FE"
@@ -205,7 +188,7 @@ export default function ReportPage() {
               >
                 <BarChart
                   values={insights.expenseByDow}
-                  labels={["월", "화", "수", "목", "금", "토", "일"]}
+                  labels={['월', '화', '수', '목', '금', '토', '일']}
                   unit="원"
                   activeColor="#FFC227"
                   normalColor="#FFE7AA"
@@ -244,11 +227,11 @@ export default function ReportPage() {
           <MemoDetailModal
             open={openMemo}
             onClose={() => setOpenMemo(false)}
-            monthText={`${year}.${String(month).padStart(2, "0")}`}
+            monthText={`${year}.${String(month).padStart(2, '0')}`}
             rows={metrics.failMemoRows}
           />
         </div>
       </div>
     </>
-  );
+  )
 }

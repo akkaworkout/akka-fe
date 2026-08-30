@@ -36,11 +36,7 @@ const Card = ({
           <div className={styles.title}>{title}</div>
 
           {buttonText && (
-            <button
-              className={styles.button}
-              type="button"
-              onClick={onButtonClick}
-            >
+            <button className={styles.button} type="button" onClick={onButtonClick}>
               {buttonText}
             </button>
           )}

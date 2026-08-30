@@ -1,6 +1,6 @@
 .divider {
   height: 1px;
-  background-color: #E5E5E8;
+  background-color: #e5e5e8;
   margin: 23px -27px 33px -27px;
 }
 
@@ -26,8 +26,8 @@
   padding: 0 45px;
   border-radius: 10px;
   border: none;
-  background-color: #4C4FD5;
-  color: var( --white);
+  background-color: #4c4fd5;
+  color: var(--white);
   font-size: 20px;
   font-style: normal;
   font-weight: 500;
@@ -44,13 +44,13 @@
 }
 
 .nextBtn:disabled {
-  background-color: #E0E0E0;
-  color: #A0A0A0;
+  background-color: #e0e0e0;
+  color: #a0a0a0;
   cursor: not-allowed;
 }
 
 .nextBtn:disabled:hover {
-  background-color: #E0E0E0;
+  background-color: #e0e0e0;
 }
 
 .nextBtn:disabled:active {
@@ -75,7 +75,7 @@
   height: 40px;
   padding: 0 14px;
   border-radius: 10px;
-  border: 1px solid #D9D9D9;
+  border: 1px solid #d9d9d9;
   font-size: 16px;
   line-height: 40px;
   box-sizing: border-box;

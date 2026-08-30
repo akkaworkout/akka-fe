@@ -19,11 +19,7 @@ export type TodayItem = {
   id: number
   date: string
   name: string
-  status:
-  | '성공'
-  | '실패'
-  | '구매'
-  | '이용권 등록'
+  status: '성공' | '실패' | '구매' | '이용권 등록'
   color_code: string
   amount: number
   memo?: string
@@ -52,18 +48,14 @@ type TodayItemResponse = {
   amount?: number
 }
 
-const mapSchedule = (
-  item: CalendarRecordResponse
-): Schedule => ({
+const mapSchedule = (item: CalendarRecordResponse): Schedule => ({
   date: item.date.slice(0, 10),
   label: item.name,
   color_code: item.color_code,
   type: item.type,
 })
 
-const mapTodayItem = (
-  item: TodayItemResponse
-): TodayItem | null => {
+const mapTodayItem = (item: TodayItemResponse): TodayItem | null => {
   const color_code = item.color_code ?? item.color ?? ''
   const success = item.success
 
@@ -72,10 +64,7 @@ const mapTodayItem = (
       id: item.id,
       date: item.date,
       name: item.exercise_type ?? '',
-      status:
-        success === 1 || success === true
-          ? '성공'
-          : '실패',
+      status: success === 1 || success === true ? '성공' : '실패',
       color_code,
       amount: item.exercise_amount ?? 0,
       memo: item.memo,
@@ -109,25 +98,15 @@ const mapTodayItem = (
 }
 
 // 월 전체 운동 기록 조회
-export const getCalendar = async (
-  year: number,
-  month: number
-): Promise<Schedule[]> => {
-  const { data } = await api.get(
-    `/calendar?year=${year}&month=${month}`
-  )
+export const getCalendar = async (year: number, month: number): Promise<Schedule[]> => {
+  const { data } = await api.get(`/calendar?year=${year}&month=${month}`)
 
   return data.data.map(mapSchedule)
 }
 
 // 월 목표 조회
-export const getGoals = async (
-  year: number,
-  month: number
-): Promise<string[]> => {
-  const { data } = await api.get(
-    `/calendar/goal?year=${year}&month=${month}`
-  )
+export const getGoals = async (year: number, month: number): Promise<string[]> => {
+  const { data } = await api.get(`/calendar/goal?year=${year}&month=${month}`)
 
   const list = data.data
 
@@ -135,56 +114,32 @@ export const getGoals = async (
     return ['', '', '']
   }
 
-  return [
-    list[0] || '',
-    list[1] || '',
-    list[2] || '',
-  ]
+  return [list[0] || '', list[1] || '', list[2] || '']
 }
 
 // 월 목표 수정
-export const updateGoals = async (
-  year: number,
-  month: number,
-  goals: string[]
-) => {
-  const filteredGoals = goals.filter(
-    goal => goal.trim() !== ''
-  )
+export const updateGoals = async (year: number, month: number, goals: string[]) => {
+  const filteredGoals = goals.filter((goal) => goal.trim() !== '')
 
-  const { data } = await api.patch(
-    '/calendar/goal',
-    {
-      year,
-      month,
-      goals: filteredGoals,
-    }
-  )
+  const { data } = await api.patch('/calendar/goal', {
+    year,
+    month,
+    goals: filteredGoals,
+  })
 
   return data.data
 }
 
 // 월 요약 정보 조회
-export const getSummary = async (
-  year: number,
-  month: number
-): Promise<Summary> => {
-  const { data } = await api.get(
-    `/calendar/summary?year=${year}&month=${month}`
-  )
+export const getSummary = async (year: number, month: number): Promise<Summary> => {
+  const { data } = await api.get(`/calendar/summary?year=${year}&month=${month}`)
 
   return data.data
 }
 
 // 특정 날짜 기록 조회
-export const getTodayItems = async (
-  date: string
-): Promise<TodayItem[]> => {
-  const { data } = await api.get(
-    `/calendar/${date}`
-  )
+export const getTodayItems = async (date: string): Promise<TodayItem[]> => {
+  const { data } = await api.get(`/calendar/${date}`)
 
-  return (data.data?.records ?? [])
-    .map(mapTodayItem)
-    .filter(Boolean) as TodayItem[]
+  return (data.data?.records ?? []).map(mapTodayItem).filter(Boolean) as TodayItem[]
 }

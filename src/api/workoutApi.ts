@@ -43,15 +43,11 @@ export const getExerciseDetail = async (recordId: number) => {
 export const createExercise = async (form: WorkoutForm) => {
   const formData = buildExerciseFormData(form)
 
-  const { data } = await api.post(
-    '/exercise-record',
-    formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }
-  )
+  const { data } = await api.post('/exercise-record', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
 
   return data
 }
@@ -60,24 +56,18 @@ export const createExercise = async (form: WorkoutForm) => {
 export const updateExercise = async (recordId: number, form: WorkoutForm) => {
   const formData = buildExerciseFormData(form)
 
-  const { data } = await api.patch(
-    `/exercise-record/${recordId}`,
-    formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }
-  )
+  const { data } = await api.patch(`/exercise-record/${recordId}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
 
   return data
 }
 
 // 운동 기록 삭제
 export const deleteExercise = async (recordId: number) => {
-  const { data } = await api.delete(
-    `/exercise-record/${recordId}`
-  )
+  const { data } = await api.delete(`/exercise-record/${recordId}`)
 
   return data
 }

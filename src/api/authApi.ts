@@ -7,12 +7,9 @@ export const authApi = {
       password,
     }),
 
-  register: (formData: FormData) =>
-    api.post('/auth/register', formData),
+  register: (formData: FormData) => api.post('/auth/register', formData),
 
-  checkEmail: (email: string) =>
-    api.get('/auth/check-email', { params: { email } }),
+  checkEmail: (email: string) => api.get('/auth/check-email', { params: { email } }),
 
-  checkNickname: (nickname: string) =>
-    api.get('/auth/check-nickname', { params: { nickname } }),
+  checkNickname: (nickname: string) => api.get('/auth/check-nickname', { params: { nickname } }),
 }

@@ -2,7 +2,7 @@
   width: 275px;
   height: 324px;
   box-sizing: border-box;
-  background: var( --white);
+  background: var(--white);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -34,12 +34,12 @@
 
 /* 최대 금액 row: 배경 + 색*/
 .expense-row.highlight {
-  background: #FF58580D; /* 강조 배경 */
+  background: #ff58580d; /* 강조 배경 */
 }
 
 .amount-max {
   color: var(--error);
-    font-weight: 700;
+  font-weight: 700;
 }
 
 /* footer */

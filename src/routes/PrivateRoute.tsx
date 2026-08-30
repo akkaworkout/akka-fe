@@ -11,10 +11,7 @@ type Props = {
 }
 
 const PrivateRoute = ({ children }: Props) => {
-  const {
-    token,
-    logout,
-  } = useAuthStore()
+  const { token, logout } = useAuthStore()
 
   const [isChecking, setIsChecking] = useState(true)
   const [isAllowed, setIsAllowed] = useState(false)

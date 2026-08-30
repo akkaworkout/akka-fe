@@ -65,7 +65,7 @@ const mapTicket = (item: TicketResponse): Ticket => {
   const formattedStatus =
     item.status === 'ENDED'
       ? item.end_reason
-        ? statusMap[item.end_reason] ?? '기타'
+        ? (statusMap[item.end_reason] ?? '기타')
         : '기타'
       : '진행 중'
 
@@ -140,11 +140,7 @@ export const deleteTicket = async (ticketId: number) => {
 }
 
 // 이용권 종료
-export const endTicket = async (
-  ticketId: number,
-  endReason: Exercise,
-  refundAmount: string
-) => {
+export const endTicket = async (ticketId: number, endReason: Exercise, refundAmount: string) => {
   const payload = {
     end_reason:
       endReason.label === '완료'
@@ -155,13 +151,10 @@ export const endTicket = async (
             ? 'REFUNDED'
             : 'ETC',
 
-    refund_amount:
-      endReason.label === '환불'
-        ? Number(refundAmount)
-        : null,
+    refund_amount: endReason.label === '환불' ? Number(refundAmount) : null,
   }
 
   const { data } = await api.patch(`/tickets/${ticketId}/end`, payload)
 
-  return data.data;
+  return data.data
 }

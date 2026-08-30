@@ -52,7 +52,8 @@ export const useMyPageForm = (initialData: InitialData) => {
   const nicknameDirty = formData.nickname !== initialData.nickname
   const budgetDirty = formData.budget !== initialData.budget
   const exerciseDirty = formData.exerciseGoal !== initialData.exerciseGoal
-  const passwordDirty = formData.password.trim().length > 0 || formData.passwordConfirm.trim().length > 0
+  const passwordDirty =
+    formData.password.trim().length > 0 || formData.passwordConfirm.trim().length > 0
 
   // === 개별 검증 ===
   const emailOk = !emailDirty || validation.isEmailValid(formData.email)
@@ -61,7 +62,8 @@ export const useMyPageForm = (initialData: InitialData) => {
   const exerciseOk = !exerciseDirty || validation.isExerciseValid(formData.exerciseGoal)
   const passwordOk =
     !passwordDirty ||
-    (validation.isPasswordValid(formData.password) && formData.passwordConfirm === formData.password)
+    (validation.isPasswordValid(formData.password) &&
+      formData.passwordConfirm === formData.password)
 
   const emailCheckOk = !emailDirty || emailChecked
   const nicknameCheckOk = !nicknameDirty || nicknameChecked
@@ -81,7 +83,16 @@ export const useMyPageForm = (initialData: InitialData) => {
       emailCheckOk &&
       nicknameCheckOk
     )
-  }, [hasAnyChange, emailOk, nicknameOk, budgetOk, exerciseOk, passwordOk, emailCheckOk, nicknameCheckOk])
+  }, [
+    hasAnyChange,
+    emailOk,
+    nicknameOk,
+    budgetOk,
+    exerciseOk,
+    passwordOk,
+    emailCheckOk,
+    nicknameCheckOk,
+  ])
 
   // === Validation ===
   const validate = () => {
@@ -112,8 +123,7 @@ export const useMyPageForm = (initialData: InitialData) => {
       else if (!validation.isPasswordValid(formData.password))
         next.password = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
 
-      if (!formData.passwordConfirm.trim())
-        next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
+      if (!formData.passwordConfirm.trim()) next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
       else if (formData.passwordConfirm !== formData.password)
         next.passwordConfirm = '비밀번호가 일치하지 않습니다.'
     }
