@@ -27,9 +27,7 @@ export const useExpenseForm = (initialCategory: Expense) => {
   const createExpenseMutation = useCreateExpenseMutation()
   const isSubmitting = createExpenseMutation.isPending
 
-  const isFormValid =
-    form.item.trim() !== '' &&
-    form.amount.trim() !== ''
+  const isFormValid = form.item.trim() !== '' && form.amount.trim() !== ''
 
   const handleDateChange = (date: Date) => {
     setForm((prev) => ({

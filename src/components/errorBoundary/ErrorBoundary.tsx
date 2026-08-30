@@ -1,8 +1,4 @@
-import {
-  Component,
-  type ErrorInfo,
-  type ReactNode,
-} from 'react'
+import { Component, type ErrorInfo, type ReactNode } from 'react'
 
 import logoSymbol from '@/assets/brand/akka-logo-symbol.png'
 
@@ -44,35 +40,20 @@ class ErrorBoundary extends Component<Props, State> {
       return (
         <div className={styles.wrap}>
           <div className={styles.card}>
-            <img
-              src={logoSymbol}
-              alt="Akkaworkout"
-              className={styles.logo}
-            />
+            <img src={logoSymbol} alt="Akkaworkout" className={styles.logo} />
 
-            <strong className={styles.title}>
-              잠시 문제가 생겼어요
-            </strong>
+            <strong className={styles.title}>잠시 문제가 생겼어요</strong>
 
             <p className={styles.description}>
-              화면을 불러오는 중 오류가 발생했어요.
-              새로고침 후 다시 시도해주세요.
+              화면을 불러오는 중 오류가 발생했어요. 새로고침 후 다시 시도해주세요.
             </p>
 
             <div className={styles.actions}>
-              <button
-                type="button"
-                onClick={this.handleReload}
-                className={styles.primaryButton}
-              >
+              <button type="button" onClick={this.handleReload} className={styles.primaryButton}>
                 새로고침
               </button>
 
-              <button
-                type="button"
-                onClick={this.handleGoMain}
-                className={styles.secondaryButton}
-              >
+              <button type="button" onClick={this.handleGoMain} className={styles.secondaryButton}>
                 메인으로
               </button>
             </div>

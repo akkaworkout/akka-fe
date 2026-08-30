@@ -17,11 +17,11 @@
 📖 **Swagger API**: https://api.akkaworkout.store/api-docs
 <img width="1918" height="947" alt="image" src="https://github.com/user-attachments/assets/ea10ef47-5e58-4144-9d2d-eadc693b5c1f" />
 
-💻 **Frontend Repository**  
+💻 **Frontend Repository**
 
 https://github.com/akkaworkout/akka-fe
 
-🛠️ **Backend Repository**  
+🛠️ **Backend Repository**
 
 https://github.com/akkaworkout/akka-be
 
@@ -45,6 +45,7 @@ https://www.figma.com/design/f63s7HXAd3yt2Bfl02IAhT/AKKA-WORKOUT?node-id=16-1487
 ---
 
 ## Service Architecture
+
 <img width="1536" height="1024" alt="image (7)" src="https://github.com/user-attachments/assets/795de138-b855-40ca-ac55-27d47f32dd50" />
 
 AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드, MySQL 데이터베이스로 구성되어 있습니다.
@@ -59,6 +60,7 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 ---
 
 ## ERD
+
 <img width="1091" height="781" alt="image (8)" src="https://github.com/user-attachments/assets/3f7cb70a-334c-4349-b75f-f111d0c79239" />
 
 주요 테이블은 다음과 같습니다.
@@ -75,76 +77,78 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 
 ### Auth
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| POST | `/auth/register` | 회원가입 |
-| POST | `/auth/login` | 로그인 |
-| POST | `/auth/refresh` | 액세스 토큰 갱신 |
-| GET | `/auth/check-email` | 이메일 중복 확인 |
-| GET | `/auth/check-nickname` | 닉네임 중복 확인 |
+| Method | Endpoint               | Description      |
+| ------ | ---------------------- | ---------------- |
+| POST   | `/auth/register`       | 회원가입         |
+| POST   | `/auth/login`          | 로그인           |
+| POST   | `/auth/refresh`        | 액세스 토큰 갱신 |
+| GET    | `/auth/check-email`    | 이메일 중복 확인 |
+| GET    | `/auth/check-nickname` | 닉네임 중복 확인 |
 
 ### Users
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| GET | `/users/me` | 내 정보 조회 |
-| PATCH | `/users/me` | 내 정보 수정 |
+| Method | Endpoint    | Description  |
+| ------ | ----------- | ------------ |
+| GET    | `/users/me` | 내 정보 조회 |
+| PATCH  | `/users/me` | 내 정보 수정 |
 
 ### ExerciseRecord
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| GET | `/exercise-record` | 운동 기록 전체 조회 |
-| POST | `/exercise-record` | 운동 기록 등록 |
-| GET | `/exercise-record/{record_id}` | 특정 운동 기록 조회 |
-| PATCH | `/exercise-record/{record_id}` | 운동 기록 수정 |
-| DELETE | `/exercise-record/{record_id}` | 운동 기록 삭제 |
+| Method | Endpoint                       | Description         |
+| ------ | ------------------------------ | ------------------- |
+| GET    | `/exercise-record`             | 운동 기록 전체 조회 |
+| POST   | `/exercise-record`             | 운동 기록 등록      |
+| GET    | `/exercise-record/{record_id}` | 특정 운동 기록 조회 |
+| PATCH  | `/exercise-record/{record_id}` | 운동 기록 수정      |
+| DELETE | `/exercise-record/{record_id}` | 운동 기록 삭제      |
 
 ### Ticket
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| POST | `/tickets` | 이용권 등록 |
-| GET | `/tickets` | 내 이용권 전체 조회 |
-| GET | `/tickets/active` | 진행 중인 이용권 조회 |
-| GET | `/tickets/{ticketId}/summary` | 이용권 요약 정보 조회 |
-| GET | `/tickets/{ticketId}` | 특정 이용권 조회 |
-| DELETE | `/tickets/{ticketId}` | 이용권 삭제 |
-| PATCH | `/tickets/{ticketId}/end` | 이용권 종료 |
+| Method | Endpoint                      | Description           |
+| ------ | ----------------------------- | --------------------- |
+| POST   | `/tickets`                    | 이용권 등록           |
+| GET    | `/tickets`                    | 내 이용권 전체 조회   |
+| GET    | `/tickets/active`             | 진행 중인 이용권 조회 |
+| GET    | `/tickets/{ticketId}/summary` | 이용권 요약 정보 조회 |
+| GET    | `/tickets/{ticketId}`         | 특정 이용권 조회      |
+| DELETE | `/tickets/{ticketId}`         | 이용권 삭제           |
+| PATCH  | `/tickets/{ticketId}/end`     | 이용권 종료           |
 
 ### Calendar
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| GET | `/calendar` | 월 전체 운동 기록 조회 |
-| GET | `/calendar/goal` | 월 목표 조회 |
-| PATCH | `/calendar/goal` | 월 목표 수정 |
-| GET | `/calendar/summary` | 월 요약 정보 조회 |
-| GET | `/calendar/{date}` | 특정 날짜 기록 조회 |
+| Method | Endpoint            | Description            |
+| ------ | ------------------- | ---------------------- |
+| GET    | `/calendar`         | 월 전체 운동 기록 조회 |
+| GET    | `/calendar/goal`    | 월 목표 조회           |
+| PATCH  | `/calendar/goal`    | 월 목표 수정           |
+| GET    | `/calendar/summary` | 월 요약 정보 조회      |
+| GET    | `/calendar/{date}`  | 특정 날짜 기록 조회    |
 
 ### Expense
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| POST | `/expense` | 기타비용 지출 등록 |
-| GET | `/expense/stats` | 이번달 지출 통계 조회 |
+| Method | Endpoint         | Description           |
+| ------ | ---------------- | --------------------- |
+| POST   | `/expense`       | 기타비용 지출 등록    |
+| GET    | `/expense/stats` | 이번달 지출 통계 조회 |
 
 ### Reports
 
-| Method | Endpoint | Description |
-| --- | --- | --- |
-| GET | `/reports` | 월간 리포트 조회 |
+| Method | Endpoint   | Description      |
+| ------ | ---------- | ---------------- |
+| GET    | `/reports` | 월간 리포트 조회 |
 
 ---
 
 ## Tech Stack
 
 ### Planning / Design
+
 - Figma
 - Notion
 - Discord
 
 ### Frontend
+
 - React
 - TypeScript
 - Vite
@@ -156,6 +160,7 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 - React Helmet Async
 
 ### Backend
+
 - Node.js
 - Express
 - REST API
@@ -163,18 +168,21 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 - Swagger API 문서화
 
 ### Database
+
 - MySQL
 - MySQL Workbench
 - ERD CLOUD
 - Railway
 
 ### Infra / Deploy
+
 - Vercel
 - Cloudtype
 - Gabia
 - GitHub Actions
 
 ### Collaboration / Tools
+
 - Git
 - GitHub
 - VS Code
@@ -186,45 +194,45 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 
 ### 공통 참여
 
-| 구분 | 담당 내용 |
-| --- | --- |
-| 기획 | 서비스 아이디어 구체화, 주요 기능 정의, 사용자 흐름 설계 |
-| 디자인 | Figma 기반 화면 설계 및 UI 디자인 |
-| 프론트엔드 | React + TypeScript 기반 화면 구현 및 API 연동 |
-| 백엔드 | Node.js + Express 기반 REST API 구현 |
-| 데이터베이스 | MySQL 기반 테이블 구조 및 관계 설계 |
-| API 문서화 | Swagger 기반 API 명세 작성 및 프론트엔드 연동 기준 공유 |
-| QA / 디버깅 | 배포 환경에서 API 응답 구조 확인 및 기능 테스트 |
+| 구분         | 담당 내용                                                |
+| ------------ | -------------------------------------------------------- |
+| 기획         | 서비스 아이디어 구체화, 주요 기능 정의, 사용자 흐름 설계 |
+| 디자인       | Figma 기반 화면 설계 및 UI 디자인                        |
+| 프론트엔드   | React + TypeScript 기반 화면 구현 및 API 연동            |
+| 백엔드       | Node.js + Express 기반 REST API 구현                     |
+| 데이터베이스 | MySQL 기반 테이블 구조 및 관계 설계                      |
+| API 문서화   | Swagger 기반 API 명세 작성 및 프론트엔드 연동 기준 공유  |
+| QA / 디버깅  | 배포 환경에서 API 응답 구조 확인 및 기능 테스트          |
 
 ### 담당자별 역할
 
-| 담당자 | 담당 영역 | 세부 내용 |
-| --- | --- | --- |
-| 선혜민 | Auth | 로그인, 회원가입, 이메일/닉네임 중복 확인, 인증 API 연동 구현 |
-| 선혜민 | My Page | 사용자 정보 조회/수정, 프로필 이미지 관리, 목표 예산/운동 횟수 설정 기능 구현 |
-| 선혜민 | Report | 월간 리포트, 운동/지출/노쇼 분석 지표, Chart.js 기반 시각화 화면 구현 |
-| 선혜민 | Common UI | 공통 모달, 상세 모달, 입력 폼 등 재사용 UI 컴포넌트 구현 |
-| 선혜민 | Frontend Deploy | Vercel 기반 프론트엔드 배포 |
-| 선혜민, 이민주 | SideNav | 사이드바 UI, 메뉴 이동, 접힘 상태, 로그인 상태 표시 구현 |
-| 이민주 | Calendar | 월별 캘린더, 목표, 날짜별 기록 조회 화면 구현 |
-| 이민주 | Records | 운동기록, 운동지출기록, 이용권 관리 화면 구현 |
-| 이민주 | App Configuration | HelmetProvider, ErrorBoundary를 적용해 React 애플리케이션 실행 및 전역 환경 구성 |
-| 이민주 | Domain / Backend Deploy | Gabia 도메인 연결, Cloudtype 백엔드 배포 |
-| 이민주 | Database / CI/CD | Railway MySQL 배포, GitHub Actions 배포 파이프라인 구성 |
+| 담당자         | 담당 영역               | 세부 내용                                                                        |
+| -------------- | ----------------------- | -------------------------------------------------------------------------------- |
+| 선혜민         | Auth                    | 로그인, 회원가입, 이메일/닉네임 중복 확인, 인증 API 연동 구현                    |
+| 선혜민         | My Page                 | 사용자 정보 조회/수정, 프로필 이미지 관리, 목표 예산/운동 횟수 설정 기능 구현    |
+| 선혜민         | Report                  | 월간 리포트, 운동/지출/노쇼 분석 지표, Chart.js 기반 시각화 화면 구현            |
+| 선혜민         | Common UI               | 공통 모달, 상세 모달, 입력 폼 등 재사용 UI 컴포넌트 구현                         |
+| 선혜민         | Frontend Deploy         | Vercel 기반 프론트엔드 배포                                                      |
+| 선혜민, 이민주 | SideNav                 | 사이드바 UI, 메뉴 이동, 접힘 상태, 로그인 상태 표시 구현                         |
+| 이민주         | Calendar                | 월별 캘린더, 목표, 날짜별 기록 조회 화면 구현                                    |
+| 이민주         | Records                 | 운동기록, 운동지출기록, 이용권 관리 화면 구현                                    |
+| 이민주         | App Configuration       | HelmetProvider, ErrorBoundary를 적용해 React 애플리케이션 실행 및 전역 환경 구성 |
+| 이민주         | Domain / Backend Deploy | Gabia 도메인 연결, Cloudtype 백엔드 배포                                         |
+| 이민주         | Database / CI/CD        | Railway MySQL 배포, GitHub Actions 배포 파이프라인 구성                          |
 
 ### 페이지별 담당
 
-| 페이지 | 담당자 | 담당 범위 |
-| --- | --- | --- |
-| Login | 선혜민 | 디자인, 프론트엔드, 백엔드, API 연동 |
-| Sign Up | 선혜민 | 디자인, 프론트엔드, 백엔드, API 연동 |
-| My Page | 선혜민 | 디자인, 프론트엔드, 백엔드, API 연동 |
-| Report | 선혜민 | 디자인, 프론트엔드, 백엔드, API 연동 |
-| SideNav | 선혜민, 이민주 | 디자인, 프론트엔드, 상태 관리 |
-| Calendar | 이민주 | 디자인, 프론트엔드, 백엔드, API 연동 |
-| Records - 운동기록 | 이민주 | 디자인, 프론트엔드, 백엔드, API 연동 |
-| Records - 운동지출기록 | 이민주 | 디자인, 프론트엔드, 백엔드, API 연동 |
-| Records - 이용권 | 이민주 | 디자인, 프론트엔드, 백엔드, API 연동 |
+| 페이지                 | 담당자         | 담당 범위                            |
+| ---------------------- | -------------- | ------------------------------------ |
+| Login                  | 선혜민         | 디자인, 프론트엔드, 백엔드, API 연동 |
+| Sign Up                | 선혜민         | 디자인, 프론트엔드, 백엔드, API 연동 |
+| My Page                | 선혜민         | 디자인, 프론트엔드, 백엔드, API 연동 |
+| Report                 | 선혜민         | 디자인, 프론트엔드, 백엔드, API 연동 |
+| SideNav                | 선혜민, 이민주 | 디자인, 프론트엔드, 상태 관리        |
+| Calendar               | 이민주         | 디자인, 프론트엔드, 백엔드, API 연동 |
+| Records - 운동기록     | 이민주         | 디자인, 프론트엔드, 백엔드, API 연동 |
+| Records - 운동지출기록 | 이민주         | 디자인, 프론트엔드, 백엔드, API 연동 |
+| Records - 이용권       | 이민주         | 디자인, 프론트엔드, 백엔드, API 연동 |
 
 ---
 
@@ -303,31 +311,38 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 - Zustand를 활용해 사이드바 접힘 상태 전역 관리
 - Zustand를 활용해 로그인 여부와 accessToken 상태 관리
 
-- ---
+---
 
 ## Lighthouse
 
 ### Main
+
 <img width="503" height="165" alt="image" src="https://github.com/user-attachments/assets/f2731d36-00ed-49a7-a645-5b435939250d" />
 
 ### Auth - 로그인
+
 <img width="506" height="163" alt="image" src="https://github.com/user-attachments/assets/125ce5ea-a801-41b4-a283-8975df9fae5a" />
 
 ### Auth - 회원가입
+
 <img width="506" height="163" alt="image" src="https://github.com/user-attachments/assets/73c1aa7b-d3c5-4d2b-bf24-81482511d23a" />
 
 ### Records - 운동기록 / 기타지출 / 이용권관리
+
 <img width="505" height="167" alt="image" src="https://github.com/user-attachments/assets/356d6f16-8cb8-4eb9-9384-df2ea814cd08" />
 <img width="497" height="162" alt="image" src="https://github.com/user-attachments/assets/a1891924-b9f8-4634-a3e3-494428fe488d" />
 <img width="497" height="162" alt="image" src="https://github.com/user-attachments/assets/2d3b261b-fbaf-4e0a-a3e9-f6d6066b1a2d" />
 
 ### Report
+
 <img width="506" height="165" alt="image" src="https://github.com/user-attachments/assets/8047a4fe-17a8-466c-8eff-f9527ff8d44a" />
 
 ### Calendar
+
 <img width="510" height="171" alt="image" src="https://github.com/user-attachments/assets/a99974c9-2421-41d3-ae38-c20abb4cf095" />
 
 ### MyPage
+
 <img width="502" height="166" alt="image" src="https://github.com/user-attachments/assets/fcefce9f-706a-4c26-bbd1-7c28f4b1aa2f" />
 
 ---

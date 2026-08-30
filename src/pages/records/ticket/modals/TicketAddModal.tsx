@@ -48,18 +48,10 @@ const TicketAddModal = ({
   const [step, setStep] = useState(1)
   const [form, setForm] = useState(() => ({
     exerciseType: initialData?.exerciseType ?? '',
-    startDate: initialData?.startDate
-      ? new Date(initialData.startDate)
-      : new Date(),
-    endDate: initialData?.endDate
-      ? new Date(initialData.endDate)
-      : new Date(),
-    targetCount: initialData?.targetCount
-      ? String(initialData.targetCount)
-      : '',
-    totalAmount: initialData?.totalAmount
-      ? String(initialData.totalAmount)
-      : '',
+    startDate: initialData?.startDate ? new Date(initialData.startDate) : new Date(),
+    endDate: initialData?.endDate ? new Date(initialData.endDate) : new Date(),
+    targetCount: initialData?.targetCount ? String(initialData.targetCount) : '',
+    totalAmount: initialData?.totalAmount ? String(initialData.totalAmount) : '',
   }))
 
   const getOnlyNumber = (value: string) => value.replace(/[^0-9]/g, '')
@@ -68,11 +60,9 @@ const TicketAddModal = ({
 
   const isDirty =
     !isViewMode &&
-    (
-      form.exerciseType.trim() !== '' ||
+    (form.exerciseType.trim() !== '' ||
       form.targetCount.trim() !== '' ||
-      form.totalAmount.trim() !== ''
-    )
+      form.totalAmount.trim() !== '')
 
   const isStep1Valid = form.exerciseType.trim() !== ''
 
@@ -103,10 +93,7 @@ const TicketAddModal = ({
     onConfirm({
       exerciseType: form.exerciseType,
       colorCode,
-      ticketType:
-        ticketType === '횟수권'
-          ? 'COUNT'
-          : 'PERIOD',
+      ticketType: ticketType === '횟수권' ? 'COUNT' : 'PERIOD',
 
       targetCount: Number(form.targetCount),
       totalAmount: Number(form.totalAmount),
@@ -118,9 +105,7 @@ const TicketAddModal = ({
 
   const handleClose = () => {
     if (isDirty) {
-      const ok = window.confirm(
-        '작성 중인 내용이 사라집니다. 나가시겠습니까?',
-      )
+      const ok = window.confirm('작성 중인 내용이 사라집니다. 나가시겠습니까?')
 
       if (!ok) return
     }
@@ -131,13 +116,7 @@ const TicketAddModal = ({
   return (
     <TicketModal
       title={isViewMode ? '이용권 조회' : '이용권 등록'}
-      buttonText={
-        step === 1
-          ? '다음'
-          : isViewMode
-            ? '이전'
-            : '완료'
-      }
+      buttonText={step === 1 ? '다음' : isViewMode ? '이전' : '완료'}
       onClose={handleClose}
       onNext={handleNext}
       nextDisabled={nextDisabled}
@@ -171,10 +150,9 @@ const TicketAddModal = ({
                   <button
                     type="button"
                     disabled={isViewMode}
-                    className={`${styles.ticketTypeButton} ${ticketType === '횟수권'
-                      ? styles.active
-                      : ''
-                      }`}
+                    className={`${styles.ticketTypeButton} ${
+                      ticketType === '횟수권' ? styles.active : ''
+                    }`}
                     onClick={() => setTicketType('횟수권')}
                   >
                     횟수권
@@ -183,10 +161,9 @@ const TicketAddModal = ({
                   <button
                     type="button"
                     disabled={isViewMode}
-                    className={`${styles.ticketTypeButton} ${ticketType === '기간권'
-                      ? styles.active
-                      : ''
-                      }`}
+                    className={`${styles.ticketTypeButton} ${
+                      ticketType === '기간권' ? styles.active : ''
+                    }`}
                     onClick={() => setTicketType('기간권')}
                   >
                     기간권
@@ -204,21 +181,14 @@ const TicketAddModal = ({
                     key={color}
                     type="button"
                     disabled={isViewMode}
-                    className={`${styles.colorCircle} ${colorCode === color
-                      ? styles.selected
-                      : ''
-                      }`}
+                    className={`${styles.colorCircle} ${
+                      colorCode === color ? styles.selected : ''
+                    }`}
                     style={{ backgroundColor: color }}
-                    onClick={() =>
-                      setSelectedColor(color)
-                    }
+                    onClick={() => setSelectedColor(color)}
                   >
                     {colorCode === color && (
-                      <img
-                        src={CheckIcon}
-                        alt="selected"
-                        className={styles.checkIcon}
-                      />
+                      <img src={CheckIcon} alt="selected" className={styles.checkIcon} />
                     )}
                   </button>
                 ))}
@@ -244,9 +214,7 @@ const TicketAddModal = ({
                   disabled={isViewMode}
                 />
 
-                <span className={styles.periodText}>
-                  ~
-                </span>
+                <span className={styles.periodText}>~</span>
 
                 <DateSelect
                   value={form.endDate}
@@ -281,18 +249,16 @@ const TicketAddModal = ({
                     maxLength={3}
                   />
 
-                  <span className={styles.unit}>
-                    회
-                  </span>
+                  <span className={styles.unit}>회</span>
                 </div>
               </div>
 
               <div className={styles.field}>
-                <label htmlFor='totalAmount'>금액</label>
+                <label htmlFor="totalAmount">금액</label>
 
                 <div className={styles.priceInput}>
                   <input
-                    id='totalAmount'
+                    id="totalAmount"
                     className={styles.input}
                     value={form.totalAmount}
                     disabled={isViewMode}
@@ -306,20 +272,18 @@ const TicketAddModal = ({
                     maxLength={8}
                   />
 
-                  <span className={styles.unit}>
-                    원
-                  </span>
+                  <span className={styles.unit}>원</span>
                 </div>
               </div>
             </div>
 
             {isViewMode && isRefunded && (
               <div className={styles.field}>
-                <label htmlFor='refundAmount'>환불 금액</label>
+                <label htmlFor="refundAmount">환불 금액</label>
 
                 <div className={styles.priceInput}>
                   <input
-                    id='refundAmount'
+                    id="refundAmount"
                     className={styles.input}
                     value={
                       initialData?.refundAmount !== undefined
@@ -331,9 +295,7 @@ const TicketAddModal = ({
                     maxLength={8}
                   />
 
-                  <span className={styles.unit}>
-                    원
-                  </span>
+                  <span className={styles.unit}>원</span>
                 </div>
               </div>
             )}

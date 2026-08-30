@@ -32,7 +32,7 @@ export default function ExpenseDetailModal({ open, onClose, items }: Props) {
       { key: 'food' as const, label: '운동식품비' },
       { key: 'etc' as const, label: '기타' },
     ],
-    []
+    [],
   )
 
   const dataByTab: Record<TabKey, Group[]> = useMemo(() => {
@@ -43,7 +43,7 @@ export default function ExpenseDetailModal({ open, onClose, items }: Props) {
       etc: [],
     }
 
-    items.forEach(i => {
+    items.forEach((i) => {
       let key: TabKey = 'etc'
 
       // 카테고리 매칭 순서 중요
@@ -65,10 +65,7 @@ export default function ExpenseDetailModal({ open, onClose, items }: Props) {
 
   const tabSums: Record<TabKey, number> = useMemo(() => {
     const sum = (groups: Group[]) =>
-      groups.reduce(
-        (acc, g) => acc + g.items.reduce((s, it) => s + it.amount, 0),
-        0
-      )
+      groups.reduce((acc, g) => acc + g.items.reduce((s, it) => s + it.amount, 0), 0)
 
     return {
       workout: sum(dataByTab.workout),
@@ -78,11 +75,7 @@ export default function ExpenseDetailModal({ open, onClose, items }: Props) {
     }
   }, [dataByTab])
 
-  const total =
-    tabSums.workout +
-    tabSums.gear +
-    tabSums.food +
-    tabSums.etc
+  const total = tabSums.workout + tabSums.gear + tabSums.food + tabSums.etc
 
   const isEmpty = total === 0
 
@@ -93,16 +86,12 @@ export default function ExpenseDetailModal({ open, onClose, items }: Props) {
           <div className={styles.header}>
             <h2 className={styles.title}>상세지출</h2>
 
-            <p className={styles.ment}>
-              이번 달 지출 내역을 항목별로 확인할 수 있어요
-            </p>
+            <p className={styles.ment}>이번 달 지출 내역을 항목별로 확인할 수 있어요</p>
 
-            <div className={styles.total}>
-              총 {formatWon(total)}
-            </div>
+            <div className={styles.total}>총 {formatWon(total)}</div>
 
             <div className={styles.tabs} role="tablist">
-              {tabs.map(t => {
+              {tabs.map((t) => {
                 const isActive = t.key === activeTab
 
                 return (
@@ -115,23 +104,19 @@ export default function ExpenseDetailModal({ open, onClose, items }: Props) {
                     onClick={() => setActiveTab(t.key)}
                   >
                     <div
-                      className={`${styles.tabLabel} ${isActive
-                          ? styles.tabLabelActive
-                          : styles.tabLabelInactive
-                        }`}
+                      className={`${styles.tabLabel} ${
+                        isActive ? styles.tabLabelActive : styles.tabLabelInactive
+                      }`}
                     >
                       {t.label}
                     </div>
 
-                    <div className={styles.tabAmount}>
-                      {formatWon(tabSums[t.key])}
-                    </div>
+                    <div className={styles.tabAmount}>{formatWon(tabSums[t.key])}</div>
 
                     <div
-                      className={`${styles.tabBar} ${isActive
-                          ? styles.tabBarActive
-                          : styles.tabBarInactive
-                        }`}
+                      className={`${styles.tabBar} ${
+                        isActive ? styles.tabBarActive : styles.tabBarInactive
+                      }`}
                     />
                   </button>
                 )
@@ -141,26 +126,18 @@ export default function ExpenseDetailModal({ open, onClose, items }: Props) {
 
           <div className={styles.listArea}>
             {isEmpty ? (
-              <div className={styles.empty}>
-                이번 달 지출 내역이 없습니다
-              </div>
+              <div className={styles.empty}>이번 달 지출 내역이 없습니다</div>
             ) : (
               activeGroups.map((group, gi) => (
                 <div key={gi} className={styles.group}>
                   {group.items.map((item, idx) => (
                     <div key={idx} className={styles.rowBlock}>
                       <div className={styles.row}>
-                        <div className={styles.date}>
-                          {idx === 0 ? group.date : ''}
-                        </div>
+                        <div className={styles.date}>{idx === 0 ? group.date : ''}</div>
 
-                        <div className={styles.itemName}>
-                          {item.name}
-                        </div>
+                        <div className={styles.itemName}>{item.name}</div>
 
-                        <div className={styles.amount}>
-                          {formatWon(item.amount)}
-                        </div>
+                        <div className={styles.amount}>{formatWon(item.amount)}</div>
                       </div>
 
                       <div className={styles.divider} />

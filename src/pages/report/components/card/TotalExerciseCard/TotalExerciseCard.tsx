@@ -22,58 +22,37 @@ export default function TotalExerciseCard({ totalCount, items }: Props) {
 
   const restCount = Math.max(sortedItems.length - VISIBLE_COUNT, 0)
 
-  const maxCount = sortedItems.length
-    ? Math.max(...sortedItems.map(i => i.count))
-    : 0
+  const maxCount = sortedItems.length ? Math.max(...sortedItems.map((i) => i.count)) : 0
 
-  const maxItem = sortedItems.find(i => i.count === maxCount)
+  const maxItem = sortedItems.find((i) => i.count === maxCount)
   const maxLabel = maxItem?.label
 
   return (
     <>
-      <Card
-        title="총 운동"
-        width={330}
-        height={324}
-        backgroundColor="#ffffff"
-        radius={20}
-      >
+      <Card title="총 운동" width={330} height={324} backgroundColor="#ffffff" radius={20}>
         <section className="total-exercise-card">
           <ul className="exercise-list">
-
             {Array.from({ length: VISIBLE_COUNT }).map((_, idx) => {
               const item = sortedItems[idx]
 
               if (!item) {
-                return (
-                  <li key={idx} className="exercise-row empty" />
-                )
+                return <li key={idx} className="exercise-row empty" />
               }
 
               const isMax = item.count === maxCount && maxCount > 0
 
               return (
-                <li
-                  key={idx}
-                  className={`exercise-row ${isMax ? 'highlight' : ''}`}
-                >
+                <li key={idx} className={`exercise-row ${isMax ? 'highlight' : ''}`}>
                   <span className="label">{item.label}</span>
 
-                  <span className={`count ${isMax ? 'count-max' : ''}`}>
-                    {item.count}회
-                  </span>
+                  <span className={`count ${isMax ? 'count-max' : ''}`}>{item.count}회</span>
                 </li>
               )
             })}
-
           </ul>
 
           {restCount > 0 && (
-            <button
-              className="more-btn"
-              type="button"
-              onClick={() => setOpen(true)}
-            >
+            <button className="more-btn" type="button" onClick={() => setOpen(true)}>
               나머지 {restCount}개 항목 보기
             </button>
           )}
@@ -83,11 +62,7 @@ export default function TotalExerciseCard({ totalCount, items }: Props) {
               총 <span className="summary-number">{totalCount}</span>회 운동했어요.
             </p>
 
-            {maxLabel && (
-              <p className="summary-sub">
-                {maxLabel}를 가장 많이 운동했어요.
-              </p>
-            )}
+            {maxLabel && <p className="summary-sub">{maxLabel}를 가장 많이 운동했어요.</p>}
           </footer>
         </section>
       </Card>

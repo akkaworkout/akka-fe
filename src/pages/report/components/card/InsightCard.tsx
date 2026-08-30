@@ -11,9 +11,7 @@ export default function InsightCard({
   추천횟수 = 1,
   noshowLoss = 0,
 }: Props) {
-
-  const hasExerciseData =
-    집중요일 && 집중요일 !== '데이터 없음'
+  const hasExerciseData = 집중요일 && 집중요일 !== '데이터 없음'
 
   const hasNoShowLoss = noshowLoss > 0
 
@@ -34,9 +32,8 @@ export default function InsightCard({
       <p style={{ margin: 0, fontSize: 16, color: '#2C2C2C' }}>
         {hasExerciseData ? (
           <>
-            이번 달엔{' '}
-            <span style={{ color: '#454DD7' }}>{집중요일}에 운동</span>이 몰렸어요.
-            다음 달엔{' '}
+            이번 달엔 <span style={{ color: '#454DD7' }}>{집중요일}에 운동</span>이 몰렸어요. 다음
+            달엔{' '}
             <span style={{ color: '#454DD7' }}>
               {추천요일} {추천횟수}회
             </span>
@@ -44,8 +41,7 @@ export default function InsightCard({
           </>
         ) : (
           <>
-            이번 달엔 아직 운동 기록이 없네요.
-            다음 달엔{' '}
+            이번 달엔 아직 운동 기록이 없네요. 다음 달엔{' '}
             <span style={{ color: '#454DD7' }}>
               {추천요일} {추천횟수}회
             </span>
@@ -57,11 +53,8 @@ export default function InsightCard({
       <p style={{ margin: '4px 0 0 0', fontSize: 16, color: '#2C2C2C' }}>
         {hasNoShowLoss ? (
           <>
-            노쇼로{' '}
-            <span style={{ color: '#454DD7' }}>
-              {noshowLoss.toLocaleString()}원
-            </span>
-            을 놓쳤어요.
+            노쇼로 <span style={{ color: '#454DD7' }}>{noshowLoss.toLocaleString()}원</span>을
+            놓쳤어요.
           </>
         ) : (
           <>노쇼는 없었어요.</>

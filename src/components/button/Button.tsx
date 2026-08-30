@@ -37,29 +37,15 @@ const Button = ({
       className={`
         ${styles.button}
         ${active ? styles.active : ''}
-        ${
-          variant !== 'default'
-            ? styles[variant]
-            : ''
-        }
+        ${variant !== 'default' ? styles[variant] : ''}
       `}
       onClick={onClick}
     >
       {variant === 'file' && (
-        <img
-          src={uploadIcon}
-          alt="upload_icon"
-          className={styles.uploadIcon}
-        />
+        <img src={uploadIcon} alt="upload_icon" className={styles.uploadIcon} />
       )}
 
-      {icon && (
-        <img
-          src={icon}
-          alt="button_icon"
-          className={styles.icon}
-        />
-      )}
+      {icon && <img src={icon} alt="button_icon" className={styles.icon} />}
 
       {children}
     </button>

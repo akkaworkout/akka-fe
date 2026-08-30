@@ -1,11 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 
-import {
-  createExercise,
-  updateExercise,
-  deleteExercise,
-} from '@/api/workoutApi'
+import { createExercise, updateExercise, deleteExercise } from '@/api/workoutApi'
 
 import type { WorkoutForm } from '@/pages/records/workout/types/workoutTypes'
 
@@ -26,8 +22,7 @@ export const useCreateExerciseMutation = () => {
 
 export const useUpdateExerciseMutation = () => {
   return useMutation<unknown, AxiosError<ErrorResponse>, UpdateExercisePayload>({
-    mutationFn: ({ recordId, form }) =>
-      updateExercise(recordId, form),
+    mutationFn: ({ recordId, form }) => updateExercise(recordId, form),
   })
 }
 

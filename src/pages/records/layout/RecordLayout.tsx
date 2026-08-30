@@ -7,17 +7,12 @@ type Props = {
   children: React.ReactNode
 }
 
-const RecordLayout = ({
-  title,
-  children,
-}: Props) => {
+const RecordLayout = ({ title, children }: Props) => {
   return (
     <div className={styles.wrap}>
       <div className={styles.writePage}>
         <div className={styles.writeInner}>
-          <div className={styles.title}>
-            {title}
-          </div>
+          <div className={styles.title}>{title}</div>
 
           <div className={styles.tabContainer}>
             <WorkoutTabs />

@@ -50,21 +50,13 @@ export default function Input({
   const [isVisible, setIsVisible] = useState(false)
 
   const isPassword = type === 'password'
-  const inputType =
-    isPassword && showPasswordToggle
-      ? isVisible
-        ? 'text'
-        : 'password'
-      : type
+  const inputType = isPassword && showPasswordToggle ? (isVisible ? 'text' : 'password') : type
 
   // input + error 묶음
   const Field = (
     <div className={styles.inputWrap}>
       <div className={styles.inputInner}>
-        <label
-          className={styles.visuallyHidden}
-          htmlFor={inputId}
-        >
+        <label className={styles.visuallyHidden} htmlFor={inputId}>
           {label}
         </label>
 
@@ -83,32 +75,21 @@ export default function Input({
           <button
             type="button"
             className={styles.eyeBtn}
-            onClick={() => setIsVisible(v => !v)}
+            onClick={() => setIsVisible((v) => !v)}
             aria-label={isVisible ? '비밀번호 숨기기' : '비밀번호 보기'}
           >
-            <img
-              src={isVisible ? eyeOn : eyeOff}
-              alt=""
-              aria-hidden="true"
-            />
+            <img src={isVisible ? eyeOn : eyeOff} alt="" aria-hidden="true" />
           </button>
         )}
       </div>
 
-      {errorText && (
-        <p className={styles.error}>{errorText}</p>
-      )}
+      {errorText && <p className={styles.error}>{errorText}</p>}
     </div>
   )
 
   return (
-    <div
-      className={`${styles.row} ${variant === 'profile' ? styles.profileRow : ''}`}
-    >
-      <label
-        className={styles.label}
-        htmlFor={inputId}
-      >
+    <div className={`${styles.row} ${variant === 'profile' ? styles.profileRow : ''}`}>
+      <label className={styles.label} htmlFor={inputId}>
         {label}
       </label>
 

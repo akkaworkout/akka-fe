@@ -24,15 +24,13 @@ import MyPage from '@/pages/mypage/MyPage'
 import styles from '@/App.module.css'
 
 function App() {
-  const { folded } = useSidebarStore();
+  const { folded } = useSidebarStore()
 
   return (
     <div className={styles.layout}>
       <SideNav />
 
-      <main
-        className={`${styles.main} ${folded ? styles.mainFolded : ''}`}
-      >
+      <main className={`${styles.main} ${folded ? styles.mainFolded : ''}`}>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/main" element={<Navigate to="/" replace />} />
@@ -78,10 +76,7 @@ function App() {
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route
-            path="/signup/success"
-            element={<SignUpSuccessPage />}
-          />
+          <Route path="/signup/success" element={<SignUpSuccessPage />} />
           <Route
             path="/mypage"
             element={
@@ -90,10 +85,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="*"
-            element={<Navigate to="/main" replace />}
-          />
+          <Route path="*" element={<Navigate to="/main" replace />} />
         </Routes>
       </main>
     </div>

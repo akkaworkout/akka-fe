@@ -11,11 +11,7 @@ export const useExpenseSummary = () => {
     isError,
   } = useExpenseStatsQuery()
 
-  const status = isLoading
-    ? 'loading'
-    : isError
-      ? 'error'
-      : 'success'
+  const status = isLoading ? 'loading' : isError ? 'error' : 'success'
 
   return {
     status,

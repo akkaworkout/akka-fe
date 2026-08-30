@@ -16,8 +16,7 @@ export const getMyPageInitialData = (user?: User | null): InitialData => ({
       ? ''
       : String(user.target_budget),
   exerciseGoal:
-    user?.target_exercise_count === null ||
-    user?.target_exercise_count === undefined
+    user?.target_exercise_count === null || user?.target_exercise_count === undefined
       ? ''
       : String(user.target_exercise_count),
   premiumPoint: user?.premium_point ? `${user.premium_point}P` : '0P',

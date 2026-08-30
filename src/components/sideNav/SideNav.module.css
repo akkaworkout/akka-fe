@@ -1,171 +1,171 @@
 .layout {
-    display: flex;
-    min-height: 100vh;
+  display: flex;
+  min-height: 100vh;
 }
 
 .sideNav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 220px;
-    height: 100vh;
-    min-height: 600px;
-    flex-shrink: 0;
-    background: var( --white);
-    z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100vh;
+  min-height: 600px;
+  flex-shrink: 0;
+  background: var(--white);
+  z-index: 100;
 }
 
 .sideNavFolded {
-    width: 74px;
+  width: 74px;
 }
 
 .sidebarToggleWrapper {
-    position: absolute;
-    top: 20px;
-    right: 17px;
-    display: flex;
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: 0.2s all;
+  position: absolute;
+  top: 20px;
+  right: 17px;
+  display: flex;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s all;
 }
 
 .sidebarToggleWrapper:hover {
-    background: var(--primary-soft);
+  background: var(--primary-soft);
 }
 
 .sidebarToggleIcon {
-    width: 22px;
-    height: 22px;
+  width: 22px;
+  height: 22px;
 }
 
 .sideNavLogo,
 .sideNavLogoSvg {
-    cursor: pointer;
-    transition: opacity 0.4s ease;
+  cursor: pointer;
+  transition: opacity 0.4s ease;
 }
 
 .sideNavLogo:hover,
 .sideNavLogoSvg:hover {
-    opacity: 0.75;
+  opacity: 0.75;
 }
 
 .sideNavLogo {
-    position: absolute;
-    top: 79px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 164px;
+  position: absolute;
+  top: 79px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 164px;
 }
 
 .sideNavLogoSvg {
-    position: absolute;
-    top: 97px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 51px;
+  position: absolute;
+  top: 97px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 51px;
 }
 
 .sidebarMenuWrapper {
-    position: absolute;
-    top: 205px;
-    left: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 11px;
+  position: absolute;
+  top: 205px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
 }
 
 .sidebarMenu {
-    width: 202px;
-    height: 48px;
-    border-radius: 10px;
-    color: #787878;
-    font-size: 16px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    line-height: 48px;
-    cursor: pointer;
-    gap: 16px;
-    padding-left: 20px;
-    transition: 0.2s all;
-    overflow: hidden;
-    white-space: nowrap;
+  width: 202px;
+  height: 48px;
+  border-radius: 10px;
+  color: #787878;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  line-height: 48px;
+  cursor: pointer;
+  gap: 16px;
+  padding-left: 20px;
+  transition: 0.2s all;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .sideNavFolded .sidebarMenu {
-    width: 58px;
-    padding-left: 19px;
-    justify-content: flex-start;
-    gap: 0;
+  width: 58px;
+  padding-left: 19px;
+  justify-content: flex-start;
+  gap: 0;
 }
 
 .active {
-    background-color: var(--primary-soft);
-    color: var(--primary);
-    font-weight: 700;
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 700;
 }
 
 .sidebarMenu:hover {
-    background: var(--primary-soft);
+  background: var(--primary-soft);
 }
 
 .sidebarMenuIcon {
-    width: 20px;
+  width: 20px;
 }
 
 .sidebarProfileWrapper {
-    display: flex;
-    position: absolute;
-    left: 15px;
-    bottom: 34px;
-    align-items: center;
-    width: 202px;
+  display: flex;
+  position: absolute;
+  left: 15px;
+  bottom: 34px;
+  align-items: center;
+  width: 202px;
 }
 
 .sidebarProfile {
-    width: 45px;
-    height: 43px;
-    border-radius: 12px;
-    background: #FFD15B;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+  width: 45px;
+  height: 43px;
+  border-radius: 12px;
+  background: #ffd15b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .sidebarProfileImg {
-    width: 26px;
-    height: 37px;
-    border-radius: 12px;
-    object-fit: cover;
+  width: 26px;
+  height: 37px;
+  border-radius: 12px;
+  object-fit: cover;
 }
 
 .sidebarProfileDefaultImg {
-    transition: box-shadow 0.2s ease;
-    height: 37px;
-    cursor: pointer;
-    border-radius: 12px;
+  transition: box-shadow 0.2s ease;
+  height: 37px;
+  cursor: pointer;
+  border-radius: 12px;
 }
 
 .sidebarProfileDefaultImg:hover {
-    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
 }
 
 .sidebarUser {
-    color: var(--black);
-    font-size: 12px;
-    font-weight: 600;
-    font-family: 'Roboto', sans-serif;
-    margin-left: 10px;
+  color: var(--black);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+  margin-left: 10px;
 }
 
 .sidebarLogout {
-    position: absolute;
-    right: 15px;
-    width: 20px;
-    cursor: pointer;
+  position: absolute;
+  right: 15px;
+  width: 20px;
+  cursor: pointer;
 }

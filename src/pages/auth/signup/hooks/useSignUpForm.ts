@@ -49,33 +49,25 @@ export const useSignUpForm = () => {
     const next: FieldErrors = {}
 
     if (!email.trim()) next.email = '이메일을 입력해주세요.'
-    else if (!isEmailValid(email))
-      next.email = '올바른 이메일 형식이 아닙니다.'
+    else if (!isEmailValid(email)) next.email = '올바른 이메일 형식이 아닙니다.'
 
     if (!password) next.password = '비밀번호를 입력해주세요.'
     else if (!isPasswordValid(password))
       next.password = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
 
-    if (!passwordConfirm)
-      next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
-    else if (passwordConfirm !== password)
-      next.passwordConfirm = '비밀번호가 일치하지 않습니다.'
+    if (!passwordConfirm) next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
+    else if (passwordConfirm !== password) next.passwordConfirm = '비밀번호가 일치하지 않습니다.'
 
     if (!nickname.trim()) next.nickname = '닉네임을 입력해주세요.'
-    else if (!isNicknameValid(nickname))
-      next.nickname = '닉네임은 2자 이상이어야 합니다.'
+    else if (!isNicknameValid(nickname)) next.nickname = '닉네임은 2자 이상이어야 합니다.'
 
     if (!budget.trim()) next.budget = '목표 예산을 입력해주세요.'
-    else if (!/^\d+$/.test(budget))
-      next.budget = '숫자만 입력 가능합니다.'
-    else if (Number(budget) <= 0)
-      next.budget = '0보다 큰 숫자를 입력해주세요.'
+    else if (!/^\d+$/.test(budget)) next.budget = '숫자만 입력 가능합니다.'
+    else if (Number(budget) <= 0) next.budget = '0보다 큰 숫자를 입력해주세요.'
 
     if (!exerciseGoal.trim()) next.exerciseGoal = '목표 운동 횟수를 입력해주세요.'
-    else if (!/^\d+$/.test(exerciseGoal))
-      next.exerciseGoal = '숫자만 입력 가능합니다.'
-    else if (Number(exerciseGoal) <= 0)
-      next.exerciseGoal = '0보다 큰 숫자를 입력해주세요.'
+    else if (!/^\d+$/.test(exerciseGoal)) next.exerciseGoal = '숫자만 입력 가능합니다.'
+    else if (Number(exerciseGoal) <= 0) next.exerciseGoal = '0보다 큰 숫자를 입력해주세요.'
 
     return next
   }

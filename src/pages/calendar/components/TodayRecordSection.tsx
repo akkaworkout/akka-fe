@@ -24,7 +24,7 @@ const TodayRecordSection = ({
   isLoading,
   onItemClick,
 }: Props) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <div className={styles.today}>
@@ -43,7 +43,7 @@ const TodayRecordSection = ({
               </li>
             ) : todayItems.length === 0 ? (
               <li className={`${styles.stateItem} ${styles.empty}`}>
-                아직 기록이 없어요. <br/> 하단 버튼을 클릭하고 운동 기록을 작성해보세요!
+                아직 기록이 없어요. <br /> 하단 버튼을 클릭하고 운동 기록을 작성해보세요!
               </li>
             ) : (
               todayItems.map((item) => (
@@ -62,13 +62,9 @@ const TodayRecordSection = ({
                       />
 
                       <div>
-                        <div className={styles.name}>
-                          {item.name}
-                        </div>
+                        <div className={styles.name}>{item.name}</div>
 
-                        <div className={styles.status}>
-                          {item.status}
-                        </div>
+                        <div className={styles.status}>{item.status}</div>
                       </div>
                     </div>
 

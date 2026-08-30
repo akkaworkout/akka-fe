@@ -10,7 +10,7 @@ export const useTodayItems = (
   navigate: ReturnType<typeof useNavigate>,
   initialDay: number,
   year: number,
-  month: number
+  month: number,
 ) => {
   const [selectedDay, setSelectedDay] = useState(initialDay)
   const [selectedItem, setSelectedItem] = useState<TodayItem | null>(null)
@@ -49,10 +49,7 @@ export const useTodayItems = (
         id: record.id,
         date: record.exercise_date,
         name: item.name,
-        status:
-          record.is_success === 1
-            ? '성공'
-            : '실패',
+        status: record.is_success === 1 ? '성공' : '실패',
         color_code: record.color_code,
         amount: record.exercise_amount,
         memo: record.memo,

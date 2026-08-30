@@ -5,14 +5,11 @@ import DateSelect from '@/components/dateSelect/DateSelect'
 import styles from '../Workout.module.css'
 
 type Props = {
-  date: Date,
+  date: Date
   setForm: WorkoutFormSetter
 }
 
-const WorkoutDateField = ({
-  date,
-  setForm,
-}: Props) => {
+const WorkoutDateField = ({ date, setForm }: Props) => {
   return (
     <div className={styles.field}>
       <label>날짜*</label>

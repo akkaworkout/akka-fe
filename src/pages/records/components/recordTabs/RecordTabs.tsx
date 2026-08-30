@@ -16,16 +16,11 @@ const RecordTabs = () => {
 
   return (
     <div className={styles.tabContainer}>
-      {TABS.map(tab => {
-        const isActive =
-          location.pathname === tab.path
+      {TABS.map((tab) => {
+        const isActive = location.pathname === tab.path
 
         return (
-          <Button
-            key={tab.label}
-            active={isActive}
-            onClick={() => navigate(tab.path)}
-          >
+          <Button key={tab.label} active={isActive} onClick={() => navigate(tab.path)}>
             {tab.label}
           </Button>
         )

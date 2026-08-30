@@ -3,12 +3,9 @@ import { useEffect, useState } from 'react'
 import { useGoalsQuery } from '@/hooks/queries/useCalendarQuery'
 import { useUpdateGoalsMutation } from '@/hooks/mutations/useGoalMutation'
 
-export const useGoals = (
-  year: number,
-  month: number
-) => {
-  const { data = ['', '', ''] } = useGoalsQuery(year, month);
-  const [goals, setGoals] = useState<string[]>(['', '', '']);
+export const useGoals = (year: number, month: number) => {
+  const { data = ['', '', ''] } = useGoalsQuery(year, month)
+  const [goals, setGoals] = useState<string[]>(['', '', ''])
   const updateGoalsMutation = useUpdateGoalsMutation()
 
   useEffect(() => {
@@ -16,10 +13,7 @@ export const useGoals = (
   }, [data])
 
   // 목표 입력 변경
-  const handleGoalChange = (
-    index: number,
-    value: string
-  ) => {
+  const handleGoalChange = (index: number, value: string) => {
     const updatedGoals = [...goals]
 
     updatedGoals[index] = value
@@ -42,7 +36,7 @@ export const useGoals = (
         onError: (error: unknown) => {
           console.error(error)
           alert('목표 저장에 실패했어요. 다시 시도해주세요.')
-        }
+        },
       },
     )
   }

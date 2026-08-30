@@ -1,10 +1,10 @@
-import { Helmet } from "react-helmet-async";
+import { Helmet } from 'react-helmet-async'
 
-import styles from "./MainPage.module.css";
+import styles from './MainPage.module.css'
 
-import mainAkka from "@/assets/brand/main-akka.png";
-import mainWorkout from "@/assets/brand/main-workout.png";
-import mainpage from "@/assets/brand/main-hero.webp";
+import mainAkka from '@/assets/brand/main-akka.png'
+import mainWorkout from '@/assets/brand/main-workout.png'
+import mainpage from '@/assets/brand/main-hero.webp'
 
 export default function MainPage() {
   return (
@@ -27,13 +27,9 @@ export default function MainPage() {
           <div className={styles.mainInner}>
             <section className={styles.hero}>
               <div className={styles.copy}>
-                <p className={styles.kicker}>
-                  운동 안 가면, 돈도 사라집니다
-                </p>
+                <p className={styles.kicker}>운동 안 가면, 돈도 사라집니다</p>
 
-                <h1 className={styles.title}>
-                  이제 숫자로 확인하세요
-                </h1>
+                <h1 className={styles.title}>이제 숫자로 확인하세요</h1>
 
                 <div className={styles.brand}>
                   <img className={styles.brandAkka} src={mainAkka} alt="akka" />
@@ -54,5 +50,5 @@ export default function MainPage() {
         </div>
       </div>
     </>
-  );
+  )
 }

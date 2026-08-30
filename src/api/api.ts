@@ -2,9 +2,10 @@ import axios from 'axios'
 
 import { useAuthStore } from '@/stores/useAuthStore'
 
-export const API_BASE_URL = (
-  import.meta.env.VITE_API_URL || 'https://api.akkaworkout.store'
-).replace(/\/$/, '')
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://api.akkaworkout.store').replace(
+  /\/$/,
+  '',
+)
 
 export const buildApiUrl = (path: string) => {
   if (!path) return API_BASE_URL

@@ -27,10 +27,8 @@ export default function TotalExpenseCard({ items }: Props) {
     { label: '기타', amount: 0 },
   ]
 
-  const safeItems = baseItems.map(base => {
-    const found = items?.find(
-      item => normalizeLabel(item.label) === normalizeLabel(base.label),
-    )
+  const safeItems = baseItems.map((base) => {
+    const found = items?.find((item) => normalizeLabel(item.label) === normalizeLabel(base.label))
 
     return {
       ...base,
@@ -38,14 +36,11 @@ export default function TotalExpenseCard({ items }: Props) {
     }
   })
 
-  const maxAmount = Math.max(...safeItems.map(item => item.amount), 0)
+  const maxAmount = Math.max(...safeItems.map((item) => item.amount), 0)
 
-  const maxItem = safeItems.find(item => item.amount === maxAmount)
+  const maxItem = safeItems.find((item) => item.amount === maxAmount)
 
-  const displayTotalAmount = safeItems.reduce(
-    (sum, item) => sum + Number(item.amount ?? 0),
-    0,
-  )
+  const displayTotalAmount = safeItems.reduce((sum, item) => sum + Number(item.amount ?? 0), 0)
 
   return (
     <>
@@ -60,14 +55,11 @@ export default function TotalExpenseCard({ items }: Props) {
       >
         <section className="total-expense-card">
           <ul className="expense-list">
-            {safeItems.map(item => {
+            {safeItems.map((item) => {
               const isMax = item.amount === maxAmount && maxAmount > 0
 
               return (
-                <li
-                  key={item.label}
-                  className={`expense-row ${isMax ? 'highlight' : ''}`}
-                >
+                <li key={item.label} className={`expense-row ${isMax ? 'highlight' : ''}`}>
                   <span className="label">{item.label}</span>
 
                   <span className={`amount ${isMax ? 'amount-max' : ''}`}>
@@ -80,17 +72,12 @@ export default function TotalExpenseCard({ items }: Props) {
 
           <footer className="card-footer">
             <p className="summary-main">
-              총{' '}
-              <span className="summary-number">
-                {displayTotalAmount.toLocaleString()}
-              </span>
-              원 사용했어요.
+              총 <span className="summary-number">{displayTotalAmount.toLocaleString()}</span>원
+              사용했어요.
             </p>
 
             {maxItem && maxAmount > 0 && (
-              <p className="summary-sub">
-                {maxItem.label}에 가장 많이 썼어요.
-              </p>
+              <p className="summary-sub">{maxItem.label}에 가장 많이 썼어요.</p>
             )}
           </footer>
         </section>

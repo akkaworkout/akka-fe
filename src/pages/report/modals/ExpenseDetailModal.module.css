@@ -47,7 +47,6 @@
   color: var(--success);
 }
 
-
 .tabs {
   margin-top: 26px;
 
@@ -55,7 +54,6 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 0px;
 }
-
 
 .tabBtn {
   border: 0;
@@ -88,7 +86,6 @@
   color: var(--black);
 }
 
-
 .tabBar {
   margin-top: 10px;
   height: 3px;
@@ -111,7 +108,6 @@
   margin-top: 45px;
   overflow: auto;
 
-
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -125,16 +121,13 @@
   display: block;
 }
 
-
 .rowBlock {
   display: block;
 }
 
-
 .row {
   display: grid;
   align-items: center;
-
 
   grid-template-columns: 48px 226px 1fr;
   column-gap: 24px;
@@ -143,12 +136,11 @@
   font-weight: 400;
   color: var(--black);
 
-
   margin-bottom: 16px;
 }
 
 .date {
-  min-height: 1em; 
+  min-height: 1em;
 }
 
 .itemName {
@@ -167,7 +159,6 @@
 .divider {
   height: 1px;
   background: rgba(96, 91, 255, 0.1);
-
 
   margin-bottom: 16px;
 }

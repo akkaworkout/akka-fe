@@ -1,72 +1,72 @@
-import { Helmet } from "react-helmet-async";
+import { Helmet } from 'react-helmet-async'
 
-import styles from "./MyPage.module.css";
+import styles from './MyPage.module.css'
 
-import editAvatar from "@/assets/icons/auth/edit-avatar.png";
-import profileDefault from "@/assets/icons/auth/profile-default.png";
-import premiumCard from "@/assets/images/premium-card.png";
+import editAvatar from '@/assets/icons/auth/edit-avatar.png'
+import profileDefault from '@/assets/icons/auth/profile-default.png'
+import premiumCard from '@/assets/images/premium-card.png'
 
-import { buildApiUrl } from "@/api/api";
+import { buildApiUrl } from '@/api/api'
 
-import Card from "@/components/card/Card";
-import Input from "@/components/form/Form";
+import Card from '@/components/card/Card'
+import Input from '@/components/form/Form'
 
-import { useFormValidation } from "./hooks/useFormValidation";
-import { useMyPageForm } from "./hooks/useMyPageForm";
-import { useMyPageHandlers } from "./hooks/useMyPageHandlers";
-import { useProfileImage } from "./hooks/useProfileImage";
-import { useUserData } from "./hooks/useUserData";
+import { useFormValidation } from './hooks/useFormValidation'
+import { useMyPageForm } from './hooks/useMyPageForm'
+import { useMyPageHandlers } from './hooks/useMyPageHandlers'
+import { useProfileImage } from './hooks/useProfileImage'
+import { useUserData } from './hooks/useUserData'
 
-import { getMyPageInitialData } from "./utils/getMyPageInitialData";
+import { getMyPageInitialData } from './utils/getMyPageInitialData'
 
 // ===== FORM FIELDS CONFIG =====
 type FormFieldConfig = {
-  name: "email" | "nickname";
-  label: string;
-  type: "email" | "text";
-  hasButton: boolean;
-  buttonText: string;
-};
+  name: 'email' | 'nickname'
+  label: string
+  type: 'email' | 'text'
+  hasButton: boolean
+  buttonText: string
+}
 
 const LEFT_FORM_FIELDS: FormFieldConfig[] = [
   {
-    name: "email",
-    label: "이메일",
-    type: "email",
+    name: 'email',
+    label: '이메일',
+    type: 'email',
     hasButton: true,
-    buttonText: "중복 확인",
+    buttonText: '중복 확인',
   },
   {
-    name: "nickname",
-    label: "닉네임",
-    type: "text",
+    name: 'nickname',
+    label: '닉네임',
+    type: 'text',
     hasButton: true,
-    buttonText: "중복 확인",
+    buttonText: '중복 확인',
   },
-];
+]
 
 type RightFieldConfig = {
-  name: "budget" | "exerciseGoal";
-  label: string;
-  unit: string;
-};
+  name: 'budget' | 'exerciseGoal'
+  label: string
+  unit: string
+}
 
 const RIGHT_FORM_FIELDS: RightFieldConfig[] = [
   {
-    name: "budget",
-    label: "목표 예산(월 기준)",
-    unit: "원",
+    name: 'budget',
+    label: '목표 예산(월 기준)',
+    unit: '원',
   },
   {
-    name: "exerciseGoal",
-    label: "목표 운동 횟수(월 기준)",
-    unit: "회",
+    name: 'exerciseGoal',
+    label: '목표 운동 횟수(월 기준)',
+    unit: '회',
   },
-];
+]
 
 export default function MyPage() {
   // === 훅 사용 ===
-  const { user, fetchMe } = useUserData();
+  const { user, fetchMe } = useUserData()
   const {
     fileRef,
     profilePreview,
@@ -74,31 +74,26 @@ export default function MyPage() {
     handlePickProfile,
     handleProfileChange,
     resetProfile,
-  } = useProfileImage();
-  const validation = useFormValidation();
+  } = useProfileImage()
+  const validation = useFormValidation()
 
   // 초기값 계산
   const initialData = getMyPageInitialData(user)
 
-  const form = useMyPageForm(initialData);
-  const { handleFieldChange, handlePasswordChange, handleCheck, handleSubmit } =
-    useMyPageHandlers({
-      form,
-      validation,
-      fileRef,
-      resetProfile,
-      fetchMe,
-    });
-
+  const form = useMyPageForm(initialData)
+  const { handleFieldChange, handlePasswordChange, handleCheck, handleSubmit } = useMyPageHandlers({
+    form,
+    validation,
+    fileRef,
+    resetProfile,
+    fetchMe,
+  })
 
   return (
     <>
       <Helmet>
         <title>마이페이지 | Akkaworkout</title>
-        <meta
-          name="description"
-          content="내 목표 예산, 운동 목표, 프로필 정보를 관리해 보세요."
-        />
+        <meta name="description" content="내 목표 예산, 운동 목표, 프로필 정보를 관리해 보세요." />
       </Helmet>
 
       <div className={styles.wrap}>
@@ -137,11 +132,7 @@ export default function MyPage() {
                         onClick={handlePickProfile}
                         aria-label="프로필 이미지 변경"
                       >
-                        <img
-                          src={editAvatar}
-                          alt="프로필 이미지 수정"
-                          draggable={false}
-                        />
+                        <img src={editAvatar} alt="프로필 이미지 수정" draggable={false} />
                       </button>
                     </div>
 
@@ -153,18 +144,12 @@ export default function MyPage() {
                       onChange={handleProfileChange}
                     />
 
-                    {profileError && (
-                      <p className={styles.profileError}>{profileError}</p>
-                    )}
+                    {profileError && <p className={styles.profileError}>{profileError}</p>}
                   </div>
 
                   <div className={styles.profileToFormGap} />
 
-                  <form
-                    className={styles.form}
-                    onSubmit={handleSubmit}
-                    autoComplete="off"
-                  >
+                  <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
                     {/* === 이메일, 닉네임 (map으로 렌더링) === */}
                     {LEFT_FORM_FIELDS.map((field) => (
                       <Input
@@ -172,31 +157,21 @@ export default function MyPage() {
                         id={`mypage-${field.name}`}
                         label={field.label}
                         value={form.formData[field.name]}
-                        onChange={(e) =>
-                          handleFieldChange(field.name, e.target.value)
-                        }
+                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
                         type={field.type}
                         variant="profile"
-                        errorText={
-                          form.showError(field.name)
-                            ? form.errors[field.name]
-                            : undefined
-                        }
+                        errorText={form.showError(field.name) ? form.errors[field.name] : undefined}
                         rightButton={
                           field.hasButton
                             ? {
                                 label: field.buttonText,
                                 onClick: () => handleCheck(field.name),
                                 disabled:
-                                  field.name === "email"
+                                  field.name === 'email'
                                     ? !form.emailDirty ||
-                                      !validation.isEmailValid(
-                                        form.formData.email,
-                                      )
+                                      !validation.isEmailValid(form.formData.email)
                                     : !form.nicknameDirty ||
-                                      !validation.isNicknameValid(
-                                        form.formData.nickname,
-                                      ),
+                                      !validation.isNicknameValid(form.formData.nickname),
                               }
                             : undefined
                         }
@@ -208,17 +183,11 @@ export default function MyPage() {
                       id="mypage-password"
                       label="비밀번호"
                       value={form.formData.password}
-                      onChange={(e) =>
-                        handlePasswordChange("password", e.target.value)
-                      }
+                      onChange={(e) => handlePasswordChange('password', e.target.value)}
                       type="password"
                       variant="profile"
                       placeholder="비밀번호 (특수문자 포함, 8자 이상)"
-                      errorText={
-                        form.showError("password")
-                          ? form.errors.password
-                          : undefined
-                      }
+                      errorText={form.showError('password') ? form.errors.password : undefined}
                       showPasswordToggle={true}
                     />
 
@@ -227,27 +196,19 @@ export default function MyPage() {
                       id="mypage-password-confirm"
                       label="비밀번호 확인"
                       value={form.formData.passwordConfirm}
-                      onChange={(e) =>
-                        handlePasswordChange("passwordConfirm", e.target.value)
-                      }
+                      onChange={(e) => handlePasswordChange('passwordConfirm', e.target.value)}
                       type="password"
                       variant="profile"
                       placeholder="비밀번호 확인"
                       errorText={
-                        form.showError("passwordConfirm")
-                          ? form.errors.passwordConfirm
-                          : undefined
+                        form.showError('passwordConfirm') ? form.errors.passwordConfirm : undefined
                       }
                       showPasswordToggle={true}
                     />
 
                     {/* === Submit 버튼 === */}
                     <div className={styles.submitArea}>
-                      <button
-                        type="submit"
-                        className={styles.submitBtn}
-                        disabled={!form.canSubmit}
-                      >
+                      <button type="submit" className={styles.submitBtn} disabled={!form.canSubmit}>
                         완료
                       </button>
                     </div>
@@ -268,14 +229,11 @@ export default function MyPage() {
                   >
                     <div className={styles.rightInner}>
                       {RIGHT_FORM_FIELDS.map((field) => {
-                        const inputId = `mypage-${field.name}`;
+                        const inputId = `mypage-${field.name}`
 
                         return (
                           <div key={field.name} className={styles.goalBlock}>
-                            <label
-                              className={styles.goalLabel}
-                              htmlFor={inputId}
-                            >
+                            <label className={styles.goalLabel} htmlFor={inputId}>
                               {field.label}
                             </label>
 
@@ -284,17 +242,10 @@ export default function MyPage() {
                                 <input
                                   id={inputId}
                                   className={`${styles.inputRight} ${
-                                    form.showError(field.name)
-                                      ? styles.inputError
-                                      : ""
+                                    form.showError(field.name) ? styles.inputError : ''
                                   }`}
                                   value={form.formData[field.name]}
-                                  onChange={(e) =>
-                                    handleFieldChange(
-                                      field.name,
-                                      e.target.value,
-                                    )
-                                  }
+                                  onChange={(e) => handleFieldChange(field.name, e.target.value)}
                                   type="number"
                                 />
                               </div>
@@ -302,7 +253,7 @@ export default function MyPage() {
                               <span className={styles.unit}>{field.unit}</span>
                             </div>
                           </div>
-                        );
+                        )
                       })}
                     </div>
                   </Card>
@@ -318,16 +269,10 @@ export default function MyPage() {
                     radius={20}
                   >
                     <div className={styles.premiumHeader}>
-                      <div className={styles.premiumPoint}>
-                        {initialData.premiumPoint}
-                      </div>
+                      <div className={styles.premiumPoint}>{initialData.premiumPoint}</div>
                     </div>
 
-                    <img
-                      className={styles.premiumImg}
-                      src={premiumCard}
-                      alt="프리미엄 카드"
-                    />
+                    <img className={styles.premiumImg} src={premiumCard} alt="프리미엄 카드" />
                   </Card>
                 </div>
               </aside>
@@ -336,5 +281,5 @@ export default function MyPage() {
         </div>
       </div>
     </>
-  );
+  )
 }

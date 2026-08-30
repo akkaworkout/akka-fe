@@ -1,12 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 
-import {
-  createTicket,
-  deleteTicket,
-  endTicket,
-  type TicketCreatePayload,
-} from '@/api/ticketApi'
+import { createTicket, deleteTicket, endTicket, type TicketCreatePayload } from '@/api/ticketApi'
 
 import type { Exercise } from '@/components/summaryCard/SummaryCard'
 

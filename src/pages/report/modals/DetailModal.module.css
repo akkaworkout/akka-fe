@@ -4,27 +4,24 @@
   padding-top: 22px;
 }
 
-
 /* ===== 상단 안내 문구 ===== */
 /* 상위 N개 제외 설명 텍스트 */
 .detailTitle {
-  margin: 0; 
+  margin: 0;
   font-size: 14px;
   font-weight: 400;
   color: var(--black);
 }
 
-
 /* ===== 운동 상세 리스트 영역 ===== */
 .detailList {
-  list-style: none;      
-  padding: 0;           
-  margin: 15px 0 0 0;    
+  list-style: none;
+  padding: 0;
+  margin: 15px 0 0 0;
   display: flex;
   flex-direction: column;
-  gap: 15px;            
+  gap: 15px;
 }
-
 
 /* ===== 개별 pill row ===== */
 .detailRow {
@@ -34,13 +31,12 @@
   border-radius: 10px;
 
   display: flex;
-  align-items: center;         
-  justify-content: space-between; 
+  align-items: center;
+  justify-content: space-between;
 
-  padding-left: 15px;  
-  padding-right: 17px; 
+  padding-left: 15px;
+  padding-right: 17px;
 }
-
 
 /* ===== 운동명 텍스트 ===== */
 .detailLabel {
@@ -48,7 +44,6 @@
   font-weight: 500;
   color: var(--black);
 }
-
 
 /* ===== 횟수 텍스트 ===== */
 .detailCount {

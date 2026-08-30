@@ -7,24 +7,18 @@ type Props = {
   setForm: WorkoutFormSetter
 }
 
-const WorkoutFailReasonField = ({
-  failReason,
-  setForm,
-}: Props) => {
+const WorkoutFailReasonField = ({ failReason, setForm }: Props) => {
   return (
     <div className={styles.field}>
-      <label htmlFor='failReason'>
-        실패 이유{' '}
-        <span className={styles.limit}>
-          (7자 이하)
-        </span>
+      <label htmlFor="failReason">
+        실패 이유 <span className={styles.limit}>(7자 이하)</span>
       </label>
 
       <input
-        id='failReason'
+        id="failReason"
         className={styles.input}
         value={failReason}
-        onChange={e => {
+        onChange={(e) => {
           setForm((prev) => ({
             ...prev,
             failReason: e.target.value,

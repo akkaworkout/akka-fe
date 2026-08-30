@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import api from '@/api/api'
 
-export type ReportKPI = {
+type ReportKPI = {
   totalExerciseCount?: number
   noShowCount?: number
   noshowLossAmount?: number
   totalExpenseAmount?: number
 }
 
-export type ReportBreakdown = {
+type ReportBreakdown = {
   exercise?: { label: string; count: number }[]
   noshow?: { label: string; count: number }[]
   expense?: { label: string; amount: number }[]
   failMemo?: { date: string; category: string; reason: string }[]
 }
 
-export type ReportCharts = {
+type ReportCharts = {
   exerciseByDow?: number[]
   expenseByDow?: number[]
 }
@@ -31,16 +31,12 @@ export type ReportData = {
   summary?: unknown
 }
 
-export const useReportData = (
-  year: number,
-  month: number,
-  exerciseType?: string,
-) => {
+export const useReportData = (year: number, month: number, exerciseType?: string) => {
   const [reportData, setReportData] = useState<ReportData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const getReportData = async () => {
+  const getReportData = useCallback(async () => {
     if (!exerciseType) {
       setReportData(null)
       setLoading(false)
@@ -67,11 +63,11 @@ export const useReportData = (
     } finally {
       setLoading(false)
     }
-  }
+  }, [year, month, exerciseType])
 
   useEffect(() => {
-    getReportData()
-  }, [year, month, exerciseType])
+    void getReportData()
+  }, [getReportData])
 
   return {
     reportData,

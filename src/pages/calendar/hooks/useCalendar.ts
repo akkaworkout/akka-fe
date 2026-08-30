@@ -20,33 +20,28 @@ export const useCalendar = () => {
   // 이전 달로 이동
   const handlePrevMonth = () => {
     if (month === 1) {
-      setYear(prev => prev - 1)
+      setYear((prev) => prev - 1)
       setMonth(12)
     } else {
-      setMonth(prev => prev - 1)
+      setMonth((prev) => prev - 1)
     }
   }
 
   // 다음 달로 이동
   const handleNextMonth = () => {
     if (month === 12) {
-      setYear(prev => prev + 1)
+      setYear((prev) => prev + 1)
       setMonth(1)
     } else {
-      setMonth(prev => prev + 1)
+      setMonth((prev) => prev + 1)
     }
   }
 
   // 캘린더 데이터 정리
-  const buildCalendarMap = (
-    list: Schedule[]
-  ) => {
-    const map: Record<
-      string,
-      CalendarDay
-    > = {}
+  const buildCalendarMap = (list: Schedule[]) => {
+    const map: Record<string, CalendarDay> = {}
 
-    list.forEach(item => {
+    list.forEach((item) => {
       const key = item.date
 
       if (!map[key]) {
@@ -64,23 +59,18 @@ export const useCalendar = () => {
       }
     })
 
-    Object.values(map).forEach(day => {
+    Object.values(map).forEach((day) => {
       if (day.visible.length > 2) {
-        day.hiddenCount =
-          day.visible.length - 2
+        day.hiddenCount = day.visible.length - 2
 
-        day.visible =
-          day.visible.slice(0, 2)
+        day.visible = day.visible.slice(0, 2)
       }
     })
 
     return map
   }
 
-  const calendarMap = useMemo(
-    () => buildCalendarMap(schedules),
-    [schedules]
-  )
+  const calendarMap = useMemo(() => buildCalendarMap(schedules), [schedules])
 
   return {
     year,

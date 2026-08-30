@@ -33,86 +33,49 @@ const TicketRow = ({
   onView,
   dropdownRef,
 }: TicketRowProps) => {
-  const formattedPeriod =
-    `${ticket.start_date!.replaceAll('-', '.')} - ${ticket.end_date!.replaceAll('-', '.')}`
+  const formattedPeriod = `${ticket.start_date!.replaceAll('-', '.')} - ${ticket.end_date!.replaceAll('-', '.')}`
 
   const formattedCount = `${ticket.target_count}회`
 
   return (
-    <div
-      className={`${styles.ticketRow} ${!isActive ? styles.ended : ''
-        }`}
-    >
+    <div className={`${styles.ticketRow} ${!isActive ? styles.ended : ''}`}>
       <div className={styles.colName}>
-        <div
-          className={styles.dot}
-          style={{ backgroundColor: ticket.color_code }}
-        />
+        <div className={styles.dot} style={{ backgroundColor: ticket.color_code }} />
 
-        <span className={styles.exercise}>
-          {ticket.exercise_type}
-        </span>
+        <span className={styles.exercise}>{ticket.exercise_type}</span>
       </div>
 
       <div className={styles.colPeriod}>
-        <img
-          src={CalendarIcon}
-          alt="calendar_icon"
-        />
+        <img src={CalendarIcon} alt="calendar_icon" />
 
         {formattedPeriod}
       </div>
 
       <div className={styles.colCount}>
-        <img
-          src={Goal}
-          alt="goal_icon"
-        />
+        <img src={Goal} alt="goal_icon" />
 
         {formattedCount}
       </div>
 
-      <button
-        type="button"
-        className={styles.colStatus}
-        onClick={() => onView(index)}
-      >
+      <button type="button" className={styles.colStatus} onClick={() => onView(index)}>
         {ticket.status}
       </button>
 
       <div className={styles.colAction}>
-        <div
-          className={styles.moreWrapper}
-          ref={openIndex === index ? dropdownRef : null}
-        >
-          <button
-            type="button"
-            className={styles.moreButton}
-            onClick={() => onToggle(index)}
-          >
-            <img
-              src={MoreButton}
-              alt="more_button_icon"
-            />
+        <div className={styles.moreWrapper} ref={openIndex === index ? dropdownRef : null}>
+          <button type="button" className={styles.moreButton} onClick={() => onToggle(index)}>
+            <img src={MoreButton} alt="more_button_icon" />
           </button>
 
           {openIndex === index && (
             <div className={styles.dropdown}>
               {isActive && (
-                <Button
-                  variant="dropdownEdit"
-                  icon={EditIcon}
-                  onClick={() => onEnd(index)}
-                >
+                <Button variant="dropdownEdit" icon={EditIcon} onClick={() => onEnd(index)}>
                   이용권 종료
                 </Button>
               )}
 
-              <Button
-                variant="dropdownDelete"
-                icon={DeleteIcon}
-                onClick={() => onDelete(index)}
-              >
+              <Button variant="dropdownDelete" icon={DeleteIcon} onClick={() => onDelete(index)}>
                 이용권 삭제
               </Button>
             </div>

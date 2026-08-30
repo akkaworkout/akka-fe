@@ -8,7 +8,7 @@
   height: 49px;
   padding: 0 12px 0 16px;
   border-radius: 10px;
-  border: 1px solid #D9D9D9;
+  border: 1px solid #d9d9d9;
   background-color: var(--white);
   display: flex;
   align-items: center;
@@ -46,9 +46,9 @@
   width: 250px;
   padding: 12px;
   border-radius: 7px;
-  border: 1px solid #D9D9D9;
-  background: var( --white);
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+  border: 1px solid #d9d9d9;
+  background: var(--white);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
   z-index: 10;
   box-sizing: border-box;
 }
@@ -98,11 +98,11 @@
 }
 
 .day:hover {
-  background: #F2F4FF;
+  background: #f2f4ff;
 }
 
 .active {
-  background: #4C5BFF;
-  color: var( --white);
+  background: #4c5bff;
+  color: var(--white);
   font-weight: 600;
 }

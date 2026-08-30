@@ -14,13 +14,7 @@ type Props = {
   items: Item[]
 }
 
-export default function DetailModal({
-  open,
-  onClose,
-  restCount,
-  subject,
-  items,
-}: Props) {
+export default function DetailModal({ open, onClose, restCount, subject, items }: Props) {
   return (
     <Modal open={open} onClose={onClose} size="sm">
       <div className={styles.workoutDetail}>

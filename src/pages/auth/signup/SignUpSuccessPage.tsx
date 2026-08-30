@@ -1,11 +1,11 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import styles from "./SignUpSuccessPage.module.css";
-import signupSuccessImg from "@/assets/images/money-bag.png";
+import styles from './SignUpSuccessPage.module.css'
+import signupSuccessImg from '@/assets/images/money-bag.png'
 
 export default function SignUpSuccessPage() {
-  const location = useLocation();
-  const nickname = location.state?.nickname ?? "회원";
+  const location = useLocation()
+  const nickname = location.state?.nickname ?? '회원'
 
   return (
     <>
@@ -21,9 +21,7 @@ export default function SignUpSuccessPage() {
           <div className={styles.mainInner}>
             <section className={styles.card}>
               <h1 className={styles.title}>회원가입 완료!</h1>
-              <p className={styles.subTitle}>
-                akka workout에 오신 걸 환영합니다.
-              </p>
+              <p className={styles.subTitle}>akka workout에 오신 걸 환영합니다.</p>
               <img
                 src={signupSuccessImg}
                 alt="회원가입 완료"
@@ -40,5 +38,5 @@ export default function SignUpSuccessPage() {
         </div>
       </div>
     </>
-  );
+  )
 }

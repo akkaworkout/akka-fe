@@ -7,7 +7,7 @@ import profileDefault from '@/assets/icons/auth/profile-default.png'
 import editAvatar from '@/assets/icons/auth/edit-avatar.png'
 
 import Form from '@/components/form/Form'
-import { useSignUpForm } from "./hooks/useSignUpForm";
+import { useSignUpForm } from './hooks/useSignUpForm'
 import { authApi } from '@/api/authApi'
 
 export default function SignUpPage() {
@@ -102,11 +102,7 @@ export default function SignUpPage() {
                     onClick={handlePickProfile}
                     aria-label="프로필 사진 수정"
                   >
-                    <img
-                      src={editAvatar}
-                      alt="profile-img-edit"
-                      draggable={false}
-                    />
+                    <img src={editAvatar} alt="profile-img-edit" draggable={false} />
                   </button>
                 </div>
 
@@ -134,9 +130,7 @@ export default function SignUpPage() {
                     form.setErrors((prev) => ({
                       ...prev,
                       email:
-                        v && !form.isEmailValid(v)
-                          ? '올바른 이메일 형식이 아닙니다'
-                          : undefined,
+                        v && !form.isEmailValid(v) ? '올바른 이메일 형식이 아닙니다' : undefined,
                     }))
                   }}
                   placeholder="akka@naver.com"
@@ -146,8 +140,7 @@ export default function SignUpPage() {
                     label: '중복 확인',
                     onClick: form.handleCheckEmail,
                     disabled:
-                      !form.isEmailValid(form.email) ||
-                      (form.emailChecked && form.emailAvailable),
+                      !form.isEmailValid(form.email) || (form.emailChecked && form.emailAvailable),
                   }}
                 />
 
@@ -165,15 +158,12 @@ export default function SignUpPage() {
 
                       if (!v) next.password = '비밀번호를 입력해주세요.'
                       else if (!form.isPasswordValid(v))
-                        next.password =
-                          '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
+                        next.password = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
                       else next.password = undefined
 
                       if (form.passwordConfirm) {
                         next.passwordConfirm =
-                          form.passwordConfirm !== v
-                            ? '비밀번호가 일치하지 않습니다.'
-                            : undefined
+                          form.passwordConfirm !== v ? '비밀번호가 일치하지 않습니다.' : undefined
                       }
 
                       return next
@@ -195,9 +185,7 @@ export default function SignUpPage() {
                     form.setErrors((prev) => ({
                       ...prev,
                       passwordConfirm:
-                        v && v !== form.password
-                          ? '비밀번호가 일치하지 않습니다'
-                          : undefined,
+                        v && v !== form.password ? '비밀번호가 일치하지 않습니다' : undefined,
                     }))
                   }}
                   placeholder="비밀번호 (특수문자 포함, 8자 이상)"
@@ -240,9 +228,7 @@ export default function SignUpPage() {
                     form.setErrors((prev) => ({
                       ...prev,
                       budget:
-                        v && !/^[1-9]\d*$/.test(v)
-                          ? '1 이상의 숫자만 입력 가능합니다'
-                          : undefined,
+                        v && !/^[1-9]\d*$/.test(v) ? '1 이상의 숫자만 입력 가능합니다' : undefined,
                     }))
                   }}
                   inputMode="numeric"
@@ -260,9 +246,7 @@ export default function SignUpPage() {
                     form.setErrors((prev) => ({
                       ...prev,
                       exerciseGoal:
-                        v && !/^[1-9]\d*$/.test(v)
-                          ? '1 이상의 숫자만 입력 가능합니다'
-                          : undefined,
+                        v && !/^[1-9]\d*$/.test(v) ? '1 이상의 숫자만 입력 가능합니다' : undefined,
                     }))
                   }}
                   inputMode="numeric"
@@ -277,9 +261,7 @@ export default function SignUpPage() {
                       type="submit"
                       disabled={!form.canSubmit}
                       className={`${styles.submitBtn} ${
-                        !form.canSubmit
-                          ? styles.submitDisabled
-                          : styles.submitActive
+                        !form.canSubmit ? styles.submitDisabled : styles.submitActive
                       }`}
                     >
                       {form.isLoading ? '가입 중...' : '회원가입'}
@@ -290,10 +272,7 @@ export default function SignUpPage() {
 
               <p className={styles.signupGuide}>
                 이미 계정이 있으신가요?{' '}
-                <span
-                  className={styles.signupLink}
-                  onClick={() => nav('/login')}
-                >
+                <span className={styles.signupLink} onClick={() => nav('/login')}>
                   로그인
                 </span>
               </p>

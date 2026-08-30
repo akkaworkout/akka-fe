@@ -10,31 +10,18 @@ type Props = {
   nextDisabled?: boolean
 }
 
-const TicketModal = ({
-  title,
-  buttonText,
-  onClose,
-  onNext,
-  children,
-  nextDisabled,
-}: Props) => {
+const TicketModal = ({ title, buttonText, onClose, onNext, children, nextDisabled }: Props) => {
   return (
-    <Modal
-      title={title}
-      onClose={onClose}
-    >
+    <Modal title={title} onClose={onClose}>
       <div className={styles.divider} />
 
-      <div className={styles.body}>
-        {children}
-      </div>
+      <div className={styles.body}>{children}</div>
 
       <div className={styles.footer}>
         <button
           onClick={onNext}
           disabled={nextDisabled}
-          className={`${styles.nextBtn} ${nextDisabled ? styles.disabled : ''
-            }`}
+          className={`${styles.nextBtn} ${nextDisabled ? styles.disabled : ''}`}
         >
           {buttonText}
         </button>

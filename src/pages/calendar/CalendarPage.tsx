@@ -1,42 +1,31 @@
 // React / 외부 라이브러리
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 
 // API / hooks / utils
-import { useCalendar } from "./hooks/useCalendar";
-import { useGoals } from "./hooks/useGoals";
-import { useSummary } from "./hooks/useSummary";
-import { useTodayItems } from "./hooks/useTodayItems";
+import { useCalendar } from './hooks/useCalendar'
+import { useGoals } from './hooks/useGoals'
+import { useSummary } from './hooks/useSummary'
+import { useTodayItems } from './hooks/useTodayItems'
 
 // 컴포넌트
-import Card from "@/components/card/Card";
-import Spinner from "@/components/spinner/Spinner";
-import Calendar from "./components/Calendar";
+import Card from '@/components/card/Card'
+import Spinner from '@/components/spinner/Spinner'
+import Calendar from './components/Calendar'
 import TodayRecordSection from './components/TodayRecordSection'
 
 // 모달
-import TodayItemModal from "./modals/TodayItemModal";
+import TodayItemModal from './modals/TodayItemModal'
 
-// 스타일 
+// 스타일
 import styles from './Calendar.module.css'
 
 const CalenderPage = () => {
   const navigate = useNavigate()
 
-  const {
-    year,
-    month,
-    schedules,
-    handlePrevMonth,
-    handleNextMonth
-  } = useCalendar()
+  const { year, month, schedules, handlePrevMonth, handleNextMonth } = useCalendar()
 
-  const {
-    goals,
-    handleGoalChange,
-    handleupdateGoals
-  } = useGoals(year, month)
+  const { goals, handleGoalChange, handleupdateGoals } = useGoals(year, month)
 
   const { summary } = useSummary(year, month)
 
@@ -48,14 +37,10 @@ const CalenderPage = () => {
     isLoading,
     handleSelectDay,
     handleItemClick,
-    handleCloseModal
+    handleCloseModal,
   } = useTodayItems(navigate, new Date().getDate(), year, month)
 
   const isOverBudget = Number(summary?.totalAmount ?? 0) > Number(summary?.targetBudget ?? 0)
-
-  useEffect(() => {
-    handleSelectDay(selectedDate)
-  }, [year, month])
 
   return (
     <>
@@ -95,8 +80,7 @@ const CalenderPage = () => {
                         <>
                           <span className={styles.label}>금액:</span>
                           <span
-                            className={`${styles.current} ${isOverBudget ? styles.overBudget : ''
-                              }`}
+                            className={`${styles.current} ${isOverBudget ? styles.overBudget : ''}`}
                           >
                             {Number(summary.totalAmount).toLocaleString()}
                           </span>
@@ -140,7 +124,7 @@ const CalenderPage = () => {
                 height={223}
               >
                 <div className={styles.goalList}>
-                  {(goals.length > 0 ? goals : ["", "", ""]).map((goal, index) => (
+                  {(goals.length > 0 ? goals : ['', '', '']).map((goal, index) => (
                     <div key={index} className={styles.goalItem}>
                       <input
                         value={goal}
@@ -166,10 +150,7 @@ const CalenderPage = () => {
       </div>
 
       {isModalOpen && selectedItem && (
-        <TodayItemModal
-          item={selectedItem}
-          onClose={handleCloseModal}
-        />
+        <TodayItemModal item={selectedItem} onClose={handleCloseModal} />
       )}
     </>
   )

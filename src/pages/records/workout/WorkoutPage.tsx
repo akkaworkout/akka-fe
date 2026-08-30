@@ -7,16 +7,16 @@ import { useWorkoutForm } from './hooks/useWorkoutForm'
 import { useImagePreview } from './hooks/useImagePreview'
 
 // 컴포넌트
-import RecordLayout from '../layout/RecordLayout';
-import Button from '@/components/button/Button';
+import RecordLayout from '../layout/RecordLayout'
+import Button from '@/components/button/Button'
 import RecordSummaryCard from '../components/RecordSummaryCard'
 
-import WorkoutExerciseField from './components/WorkoutExerciseField';
-import WorkoutDateField from './components/WorkoutDateField';
+import WorkoutExerciseField from './components/WorkoutExerciseField'
+import WorkoutDateField from './components/WorkoutDateField'
 import WorkoutResultField from './components/WorkoutResultField'
 import WorkoutImageField from './components/WorkoutImageField'
-import WorkoutMemoField from './components/WorkoutMemoField';
-import WorkoutFailReasonField from './components/WorkoutFailReasonField';
+import WorkoutMemoField from './components/WorkoutMemoField'
+import WorkoutFailReasonField from './components/WorkoutFailReasonField'
 
 // 스타일
 import styles from './Workout.module.css'
@@ -24,9 +24,7 @@ import styles from './Workout.module.css'
 const WorkoutPage = () => {
   const [searchParams] = useSearchParams()
 
-  const recordId = Number(
-    searchParams.get('record_id')
-  )
+  const recordId = Number(searchParams.get('record_id'))
 
   const {
     form,
@@ -42,28 +40,19 @@ const WorkoutPage = () => {
     setPreviewUrl,
   } = useWorkoutForm(recordId)
 
-  const {
-    fileInputRef,
-    handleFileChange,
-  } = useImagePreview(setForm, setPreviewUrl)
+  const { fileInputRef, handleFileChange } = useImagePreview(setForm, setPreviewUrl)
 
   return (
     <>
       <Helmet>
         <title>운동 기록 | Akkaworkout</title>
-        <meta
-          name="description"
-          content="오늘의 운동 성공 여부와 메모, 사진을 기록해 보세요."
-        />
+        <meta name="description" content="오늘의 운동 성공 여부와 메모, 사진을 기록해 보세요." />
       </Helmet>
-      
+
       <RecordLayout title="운동 기록">
         <div className={styles.write}>
           <div className={styles.row}>
-            <WorkoutDateField
-              date={form.date}
-              setForm={setForm}
-            />
+            <WorkoutDateField date={form.date} setForm={setForm} />
 
             <WorkoutExerciseField
               mappedTickets={mappedTickets}
@@ -87,43 +76,26 @@ const WorkoutPage = () => {
             setForm={setForm}
           />
 
-          <WorkoutMemoField
-            memo={form.memo}
-            setForm={setForm}
-          />
+          <WorkoutMemoField memo={form.memo} setForm={setForm} />
 
           {form.workoutResult === '실패' && (
-            <WorkoutFailReasonField
-              failReason={form.failReason}
-              setForm={setForm}
-            />
+            <WorkoutFailReasonField failReason={form.failReason} setForm={setForm} />
           )}
 
           <div className={styles.footer}>
-            <span className={styles.required}>
-              *는 필수 입력사항입니다.
-            </span>
+            <span className={styles.required}>*는 필수 입력사항입니다.</span>
 
             {!recordId ? (
-              <Button
-                variant="primary"
-                onClick={handleSubmit}
-              >
+              <Button variant="primary" onClick={handleSubmit}>
                 완료
               </Button>
             ) : (
               <div className={styles.editButtons}>
-                <Button
-                  variant="gray"
-                  onClick={handleDelete}
-                >
+                <Button variant="gray" onClick={handleDelete}>
                   삭제
                 </Button>
 
-                <Button
-                  variant="primary"
-                  onClick={handleUpdate}
-                >
+                <Button variant="primary" onClick={handleUpdate}>
                   수정
                 </Button>
               </div>
@@ -131,14 +103,10 @@ const WorkoutPage = () => {
           </div>
         </div>
 
-        {remainingCount == null ||
-          usedCount == null ||
-          pricePerSession == null ? (
+        {remainingCount == null || usedCount == null || pricePerSession == null ? (
           <RecordSummaryCard
             title="이용권 정보를 확인할 수 없어요"
-            items={[
-              '운동 종목을 선택해 이용권을 확인해주세요.',
-            ]}
+            items={['운동 종목을 선택해 이용권을 확인해주세요.']}
           />
         ) : (
           <RecordSummaryCard

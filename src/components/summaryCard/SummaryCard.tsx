@@ -27,9 +27,7 @@ type SummaryCardProps<T extends { id: number; label: string; color: string }> = 
   disabled?: boolean
 }
 
-export default function SummaryCard<
-  T extends { id: number; label: string; color: string },
->({
+export default function SummaryCard<T extends { id: number; label: string; color: string }>({
   expenses,
   selected,
   onChange,
@@ -47,10 +45,7 @@ export default function SummaryCard<
     if (!isOpen) return
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
-      ) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
         setIsOpen(false)
       }
     }
@@ -69,9 +64,7 @@ export default function SummaryCard<
           type="button"
           className={styles.select}
           onClick={() => {
-            const ok = window.confirm(
-              '작성 중인 내용이 사라집니다. 이동할까요?',
-            )
+            const ok = window.confirm('작성 중인 내용이 사라집니다. 이동할까요?')
             if (!ok) return
 
             navigate(addPath)
@@ -94,18 +87,11 @@ export default function SummaryCard<
           setIsOpen((prev) => !prev)
         }}
       >
-        <span
-          className={styles.dot}
-          style={{ backgroundColor: selected.color }}
-        />
+        <span className={styles.dot} style={{ backgroundColor: selected.color }} />
         <span className={styles.text}>{selected.label}</span>
 
         {canSelect && (
-          <img
-            className={`${styles.arrow} ${isOpen ? styles.open : ''}`}
-            src={arrow}
-            alt="arrow"
-          />
+          <img className={`${styles.arrow} ${isOpen ? styles.open : ''}`} src={arrow} alt="arrow" />
         )}
       </button>
 
@@ -123,10 +109,7 @@ export default function SummaryCard<
                   setIsOpen(false)
                 }}
               >
-                <span
-                  className={styles.dot}
-                  style={{ backgroundColor: item.color }}
-                />
+                <span className={styles.dot} style={{ backgroundColor: item.color }} />
                 <span className={styles.text}>{item.label}</span>
               </button>
             ))}
@@ -136,9 +119,7 @@ export default function SummaryCard<
               type="button"
               className={styles.addButton}
               onClick={() => {
-                const ok = window.confirm(
-                  '작성 중인 내용이 사라집니다. 이동하시겠습니까?',
-                )
+                const ok = window.confirm('작성 중인 내용이 사라집니다. 이동하시겠습니까?')
                 if (!ok) return
 
                 setIsOpen(false)
