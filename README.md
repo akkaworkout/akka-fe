@@ -298,6 +298,16 @@ AKKA는 React + Vite 기반 프론트엔드와 Node.js Express 기반 백엔드,
 - 프로필 이미지, 닉네임, 이메일 등 사용자 정보 관리
 - 목표 예산 및 목표 운동 횟수 입력 흐름 구성
 
+### ErrorBoundary
+
+<img width="1917" height="867" alt="image" src="https://github.com/user-attachments/assets/7ec9a369-92c4-4d19-886e-346df988a4dd" />
+
+- AppErrorBoundary
+
+<img width="1917" height="867" alt="image" src="https://github.com/user-attachments/assets/aec607e6-6381-4abe-9063-73272720da8d" />
+
+- PageErrorBoundary
+
 ### Common
 
 - Axios 공통 인스턴스를 구성해 API 요청 흐름 통일
