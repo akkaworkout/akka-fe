@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://akkaworkout.store/sitemap.xml
