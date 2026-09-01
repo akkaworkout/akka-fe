@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useFormValidation } from './useFormValidation'
 
 export type FieldErrors = Partial<{
@@ -46,6 +46,17 @@ export const useMyPageForm = (initialData: InitialData) => {
   const [submitted, setSubmitted] = useState(false)
   const [emailChecked, setEmailChecked] = useState(false)
   const [nicknameChecked, setNicknameChecked] = useState(false)
+
+  useEffect(() => {
+    setFormData({
+      email: initialData.email,
+      password: '',
+      passwordConfirm: '',
+      nickname: initialData.nickname,
+      budget: initialData.budget,
+      exerciseGoal: initialData.exerciseGoal,
+    })
+  }, [initialData.email, initialData.nickname, initialData.budget, initialData.exerciseGoal])
 
   // === Dirty 체크 ===
   const emailDirty = formData.email !== initialData.email

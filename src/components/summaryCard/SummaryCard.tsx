@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-import arrow from '@/assets/icons/common/arrow-down.png'
+import { IoIosArrowDown } from 'react-icons/io'
 
 import styles from './SummaryCard.module.css'
 
@@ -91,7 +90,10 @@ export default function SummaryCard<T extends { id: number; label: string; color
         <span className={styles.text}>{selected.label}</span>
 
         {canSelect && (
-          <img className={`${styles.arrow} ${isOpen ? styles.open : ''}`} src={arrow} alt="arrow" />
+          <IoIosArrowDown
+            className={`${styles.arrow} ${isOpen ? styles.open : ''}`}
+            aria-hidden="true"
+          />
         )}
       </button>
 

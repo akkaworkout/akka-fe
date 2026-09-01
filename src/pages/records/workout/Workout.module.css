@@ -137,6 +137,12 @@
   color: var(--black);
 }
 
+.recordSkeletonItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
 .checkIcon {
   display: flex;
   align-items: center;

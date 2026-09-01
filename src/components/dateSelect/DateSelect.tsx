@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
+import { FaRegCalendarCheck } from 'react-icons/fa6'
+import { IoIosArrowDown } from 'react-icons/io'
+import { VscTriangleLeft } from 'react-icons/vsc'
 
-import calendarIcon from '@/assets/icons/common/calendar.png'
-import arrow from '@/assets/icons/common/arrow-down.png'
 import styles from './DateSelect.module.css'
 
 type DateSelectProps = {
@@ -33,6 +34,9 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
 
   const year = currentMonth.getFullYear()
   const month = currentMonth.getMonth()
+  const today = new Date()
+  const isNextMonthDisabled =
+    year > today.getFullYear() || (year === today.getFullYear() && month >= today.getMonth())
 
   const firstDay = new Date(year, month, 1).getDay()
   const lastDate = new Date(year, month + 1, 0).getDate()
@@ -67,27 +71,40 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
         disabled={disabled}
         className={styles.selectBox}
         onClick={() => setIsOpen((prev) => !prev)}
+        aria-expanded={isOpen}
       >
-        <img className={styles.calendarIcon} src={calendarIcon} alt="calendar_icon" />
+        <FaRegCalendarCheck className={styles.calendarIcon} aria-hidden="true" />
 
         <div>{formatDate(value)}</div>
 
-        <img className={`${styles.arrow} ${isOpen ? styles.open : ''}`} src={arrow} alt="arrow" />
+        <IoIosArrowDown
+          className={`${styles.arrow} ${isOpen ? styles.open : ''}`}
+          aria-hidden="true"
+        />
       </button>
 
       {isOpen && (
         <div className={styles.calendar}>
           <div className={styles.calendarHeader}>
-            <button type="button" onClick={() => setCurrentMonth(new Date(year, month - 1, 1))}>
-              ‹
+            <button
+              type="button"
+              onClick={() => setCurrentMonth(new Date(year, month - 1, 1))}
+              aria-label="이전 달로 이동"
+            >
+              <VscTriangleLeft aria-hidden="true" />
             </button>
 
             <span>
               {year}년 {month + 1}월
             </span>
 
-            <button type="button" onClick={() => setCurrentMonth(new Date(year, month + 1, 1))}>
-              ›
+            <button
+              type="button"
+              onClick={() => setCurrentMonth(new Date(year, month + 1, 1))}
+              disabled={isNextMonthDisabled}
+              aria-label="다음 달로 이동"
+            >
+              <VscTriangleLeft className={styles.nextMonthIcon} aria-hidden="true" />
             </button>
           </div>
 

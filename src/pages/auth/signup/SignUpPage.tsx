@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import { MdPerson } from 'react-icons/md'
 
 import styles from './SignUpPage.module.css'
 
-import profileDefault from '@/assets/icons/auth/profile-default.png'
 import editAvatar from '@/assets/icons/auth/edit-avatar.png'
 
 import Form from '@/components/form/Form'
@@ -90,12 +90,18 @@ export default function SignUpPage() {
               {/* profile */}
               <div className={styles.profileArea}>
                 <div className={styles.avatar}>
-                  <img
-                    className={styles.avatarImg}
-                    src={form.profilePreview ?? profileDefault}
-                    alt="프로필"
-                    draggable={false}
-                  />
+                  {form.profilePreview ? (
+                    <img
+                      className={styles.avatarImg}
+                      src={form.profilePreview}
+                      alt="프로필"
+                      draggable={false}
+                    />
+                  ) : (
+                    <div className={styles.defaultAvatar} role="img" aria-label="기본 프로필">
+                      <MdPerson className={styles.defaultAvatarIcon} aria-hidden="true" />
+                    </div>
+                  )}
                   <button
                     type="button"
                     className={styles.editAvatarBtn}

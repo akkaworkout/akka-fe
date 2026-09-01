@@ -8,11 +8,6 @@
   padding: 0 20px;
 }
 
-.ticketRow img {
-  height: 20px;
-  transform: translateY(1px);
-}
-
 .colName {
   display: flex;
   align-items: center;
@@ -29,6 +24,20 @@
   gap: 6px;
   font-size: 16px;
   font-weight: 500;
+}
+
+.calendarIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+  transform: translateY(1px);
+}
+
+.goalIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--primary);
+  transform: translateY(1px);
 }
 
 .colStatus {
@@ -76,11 +85,12 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  color: var(--black);
 }
 
-.moreButton img {
-  width: 14px;
-  height: auto;
+.moreIcon {
+  width: 22px;
+  height: 22px;
 }
 
 .dropdown {

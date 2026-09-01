@@ -10,7 +10,7 @@ import { useTodayItems } from './hooks/useTodayItems'
 
 // 컴포넌트
 import Card from '@/components/card/Card'
-import Spinner from '@/components/spinner/Spinner'
+import Skeleton from '@/components/skeleton/Skeleton'
 import Calendar from './components/Calendar'
 import TodayRecordSection from './components/TodayRecordSection'
 
@@ -23,7 +23,8 @@ import styles from './Calendar.module.css'
 const CalenderPage = () => {
   const navigate = useNavigate()
 
-  const { year, month, schedules, handlePrevMonth, handleNextMonth } = useCalendar()
+  const { year, month, schedules, handlePrevMonth, handleNextMonth, isNextMonthDisabled } =
+    useCalendar()
 
   const { goals, handleGoalChange, handleupdateGoals } = useGoals(year, month)
 
@@ -66,6 +67,7 @@ const CalenderPage = () => {
               schedules={schedules}
               onPrevMonth={handlePrevMonth}
               onNextMonth={handleNextMonth}
+              isNextMonthDisabled={isNextMonthDisabled}
               onSelectDay={(day) => handleSelectDay(day)}
             />
 
@@ -110,7 +112,15 @@ const CalenderPage = () => {
                 </Card>
               ) : (
                 <Card width={445} height={173}>
-                  <Spinner />
+                  <div
+                    className={styles.moneySkeleton}
+                    role="status"
+                    aria-label="월간 요약 불러오는 중"
+                  >
+                    <Skeleton width={210} height={24} borderRadius={9} />
+                    <Skeleton width={185} height={34} borderRadius={10} />
+                    <Skeleton width={230} height={34} borderRadius={10} />
+                  </div>
                 </Card>
               )}
             </div>

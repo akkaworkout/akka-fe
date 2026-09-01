@@ -1,12 +1,11 @@
 import styles from './TicketRow.module.css'
+import { BiSolidEditAlt } from 'react-icons/bi'
+import { FaRegCalendarCheck } from 'react-icons/fa6'
+import { GoGoal } from 'react-icons/go'
+import { IoIosMore } from 'react-icons/io'
+import { MdDelete } from 'react-icons/md'
 
 import Button from '@/components/button/Button'
-
-import CalendarIcon from '@/assets/icons/sidebar/calendar-active.png'
-import Goal from '@/assets/icons/common/goal.png'
-import MoreButton from '@/assets/icons/common/moreButton.png'
-import EditIcon from '@/assets/icons/common/edit.png'
-import DeleteIcon from '@/assets/icons/common/delete.png'
 
 import type { Ticket } from '@/api/ticketApi'
 
@@ -46,13 +45,13 @@ const TicketRow = ({
       </div>
 
       <div className={styles.colPeriod}>
-        <img src={CalendarIcon} alt="calendar_icon" />
+        <FaRegCalendarCheck className={styles.calendarIcon} aria-hidden="true" />
 
         {formattedPeriod}
       </div>
 
       <div className={styles.colCount}>
-        <img src={Goal} alt="goal_icon" />
+        <GoGoal className={styles.goalIcon} aria-hidden="true" />
 
         {formattedCount}
       </div>
@@ -63,19 +62,29 @@ const TicketRow = ({
 
       <div className={styles.colAction}>
         <div className={styles.moreWrapper} ref={openIndex === index ? dropdownRef : null}>
-          <button type="button" className={styles.moreButton} onClick={() => onToggle(index)}>
-            <img src={MoreButton} alt="more_button_icon" />
+          <button
+            type="button"
+            className={styles.moreButton}
+            onClick={() => onToggle(index)}
+            aria-label="이용권 메뉴 열기"
+            aria-expanded={openIndex === index}
+          >
+            <IoIosMore className={styles.moreIcon} aria-hidden="true" />
           </button>
 
           {openIndex === index && (
             <div className={styles.dropdown}>
               {isActive && (
-                <Button variant="dropdownEdit" icon={EditIcon} onClick={() => onEnd(index)}>
+                <Button
+                  variant="dropdownEdit"
+                  icon={<BiSolidEditAlt />}
+                  onClick={() => onEnd(index)}
+                >
                   이용권 종료
                 </Button>
               )}
 
-              <Button variant="dropdownDelete" icon={DeleteIcon} onClick={() => onDelete(index)}>
+              <Button variant="dropdownDelete" icon={<MdDelete />} onClick={() => onDelete(index)}>
                 이용권 삭제
               </Button>
             </div>

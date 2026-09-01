@@ -1,4 +1,4 @@
-import leftIcon from '@/assets/icons/common/chevron-left.png'
+import { VscTriangleLeft } from 'react-icons/vsc'
 import styles from '../Report.module.css'
 
 type Props = {
@@ -6,6 +6,7 @@ type Props = {
   month: number // 1~12
   onPrevMonth: () => void
   onNextMonth: () => void
+  isNextMonthDisabled: boolean
 
   totalExerciseCount: number
   totalExpenseAmount: number
@@ -17,6 +18,7 @@ export default function ReportHeader({
   month,
   onPrevMonth,
   onNextMonth,
+  isNextMonthDisabled,
   totalExerciseCount,
   totalExpenseAmount,
   noShowCount,
@@ -31,20 +33,25 @@ export default function ReportHeader({
     <div className={styles.reportHeader}>
       {/* 월 이동 */}
       <div className={styles.monthArea}>
-        <button className={styles.iconBtn} onClick={onPrevMonth}>
-          <img src={leftIcon} alt="prev" width={17} height={19} />
+        <button
+          type="button"
+          className={styles.iconBtn}
+          onClick={onPrevMonth}
+          aria-label="이전 달로 이동"
+        >
+          <VscTriangleLeft aria-hidden="true" />
         </button>
 
         <span className={styles.monthText}>{monthText}</span>
 
-        <button className={styles.iconBtn} onClick={onNextMonth}>
-          <img
-            src={leftIcon}
-            alt="next"
-            width={17}
-            height={19}
-            style={{ transform: 'rotate(180deg)' }}
-          />
+        <button
+          type="button"
+          className={styles.iconBtn}
+          onClick={onNextMonth}
+          disabled={isNextMonthDisabled}
+          aria-label="다음 달로 이동"
+        >
+          <VscTriangleLeft className={styles.nextIcon} aria-hidden="true" />
         </button>
       </div>
 

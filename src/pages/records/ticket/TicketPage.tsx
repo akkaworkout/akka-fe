@@ -8,7 +8,7 @@ import { useTickets } from '../hooks/useTickets'
 // 컴포넌트
 import RecordLayout from '../layout/RecordLayout'
 import TicketRow from './components/ticketRow/TicketRow'
-import Spinner from '@/components/spinner/Spinner'
+import Skeleton from '@/components/skeleton/Skeleton'
 
 // 모달
 import ConfirmModal from './modals/ConfirmModal'
@@ -109,7 +109,18 @@ const TicketPage = () => {
       <RecordLayout title="이용권 관리">
         <div className={styles.write}>
           {loading ? (
-            <Spinner />
+            <div className={styles.ticketSkeleton} role="status" aria-label="이용권 불러오는 중">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className={styles.ticketSkeletonRow}>
+                  <Skeleton width={42} height={42} borderRadius={12} />
+                  <div className={styles.ticketSkeletonText}>
+                    <Skeleton width={140} height={17} />
+                    <Skeleton width={220} height={12} />
+                  </div>
+                  <Skeleton width={90} height={32} borderRadius={10} />
+                </div>
+              ))}
+            </div>
           ) : error ? (
             <div className={styles.emptyText}>티켓을 불러오지 못했어요</div>
           ) : ticketList.length === 0 ? (
