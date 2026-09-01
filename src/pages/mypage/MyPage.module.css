@@ -44,19 +44,6 @@
   align-items: start;
 }
 
-/* ✅ 카드 래퍼: 이제 "배치"만 담당 (Card 컴포넌트가 사이즈/배경/라운드/패딩 처리) */
-.leftCard {
-  /* empty: layout wrapper only */
-}
-
-.rightCard {
-  /* empty: layout wrapper only */
-}
-
-.premiumCard {
-  /* empty: layout wrapper only */
-}
-
 /* 프로필 */
 .profileArea {
   display: flex;
