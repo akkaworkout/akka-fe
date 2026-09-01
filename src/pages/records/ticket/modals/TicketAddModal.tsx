@@ -1,11 +1,10 @@
 import { useState } from 'react'
+import { FaCheck } from 'react-icons/fa6'
 
 import TicketModal from './TicketModal'
 import DateSelect from '@/components/dateSelect/DateSelect'
 
 import styles from '@/pages/records/ticket/Ticket.module.css'
-
-import CheckIcon from '@/assets/icons/common/check.png'
 
 type Payload = {
   exerciseType: string
@@ -188,7 +187,7 @@ const TicketAddModal = ({
                     onClick={() => setSelectedColor(color)}
                   >
                     {colorCode === color && (
-                      <img src={CheckIcon} alt="selected" className={styles.checkIcon} />
+                      <FaCheck className={styles.checkIcon} aria-hidden="true" />
                     )}
                   </button>
                 ))}

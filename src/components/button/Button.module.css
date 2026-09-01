@@ -54,6 +54,7 @@
 .uploadIcon {
   width: 28px;
   height: 28px;
+  color: currentColor;
 }
 
 .primary {
@@ -133,4 +134,16 @@
 .dropdownDelete .icon {
   width: 15.86px;
   height: 15.86px;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
 }

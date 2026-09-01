@@ -14,6 +14,8 @@ export const useCalendar = () => {
   const now = new Date()
   const [year, setYear] = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth() + 1)
+  const isNextMonthDisabled =
+    year > now.getFullYear() || (year === now.getFullYear() && month >= now.getMonth() + 1)
 
   const { data: schedules = [] } = useCalendarQuery(year, month)
 
@@ -29,6 +31,13 @@ export const useCalendar = () => {
 
   // 다음 달로 이동
   const handleNextMonth = () => {
+    const currentDate = new Date()
+    const isCurrentOrFutureMonth =
+      year > currentDate.getFullYear() ||
+      (year === currentDate.getFullYear() && month >= currentDate.getMonth() + 1)
+
+    if (isCurrentOrFutureMonth) return
+
     if (month === 12) {
       setYear((prev) => prev + 1)
       setMonth(1)
@@ -79,5 +88,6 @@ export const useCalendar = () => {
     calendarMap,
     handlePrevMonth,
     handleNextMonth,
+    isNextMonthDisabled,
   }
 }

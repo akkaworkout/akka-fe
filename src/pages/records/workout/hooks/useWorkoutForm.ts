@@ -28,8 +28,15 @@ export const useWorkoutForm = (recordId?: number) => {
     useWorkoutTickets(form.exercise.id)
 
   const { data: exerciseDetail } = useExerciseDetailQuery(recordId)
+  const previousDate = exerciseDetail?.exercise_date
+    ? new Date(exerciseDetail.exercise_date)
+    : undefined
 
-  const { handleSubmit, handleUpdate, handleDelete } = useWorkoutActions(form, recordId)
+  const { handleSubmit, handleUpdate, handleDelete } = useWorkoutActions(
+    form,
+    recordId,
+    previousDate,
+  )
 
   useEffect(() => {
     if (ticketList.length === 0) return

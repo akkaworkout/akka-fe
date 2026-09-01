@@ -76,11 +76,38 @@
 }
 
 .iconBtn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
   background: transparent;
   padding: 0;
   cursor: pointer;
   margin-top: 7px;
+  color: var(--black);
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.iconBtn svg {
+  width: 17px;
+  height: 19px;
+}
+
+.iconBtn:hover:not(:disabled) {
+  color: var(--black);
+  opacity: 1;
+}
+
+.iconBtn:disabled {
+  cursor: default;
+  opacity: 0.18;
+}
+
+.nextIcon {
+  transform: rotate(180deg);
 }
 
 .summaryArea {
@@ -112,39 +139,63 @@
   background-color: var(--black);
 }
 
-.goalLoadingContainer {
+.goalContentSkeleton {
+  height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.goalDetailsSkeleton {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 14px;
+  padding-top: 24px;
+}
+
+.insightLinesSkeleton {
   width: 100%;
-  height: 200px;
-}
-
-.emptyMessage {
-  font-size: 14px;
-  color: #666;
-}
-
-.emptyState {
-  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  gap: 10px;
+}
+
+.chartContentSkeleton {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 10px 8px 18px;
+}
+
+.chartBarsSkeleton {
+  height: 150px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.listContentSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listFooterSkeleton {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  text-align: center;
-  color: var(--black);
+  margin-top: 10px;
 }
 
-.emptyState strong {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.emptyState p {
-  margin: 0;
-  width: 200px;
+.errorMessage {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fff0f0;
+  color: var(--error);
   font-size: 14px;
-  line-height: 1.5;
-  color: #666;
 }

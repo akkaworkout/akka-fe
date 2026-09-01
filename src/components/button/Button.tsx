@@ -1,10 +1,9 @@
 import styles from './Button.module.css'
-
-import uploadIcon from '@/assets/icons/common/upload.png'
+import { MdOutlineFileUpload } from 'react-icons/md'
 
 type Props = {
   children?: React.ReactNode
-  icon?: string
+  icon?: React.ReactNode
   active?: boolean
   variant?:
     | 'default'
@@ -42,10 +41,14 @@ const Button = ({
       onClick={onClick}
     >
       {variant === 'file' && (
-        <img src={uploadIcon} alt="upload_icon" className={styles.uploadIcon} />
+        <MdOutlineFileUpload className={styles.uploadIcon} aria-hidden="true" />
       )}
 
-      {icon && <img src={icon} alt="button_icon" className={styles.icon} />}
+      {icon && (
+        <span className={styles.icon} aria-hidden="true">
+          {icon}
+        </span>
+      )}
 
       {children}
     </button>

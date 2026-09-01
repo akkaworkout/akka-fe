@@ -4,8 +4,6 @@ import { Navigate } from 'react-router-dom'
 import api from '@/api/api'
 import { useAuthStore } from '@/stores/useAuthStore'
 
-import Spinner from '@/components/spinner/Spinner'
-
 type Props = {
   children: React.ReactNode
 }
@@ -42,7 +40,7 @@ const PrivateRoute = ({ children }: Props) => {
   }, [token, logout])
 
   if (isChecking) {
-    return <Spinner />
+    return token ? <>{children}</> : null
   }
 
   if (!isAllowed) {

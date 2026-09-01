@@ -1,15 +1,21 @@
 import { Helmet } from 'react-helmet-async'
+import { MdPerson } from 'react-icons/md'
 
 import styles from './MyPage.module.css'
 
 import editAvatar from '@/assets/icons/auth/edit-avatar.png'
-import profileDefault from '@/assets/icons/auth/profile-default.png'
 import premiumCard from '@/assets/images/premium-card.png'
 
 import { buildApiUrl } from '@/api/api'
 
 import Card from '@/components/card/Card'
 import Input from '@/components/form/Form'
+
+import {
+  GoalSettingsContentSkeleton,
+  PremiumContentSkeleton,
+  ProfileFormContentSkeleton,
+} from './components/MyPageContentSkeleton'
 
 import { useFormValidation } from './hooks/useFormValidation'
 import { useMyPageForm } from './hooks/useMyPageForm'
@@ -66,7 +72,7 @@ const RIGHT_FORM_FIELDS: RightFieldConfig[] = [
 
 export default function MyPage() {
   // === 훅 사용 ===
-  const { user, fetchMe } = useUserData()
+  const { user, loading: userLoading, fetchMe } = useUserData()
   const {
     fileRef,
     profilePreview,
@@ -79,6 +85,8 @@ export default function MyPage() {
 
   // 초기값 계산
   const initialData = getMyPageInitialData(user)
+  const profileImageSrc =
+    profilePreview ?? (user?.profile_image_url?.trim() ? buildApiUrl(user.profile_image_url) : null)
 
   const form = useMyPageForm(initialData)
   const { handleFieldChange, handlePasswordChange, handleCheck, handleSubmit } = useMyPageHandlers({
@@ -113,106 +121,121 @@ export default function MyPage() {
                   backgroundColor="#ffffff"
                   radius={20}
                 >
-                  <div className={styles.profileArea}>
-                    <div className={styles.avatar}>
-                      <img
-                        className={styles.avatarImg}
-                        src={
-                          profilePreview ??
-                          (user?.profile_image_url?.trim()
-                            ? buildApiUrl(user.profile_image_url)
-                            : profileDefault)
-                        }
-                        alt="프로필"
-                        draggable={false}
-                      />
-                      <button
-                        type="button"
-                        className={styles.editAvatarBtn}
-                        onClick={handlePickProfile}
-                        aria-label="프로필 이미지 변경"
-                      >
-                        <img src={editAvatar} alt="프로필 이미지 수정" draggable={false} />
-                      </button>
-                    </div>
+                  {userLoading ? (
+                    <ProfileFormContentSkeleton />
+                  ) : (
+                    <>
+                      <div className={styles.profileArea}>
+                        <div className={styles.avatar}>
+                          {profileImageSrc ? (
+                            <img
+                              className={styles.avatarImg}
+                              src={profileImageSrc}
+                              alt="프로필"
+                              draggable={false}
+                            />
+                          ) : (
+                            <div
+                              className={styles.defaultAvatar}
+                              role="img"
+                              aria-label="기본 프로필"
+                            >
+                              <MdPerson className={styles.defaultAvatarIcon} aria-hidden="true" />
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            className={styles.editAvatarBtn}
+                            onClick={handlePickProfile}
+                            aria-label="프로필 이미지 변경"
+                          >
+                            <img src={editAvatar} alt="프로필 이미지 수정" draggable={false} />
+                          </button>
+                        </div>
 
-                    <input
-                      ref={fileRef}
-                      type="file"
-                      accept="image/*"
-                      className={styles.fileInput}
-                      onChange={handleProfileChange}
-                    />
+                        <input
+                          ref={fileRef}
+                          type="file"
+                          accept="image/*"
+                          className={styles.fileInput}
+                          onChange={handleProfileChange}
+                        />
 
-                    {profileError && <p className={styles.profileError}>{profileError}</p>}
-                  </div>
+                        {profileError && <p className={styles.profileError}>{profileError}</p>}
+                      </div>
 
-                  <div className={styles.profileToFormGap} />
+                      <div className={styles.profileToFormGap} />
 
-                  <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
-                    {/* === 이메일, 닉네임 (map으로 렌더링) === */}
-                    {LEFT_FORM_FIELDS.map((field) => (
-                      <Input
-                        key={field.name}
-                        id={`mypage-${field.name}`}
-                        label={field.label}
-                        value={form.formData[field.name]}
-                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                        type={field.type}
-                        variant="profile"
-                        errorText={form.showError(field.name) ? form.errors[field.name] : undefined}
-                        rightButton={
-                          field.hasButton
-                            ? {
-                                label: field.buttonText,
-                                onClick: () => handleCheck(field.name),
-                                disabled:
-                                  field.name === 'email'
-                                    ? !form.emailDirty ||
-                                      !validation.isEmailValid(form.formData.email)
-                                    : !form.nicknameDirty ||
-                                      !validation.isNicknameValid(form.formData.nickname),
-                              }
-                            : undefined
-                        }
-                      />
-                    ))}
+                      <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
+                        {LEFT_FORM_FIELDS.map((field) => (
+                          <Input
+                            key={field.name}
+                            id={`mypage-${field.name}`}
+                            label={field.label}
+                            value={form.formData[field.name]}
+                            onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                            type={field.type}
+                            variant="profile"
+                            errorText={
+                              form.showError(field.name) ? form.errors[field.name] : undefined
+                            }
+                            rightButton={
+                              field.hasButton
+                                ? {
+                                    label: field.buttonText,
+                                    onClick: () => handleCheck(field.name),
+                                    disabled:
+                                      field.name === 'email'
+                                        ? !form.emailDirty ||
+                                          !validation.isEmailValid(form.formData.email)
+                                        : !form.nicknameDirty ||
+                                          !validation.isNicknameValid(form.formData.nickname),
+                                  }
+                                : undefined
+                            }
+                          />
+                        ))}
 
-                    {/* === 비밀번호 === */}
-                    <Input
-                      id="mypage-password"
-                      label="비밀번호"
-                      value={form.formData.password}
-                      onChange={(e) => handlePasswordChange('password', e.target.value)}
-                      type="password"
-                      variant="profile"
-                      placeholder="비밀번호 (특수문자 포함, 8자 이상)"
-                      errorText={form.showError('password') ? form.errors.password : undefined}
-                      showPasswordToggle={true}
-                    />
+                        <Input
+                          id="mypage-password"
+                          label="비밀번호"
+                          value={form.formData.password}
+                          onChange={(e) => handlePasswordChange('password', e.target.value)}
+                          type="password"
+                          variant="profile"
+                          placeholder="비밀번호 (특수문자 포함, 8자 이상)"
+                          errorText={form.showError('password') ? form.errors.password : undefined}
+                          showPasswordToggle={true}
+                        />
 
-                    {/* === 비밀번호 확인 === */}
-                    <Input
-                      id="mypage-password-confirm"
-                      label="비밀번호 확인"
-                      value={form.formData.passwordConfirm}
-                      onChange={(e) => handlePasswordChange('passwordConfirm', e.target.value)}
-                      type="password"
-                      variant="profile"
-                      placeholder="비밀번호 확인"
-                      errorText={
-                        form.showError('passwordConfirm') ? form.errors.passwordConfirm : undefined
-                      }
-                      showPasswordToggle={true}
-                    />
+                        <Input
+                          id="mypage-password-confirm"
+                          label="비밀번호 확인"
+                          value={form.formData.passwordConfirm}
+                          onChange={(e) => handlePasswordChange('passwordConfirm', e.target.value)}
+                          type="password"
+                          variant="profile"
+                          placeholder="비밀번호 확인"
+                          errorText={
+                            form.showError('passwordConfirm')
+                              ? form.errors.passwordConfirm
+                              : undefined
+                          }
+                          showPasswordToggle={true}
+                        />
 
-                    {/* === Submit 버튼 === */}
-                    <div className={styles.submitArea}>
-                      <button type="submit" className={styles.submitBtn} disabled={!form.canSubmit}>
-                        완료
-                      </button>
-                    </div>
-                  </form>
+                        <div className={styles.submitArea}>
+                          <button
+                            type="submit"
+                            className={styles.submitBtn}
+                            disabled={!form.canSubmit}
+                          >
+                            완료
+                          </button>
+                        </div>
+                      </form>
+                    </>
+                  )}
                 </Card>
               </div>
 
@@ -227,35 +250,39 @@ export default function MyPage() {
                     backgroundColor="#ffffff"
                     radius={20}
                   >
-                    <div className={styles.rightInner}>
-                      {RIGHT_FORM_FIELDS.map((field) => {
-                        const inputId = `mypage-${field.name}`
+                    {userLoading ? (
+                      <GoalSettingsContentSkeleton />
+                    ) : (
+                      <div className={styles.rightInner}>
+                        {RIGHT_FORM_FIELDS.map((field) => {
+                          const inputId = `mypage-${field.name}`
 
-                        return (
-                          <div key={field.name} className={styles.goalBlock}>
-                            <label className={styles.goalLabel} htmlFor={inputId}>
-                              {field.label}
-                            </label>
+                          return (
+                            <div key={field.name} className={styles.goalBlock}>
+                              <label className={styles.goalLabel} htmlFor={inputId}>
+                                {field.label}
+                              </label>
 
-                            <div className={styles.unitLine}>
-                              <div className={styles.inputWrapRight}>
-                                <input
-                                  id={inputId}
-                                  className={`${styles.inputRight} ${
-                                    form.showError(field.name) ? styles.inputError : ''
-                                  }`}
-                                  value={form.formData[field.name]}
-                                  onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                                  type="number"
-                                />
+                              <div className={styles.unitLine}>
+                                <div className={styles.inputWrapRight}>
+                                  <input
+                                    id={inputId}
+                                    className={`${styles.inputRight} ${
+                                      form.showError(field.name) ? styles.inputError : ''
+                                    }`}
+                                    value={form.formData[field.name]}
+                                    onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                                    type="number"
+                                  />
+                                </div>
+
+                                <span className={styles.unit}>{field.unit}</span>
                               </div>
-
-                              <span className={styles.unit}>{field.unit}</span>
                             </div>
-                          </div>
-                        )
-                      })}
-                    </div>
+                          )
+                        })}
+                      </div>
+                    )}
                   </Card>
                 </div>
 
@@ -268,11 +295,17 @@ export default function MyPage() {
                     backgroundColor="#ffffff"
                     radius={20}
                   >
-                    <div className={styles.premiumHeader}>
-                      <div className={styles.premiumPoint}>{initialData.premiumPoint}</div>
-                    </div>
+                    {userLoading ? (
+                      <PremiumContentSkeleton />
+                    ) : (
+                      <>
+                        <div className={styles.premiumHeader}>
+                          <div className={styles.premiumPoint}>{initialData.premiumPoint}</div>
+                        </div>
 
-                    <img className={styles.premiumImg} src={premiumCard} alt="프리미엄 카드" />
+                        <img className={styles.premiumImg} src={premiumCard} alt="프리미엄 카드" />
+                      </>
+                    )}
                   </Card>
                 </div>
               </aside>

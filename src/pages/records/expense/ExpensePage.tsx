@@ -125,6 +125,7 @@ const ExpensePage = () => {
 
         <RecordSummaryCard
           title="이번 기록으로 이렇게 반영돼요"
+          isLoading={status === 'loading'}
           items={
             status === 'success'
               ? [

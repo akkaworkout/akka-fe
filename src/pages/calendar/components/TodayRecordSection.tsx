@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import type { TodayItem } from '@/api/calendarApi'
 
 import Card from '@/components/card/Card'
-import Spinner from '@/components/spinner/Spinner'
+import Skeleton from '@/components/skeleton/Skeleton'
 
 import styles from '../Calendar.module.css'
 
@@ -39,7 +39,22 @@ const TodayRecordSection = ({
           <ul className={styles.list} aria-live="polite">
             {isLoading ? (
               <li className={styles.stateItem}>
-                <Spinner />
+                <div
+                  className={styles.todaySkeleton}
+                  role="status"
+                  aria-label="일일 기록 불러오는 중"
+                >
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className={styles.todaySkeletonRow}>
+                      <Skeleton width={13} height={13} borderRadius="50%" />
+                      <div className={styles.todaySkeletonText}>
+                        <Skeleton width={110} height={13} />
+                        <Skeleton width={70} height={10} />
+                      </div>
+                      <Skeleton width={58} height={15} />
+                    </div>
+                  ))}
+                </div>
               </li>
             ) : todayItems.length === 0 ? (
               <li className={`${styles.stateItem} ${styles.empty}`}>

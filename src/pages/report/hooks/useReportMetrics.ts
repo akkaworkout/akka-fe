@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { ReportData } from './useReportData'
+import type { ReportData } from '@/api/reportApi'
 
 export const useReportMetrics = (reportData: ReportData | null, selectedExerciseType?: string) => {
   return useMemo(() => {

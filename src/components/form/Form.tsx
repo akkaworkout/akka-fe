@@ -1,9 +1,7 @@
 import { useId, useState } from 'react'
 import type { ChangeEvent } from 'react'
+import { IoMdEye, IoMdEyeOff } from 'react-icons/io'
 import styles from './Form.module.css'
-
-import eyeOn from '@/assets/icons/auth/eye-on.png'
-import eyeOff from '@/assets/icons/auth/eye-off.png'
 
 type RightButton = {
   label: string
@@ -51,6 +49,7 @@ export default function Input({
 
   const isPassword = type === 'password'
   const inputType = isPassword && showPasswordToggle ? (isVisible ? 'text' : 'password') : type
+  const PasswordVisibilityIcon = isVisible ? IoMdEye : IoMdEyeOff
 
   // input + error 묶음
   const Field = (
@@ -78,7 +77,7 @@ export default function Input({
             onClick={() => setIsVisible((v) => !v)}
             aria-label={isVisible ? '비밀번호 숨기기' : '비밀번호 보기'}
           >
-            <img src={isVisible ? eyeOn : eyeOff} alt="" aria-hidden="true" />
+            <PasswordVisibilityIcon className={styles.eyeIcon} aria-hidden="true" />
           </button>
         )}
       </div>

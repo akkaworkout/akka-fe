@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
+import { VscTriangleLeft } from 'react-icons/vsc'
 
 // 이미지
-import arrowIcon from '@/assets/icons/common/chevron-left.png'
 import ticketIcon from '@/assets/images/ticket.png'
 
 // 스타일
@@ -23,6 +23,7 @@ type CalendarProps = {
   schedules: Schedule[]
   onPrevMonth: () => void
   onNextMonth: () => void
+  isNextMonthDisabled: boolean
   onSelectDay: (day: number) => void
   isLoading?: boolean
 }
@@ -36,6 +37,7 @@ const Calendar = ({
   schedules,
   onPrevMonth,
   onNextMonth,
+  isNextMonthDisabled,
   onSelectDay,
   isLoading = false,
 }: CalendarProps) => {
@@ -92,21 +94,17 @@ const Calendar = ({
             onClick={onPrevMonth}
             aria-label="이전 달로 이동"
           >
-            <img className={styles.arrowBtn} src={arrowIcon} alt="prev-button" aria-hidden="true" />
+            <VscTriangleLeft className={styles.arrowBtn} aria-hidden="true" />
           </button>
 
           <button
             type="button"
             className={styles.arrowButton}
             onClick={onNextMonth}
+            disabled={isNextMonthDisabled}
             aria-label="다음 달로 이동"
           >
-            <img
-              className={`${styles.arrowBtn} ${styles.rotate}`}
-              src={arrowIcon}
-              alt="next-button"
-              aria-hidden="true"
-            />
+            <VscTriangleLeft className={`${styles.arrowBtn} ${styles.rotate}`} aria-hidden="true" />
           </button>
         </div>
       </div>

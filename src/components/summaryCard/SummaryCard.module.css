@@ -33,8 +33,9 @@
 
 .arrow {
   margin-left: auto;
-  width: 32px;
-  height: 32px;
+  width: 20px;
+  height: 20px;
+  color: var(--gray);
   transition: transform 0.2s ease;
 }
 
