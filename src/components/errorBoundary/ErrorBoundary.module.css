@@ -20,6 +20,26 @@
   box-shadow: 0 18px 45px rgba(56, 53, 157, 0.14);
 }
 
+.pageWrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--background);
+}
+
+.pageCard {
+  width: 100%;
+  max-width: 440px;
+  padding: 36px 32px;
+  border: 1px solid var(--primary-soft);
+  border-radius: 20px;
+  background: var(--white);
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(56, 53, 157, 0.1);
+}
+
 .logo {
   width: 72px;
   height: 72px;
