@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test'
 
-export const TEST_ACCESS_TOKEN = 'playwright-access-token'
+const TEST_ACCESS_TOKEN = 'playwright-access-token'
 
 export const setAccessToken = async (page: Page, token = TEST_ACCESS_TOKEN) => {
   await page.addInitScript((accessToken) => {
