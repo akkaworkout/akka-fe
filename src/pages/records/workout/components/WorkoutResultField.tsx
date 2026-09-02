@@ -1,5 +1,3 @@
-import type { WorkoutFormSetter } from '../types/workoutTypes'
-
 import Button from '@/components/button/Button'
 
 import styles from '../Workout.module.css'
@@ -7,10 +5,10 @@ import styles from '../Workout.module.css'
 type Props = {
   workoutResult: '성공' | '실패'
   failReason: string
-  setForm: WorkoutFormSetter
+  onChange: (result: '성공' | '실패') => void
 }
 
-const WorkoutResultField = ({ workoutResult, failReason, setForm }: Props) => {
+const WorkoutResultField = ({ workoutResult, failReason, onChange }: Props) => {
   return (
     <div className={styles.field}>
       <label>결과*</label>
@@ -27,11 +25,7 @@ const WorkoutResultField = ({ workoutResult, failReason, setForm }: Props) => {
               if (!ok) return
             }
 
-            setForm((prev) => ({
-              ...prev,
-              workoutResult: '성공',
-              failReason: '',
-            }))
+            onChange('성공')
           }}
         >
           성공
@@ -41,12 +35,7 @@ const WorkoutResultField = ({ workoutResult, failReason, setForm }: Props) => {
           type="button"
           active={workoutResult === '실패'}
           variant="red"
-          onClick={() => {
-            setForm((prev) => ({
-              ...prev,
-              workoutResult: '실패',
-            }))
-          }}
+          onClick={() => onChange('실패')}
         >
           실패
         </Button>

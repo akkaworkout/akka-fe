@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { getReport } from '@/api/reportApi'
+import { formatDateForApi } from '@/utils/date'
 
 export const reportQueryKeys = {
   all: ['reports'] as const,
@@ -10,11 +11,7 @@ export const reportQueryKeys = {
     ['reports', year, month, exerciseType] as const,
 }
 
-const getDateKey = () => {
-  const now = new Date()
-
-  return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-}
+const getDateKey = () => formatDateForApi(new Date())
 
 let reportCacheDateKey = getDateKey()
 

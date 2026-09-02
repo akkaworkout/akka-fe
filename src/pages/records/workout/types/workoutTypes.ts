@@ -8,5 +8,3 @@ export type WorkoutForm = {
   exercise: Exercise
   imageFile: File | null
 }
-
-export type WorkoutFormSetter = React.Dispatch<React.SetStateAction<WorkoutForm>>

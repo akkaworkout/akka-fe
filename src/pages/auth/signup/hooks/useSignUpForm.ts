@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { authApi } from '@/api/authApi'
+import { isEmailValid, isPasswordValid } from '@/utils/validation'
 
 type FieldErrors = Partial<{
   email: string
@@ -39,9 +40,6 @@ export const useSignUpForm = () => {
 
   /* ================= 유틸 ================= */
 
-  const isEmailValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
-  const hasSpecialChar = (v: string) => /[^A-Za-z0-9]/.test(v)
-  const isPasswordValid = (v: string) => v.length >= 8 && hasSpecialChar(v)
   const isNicknameValid = (v: string) => v.trim().length >= 2
 
   const getErrors = () => {

@@ -1,11 +1,12 @@
 import api from '@/api/api'
+import { formatDateForApi } from '@/utils/date'
 
 import type { WorkoutForm } from '@/pages/records/workout/types/workoutTypes'
 
 const buildExerciseFormData = (form: WorkoutForm) => {
   const formData = new FormData()
 
-  const exerciseDate = formatDate(form.date)
+  const exerciseDate = formatDateForApi(form.date)
   const success = form.workoutResult === '성공'
 
   formData.append('exercise_date', exerciseDate)
@@ -22,14 +23,6 @@ const buildExerciseFormData = (form: WorkoutForm) => {
   }
 
   return formData
-}
-
-const formatDate = (date: Date) => {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-
-  return `${year}-${month}-${day}`
 }
 
 // 특정 운동 기록 조회

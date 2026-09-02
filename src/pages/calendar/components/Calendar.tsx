@@ -1,18 +1,12 @@
 import { useMemo } from 'react'
 import { VscTriangleLeft } from 'react-icons/vsc'
 
-// 이미지
-import ticketIcon from '@/assets/images/ticket.png'
+import type { Schedule } from '@/api/calendarApi'
+
+import CalendarDay from './CalendarDay'
 
 // 스타일
 import styles from '../Calendar.module.css'
-
-type Schedule = {
-  date: string
-  label: string
-  color_code: string
-  type: string
-}
 
 type CalendarProps = {
   year: number
@@ -133,77 +127,16 @@ const Calendar = ({
             day === selectedDate && year === selectedYear && month === selectedMonth
 
           return (
-            <button
+            <CalendarDay
               key={`${year}-${month}-${day}`}
-              type="button"
-              className={`${styles.day} ${isSelected ? styles.activeDay : ''}`}
-              onClick={() => {
-                if (isSelected) return
-
-                onSelectDay(day)
-              }}
-              aria-pressed={isSelected}
-              aria-label={`${year}년 ${month}월 ${day}일 선택`}
-            >
-              {(() => {
-                const daySchedules = schedulesByDay[day] ?? []
-
-                const tickets: Schedule[] = []
-                const normalSchedules: Schedule[] = []
-
-                daySchedules.forEach((s) => {
-                  if (s.type === 'ticket') {
-                    tickets.push(s)
-                  } else {
-                    normalSchedules.push(s)
-                  }
-                })
-
-                const ticketTooltip = tickets.map((t) => t.label).join(', ')
-                const visibleDots = normalSchedules.slice(0, 3)
-                const hiddenCount = normalSchedules.length - 3
-
-                return (
-                  <>
-                    {!isLoading && tickets.length > 0 && (
-                      <div className={styles.ticketWrapper}>
-                        <img
-                          src={ticketIcon}
-                          className={styles.ticketIcon}
-                          alt=""
-                          aria-hidden="true"
-                        />
-                        <div className={styles.ticketTooltip}>{ticketTooltip}</div>
-                      </div>
-                    )}
-
-                    <span className={`${styles.date} ${isSelected ? styles.activeDate : ''}`}>
-                      {String(day).padStart(2, '0')}
-                    </span>
-
-                    <div className={styles.dotContainer}>
-                      {isLoading ? (
-                        <div className={styles.skeletonDots} />
-                      ) : (
-                        <>
-                          {visibleDots.map((s, idx) => (
-                            <span
-                              key={`${s.date}-${idx}`}
-                              className={styles.dot}
-                              style={{ backgroundColor: s.color_code }}
-                            />
-                          ))}
-
-                          {hiddenCount > 0 && (
-                            <span className={styles.moreDot}>+{hiddenCount}</span>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </>
-                )
-              })()}
-            </button>
+              year={year}
+              month={month}
+              day={day}
+              schedules={schedulesByDay[day] ?? []}
+              isSelected={isSelected}
+              isLoading={isLoading}
+              onSelect={onSelectDay}
+            />
           )
         })}
       </div>

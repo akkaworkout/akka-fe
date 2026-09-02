@@ -3,19 +3,14 @@ import { FaRegCalendarCheck } from 'react-icons/fa6'
 import { IoIosArrowDown } from 'react-icons/io'
 import { VscTriangleLeft } from 'react-icons/vsc'
 
+import { formatDateForDisplay } from '@/utils/date'
+
 import styles from './DateSelect.module.css'
 
 type DateSelectProps = {
   value: Date
   onChange: (date: Date) => void
   disabled?: boolean
-}
-
-const formatDate = (date: Date) => {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}.${m}.${d}`
 }
 
 const isSameDate = (a: Date, b: Date) =>
@@ -75,7 +70,7 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
       >
         <FaRegCalendarCheck className={styles.calendarIcon} aria-hidden="true" />
 
-        <div>{formatDate(value)}</div>
+        <div>{formatDateForDisplay(value)}</div>
 
         <IoIosArrowDown
           className={`${styles.arrow} ${isOpen ? styles.open : ''}`}

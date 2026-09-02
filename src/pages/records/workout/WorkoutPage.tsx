@@ -52,34 +52,55 @@ const WorkoutPage = () => {
       <RecordLayout title="운동 기록">
         <div className={styles.write}>
           <div className={styles.row}>
-            <WorkoutDateField date={form.date} setForm={setForm} />
+            <WorkoutDateField
+              date={form.date}
+              onChange={(date) => setForm((prev) => ({ ...prev, date }))}
+            />
 
             <WorkoutExerciseField
               mappedTickets={mappedTickets}
               selectedExercise={form.exercise}
-              recordId={recordId}
-              setForm={setForm}
+              disabled={Boolean(recordId)}
+              onChange={(exercise) => setForm((prev) => ({ ...prev, exercise }))}
             />
           </div>
 
           <WorkoutResultField
             workoutResult={form.workoutResult}
             failReason={form.failReason}
-            setForm={setForm}
+            onChange={(workoutResult) =>
+              setForm((prev) => ({
+                ...prev,
+                workoutResult,
+                failReason: workoutResult === '성공' ? '' : prev.failReason,
+              }))
+            }
           />
 
           <WorkoutImageField
             previewUrl={previewUrl}
             fileInputRef={fileInputRef}
             handleFileChange={handleFileChange}
-            setPreviewUrl={setPreviewUrl}
-            setForm={setForm}
+            onRemove={() => {
+              setForm((prev) => ({ ...prev, imageFile: null }))
+              setPreviewUrl(null)
+
+              if (fileInputRef.current) {
+                fileInputRef.current.value = ''
+              }
+            }}
           />
 
-          <WorkoutMemoField memo={form.memo} setForm={setForm} />
+          <WorkoutMemoField
+            memo={form.memo}
+            onChange={(memo) => setForm((prev) => ({ ...prev, memo }))}
+          />
 
           {form.workoutResult === '실패' && (
-            <WorkoutFailReasonField failReason={form.failReason} setForm={setForm} />
+            <WorkoutFailReasonField
+              failReason={form.failReason}
+              onChange={(failReason) => setForm((prev) => ({ ...prev, failReason }))}
+            />
           )}
 
           <div className={styles.footer}>

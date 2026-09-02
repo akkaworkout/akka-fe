@@ -1,5 +1,3 @@
-import type { WorkoutFormSetter } from '../types/workoutTypes'
-
 import Button from '@/components/button/Button'
 
 import styles from '../Workout.module.css'
@@ -8,17 +6,10 @@ type Props = {
   previewUrl: string | null
   fileInputRef: React.RefObject<HTMLInputElement | null>
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  setPreviewUrl: React.Dispatch<React.SetStateAction<string | null>>
-  setForm: WorkoutFormSetter
+  onRemove: () => void
 }
 
-const WorkoutImageField = ({
-  previewUrl,
-  fileInputRef,
-  handleFileChange,
-  setPreviewUrl,
-  setForm,
-}: Props) => {
+const WorkoutImageField = ({ previewUrl, fileInputRef, handleFileChange, onRemove }: Props) => {
   return (
     <div className={styles.field}>
       <label htmlFor="imageFile">사진 첨부</label>
@@ -40,22 +31,7 @@ const WorkoutImageField = ({
         <div className={styles.imagePreviewBox}>
           <img src={previewUrl} alt="preview" className={styles.previewImage} />
 
-          <button
-            type="button"
-            className={styles.removeImageBtn}
-            onClick={() => {
-              setForm((prev) => ({
-                ...prev,
-                imageFile: null,
-              }))
-
-              setPreviewUrl(null)
-
-              if (fileInputRef.current) {
-                fileInputRef.current.value = ''
-              }
-            }}
-          >
+          <button type="button" className={styles.removeImageBtn} onClick={onRemove}>
             ✕
           </button>
         </div>

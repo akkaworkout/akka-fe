@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useCreateExpenseMutation } from '@/hooks/mutations/useExpenseMutation'
+import { formatDateForApi } from '@/utils/date'
 
 import type { Expense } from '@/components/summaryCard/SummaryCard'
 
@@ -11,8 +12,6 @@ type ExpenseForm = {
   item: string
   amount: string
 }
-
-const formatDate = (date: Date) => date.toISOString().split('T')[0]
 
 export const useExpenseForm = (initialCategory: Expense) => {
   const navigate = useNavigate()
@@ -65,7 +64,7 @@ export const useExpenseForm = (initialCategory: Expense) => {
         category: form.selectedCategory.value,
         title: form.item,
         amount: Number(form.amount),
-        expense_date: formatDate(form.date),
+        expense_date: formatDateForApi(form.date),
       },
       {
         onSuccess: () => {

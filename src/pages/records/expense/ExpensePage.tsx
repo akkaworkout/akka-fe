@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async'
 
 // hooks
 import { useExpenseForm } from './hooks/useExpenseForm'
-import { useExpenseSummary } from './hooks/useExpenseSummary'
+import { useExpenseStatsQuery } from '@/hooks/queries/useExpenseQuery'
 
 // 컴포넌트 (UI)
 import RecordLayout from '../layout/RecordLayout'
@@ -47,7 +47,15 @@ const ExpensePage = () => {
     handleSubmit,
   } = useExpenseForm(EXPENSES[0])
 
-  const { status, summary } = useExpenseSummary()
+  const {
+    data: summary = {
+      expenseCount: 0,
+      totalAmount: 0,
+      topCategory: '기록 없음',
+    },
+    isLoading: isSummaryLoading,
+    isError: isSummaryError,
+  } = useExpenseStatsQuery()
 
   return (
     <>
@@ -125,18 +133,18 @@ const ExpensePage = () => {
 
         <RecordSummaryCard
           title="이번 기록으로 이렇게 반영돼요"
-          isLoading={status === 'loading'}
+          isLoading={isSummaryLoading}
           items={
-            status === 'success'
+            isSummaryError
               ? [
-                  `이번 달 지출: ${summary.expenseCount}회`,
-                  `이번 달 누적 지출금: ${summary.totalAmount.toLocaleString()}원`,
-                  `가장 많이 쓴 항목: ${summary.topCategory}`,
-                ]
-              : [
                   '이번 달 지출: 조회에 실패했어요',
                   '이번 달 누적 지출금: 조회에 실패했어요',
                   '가장 많이 쓴 항목: 조회에 실패했어요',
+                ]
+              : [
+                  `이번 달 지출: ${summary.expenseCount}회`,
+                  `이번 달 누적 지출금: ${summary.totalAmount.toLocaleString()}원`,
+                  `가장 많이 쓴 항목: ${summary.topCategory}`,
                 ]
           }
         />
