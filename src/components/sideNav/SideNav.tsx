@@ -10,7 +10,7 @@ import type { IconType } from 'react-icons'
 
 import api, { buildApiUrl } from '@/api/api'
 
-import { useSidebarStore } from '@/stores/useSidebarStore'
+import { SIDEBAR_FOLD_MEDIA_QUERY, useSidebarStore } from '@/stores/useSidebarStore'
 import { useAuthStore } from '@/stores/useAuthStore'
 import Skeleton from '@/components/skeleton/Skeleton'
 
@@ -40,6 +40,7 @@ const SideNav = () => {
   const { folded, toggleFolded, setFolded } = useSidebarStore()
 
   const { logout, token, isLoggedIn } = useAuthStore()
+  const isMainPage = location.pathname === '/' || location.pathname === '/main'
 
   const [user, setUser] = useState<SidebarUser | null>(null)
   const [isUserLoading, setIsUserLoading] = useState(false)
@@ -102,21 +103,13 @@ const SideNav = () => {
 
   /* 반응형 */
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 1200) {
-        setFolded(true)
-      } else {
-        setFolded(false)
-      }
-    }
+    const mediaQuery = window.matchMedia(SIDEBAR_FOLD_MEDIA_QUERY)
+    const handleBreakpointChange = (event: MediaQueryListEvent) => setFolded(event.matches)
 
-    handleResize()
+    setFolded(mediaQuery.matches)
+    mediaQuery.addEventListener('change', handleBreakpointChange)
 
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
+    return () => mediaQuery.removeEventListener('change', handleBreakpointChange)
   }, [setFolded])
 
   /* 로그인 유저 */
@@ -172,6 +165,9 @@ const SideNav = () => {
           src={akkaLogo}
           className={styles.sideNavLogo}
           alt="akka logo"
+          width={4000}
+          height={4000}
+          fetchPriority={isMainPage ? 'auto' : 'high'}
           onClick={() => navigate('/main')}
         />
       ) : (
@@ -179,6 +175,9 @@ const SideNav = () => {
           src={akkaLogoSvg}
           className={styles.sideNavLogoSvg}
           alt="akka logo"
+          width={500}
+          height={369}
+          fetchPriority={isMainPage ? 'auto' : 'high'}
           onClick={() => navigate('/main')}
         />
       )}
@@ -212,6 +211,8 @@ const SideNav = () => {
                 src={buildApiUrl(user.profile_image_url)}
                 className={styles.sidebarProfileImg}
                 alt="프로필"
+                width={26}
+                height={37}
                 onError={() => setProfileImageError(true)}
               />
             </div>
@@ -220,6 +221,8 @@ const SideNav = () => {
               src={default_profile}
               className={styles.sidebarProfileDefaultImg}
               alt="기본 프로필"
+              width={180}
+              height={172}
               onClick={() => handleNavigate('/mypage')}
             />
           )
@@ -228,6 +231,8 @@ const SideNav = () => {
             src={default_profile}
             className={styles.sidebarProfileDefaultImg}
             alt="기본 프로필"
+            width={180}
+            height={172}
             onClick={() => handleNavigate('/login')}
           />
         )}

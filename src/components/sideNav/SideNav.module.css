@@ -61,10 +61,11 @@
 
 .sideNavLogo {
   position: absolute;
-  top: 79px;
+  top: 43px;
   left: 50%;
   transform: translateX(-50%);
   width: 164px;
+  height: 164px;
 }
 
 .sideNavLogoSvg {
@@ -73,6 +74,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: 51px;
+  height: auto;
 }
 
 .sidebarMenuWrapper {
@@ -155,6 +157,7 @@
 
 .sidebarProfileDefaultImg {
   transition: box-shadow 0.2s ease;
+  width: 39px;
   height: 37px;
   cursor: pointer;
   border-radius: 12px;
