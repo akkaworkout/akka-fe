@@ -39,6 +39,8 @@ const COLOR_OPTIONS = [
   '#D7FFF3',
 ]
 
+const TICKET_SKELETON_ROW_COUNT = 10
+
 const TicketPage = () => {
   // UI
   const [activeDropdownIndex, setActiveDropdownIndex] = useState<number | null>(null)
@@ -110,7 +112,7 @@ const TicketPage = () => {
         <div className={styles.write}>
           {loading ? (
             <div className={styles.ticketSkeleton} role="status" aria-label="이용권 불러오는 중">
-              {Array.from({ length: 3 }).map((_, index) => (
+              {Array.from({ length: TICKET_SKELETON_ROW_COUNT }).map((_, index) => (
                 <div key={index} className={styles.ticketSkeletonRow}>
                   <Skeleton width={42} height={42} borderRadius={12} />
                   <div className={styles.ticketSkeletonText}>

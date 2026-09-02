@@ -4,7 +4,7 @@ import styles from './MainPage.module.css'
 
 import mainAkka from '@/assets/brand/main-akka.png'
 import mainWorkout from '@/assets/brand/main-workout.png'
-import mainpage from '@/assets/brand/main-hero.webp'
+import akkaMascot from '@/assets/brand/akka-mascot.png'
 
 export default function MainPage() {
   return (
@@ -32,16 +32,31 @@ export default function MainPage() {
                 <h1 className={styles.title}>이제 숫자로 확인하세요</h1>
 
                 <div className={styles.brand}>
-                  <img className={styles.brandAkka} src={mainAkka} alt="akka" />
-                  <img className={styles.brandWorkout} src={mainWorkout} alt="workout" />
+                  <img
+                    className={styles.brandAkka}
+                    src={mainAkka}
+                    alt="akka"
+                    width={2692}
+                    height={980}
+                  />
+                  <img
+                    className={styles.brandWorkout}
+                    src={mainWorkout}
+                    alt="workout"
+                    width={3460}
+                    height={842}
+                  />
                 </div>
               </div>
 
               <div className={styles.illustWrap}>
                 <img
                   className={styles.illust}
-                  src={mainpage}
-                  alt="Akkaworkout 메인 일러스트"
+                  src={akkaMascot}
+                  alt="덤벨을 든 Akkaworkout 마스코트"
+                  width={640}
+                  height={687}
+                  fetchPriority="high"
                   decoding="async"
                 />
               </div>
