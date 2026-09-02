@@ -8,6 +8,16 @@ export const setAccessToken = async (page: Page, token = TEST_ACCESS_TOKEN) => {
   }, token)
 }
 
+export const setAuthTokens = async (page: Page, accessToken: string, refreshToken: string) => {
+  await page.addInitScript(
+    ({ accessToken: storedAccessToken, refreshToken: storedRefreshToken }) => {
+      window.localStorage.setItem('accessToken', storedAccessToken)
+      window.localStorage.setItem('refreshToken', storedRefreshToken)
+    },
+    { accessToken, refreshToken },
+  )
+}
+
 export const mockCurrentUser = async (page: Page, nickname = '테스트 사용자') => {
   await page.route(/\/users\/me$/, async (route) => {
     await route.fulfill({
