@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { MdPerson } from 'react-icons/md'
@@ -13,9 +14,10 @@ import { authApi } from '@/api/authApi'
 export default function SignUpPage() {
   const nav = useNavigate()
   const form = useSignUpForm()
+  const fileRef = useRef<HTMLInputElement | null>(null)
 
   const handlePickProfile = () => {
-    form.fileRef.current?.click()
+    fileRef.current?.click()
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -113,7 +115,7 @@ export default function SignUpPage() {
                 </div>
 
                 <input
-                  ref={form.fileRef}
+                  ref={fileRef}
                   type="file"
                   accept="image/*"
                   className={styles.fileInput}

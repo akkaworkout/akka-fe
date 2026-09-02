@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { authApi } from '@/api/authApi'
 
@@ -14,7 +14,6 @@ type FieldErrors = Partial<{
 
 export const useSignUpForm = () => {
   // profile
-  const fileRef = useRef<HTMLInputElement | null>(null)
   const [profilePreview, setProfilePreview] = useState<string | null>(null)
   const [profileFile, setProfileFile] = useState<File | null>(null)
 
@@ -206,7 +205,6 @@ export const useSignUpForm = () => {
 
   return {
     // profile
-    fileRef,
     profilePreview,
     profileFile,
     // form values
