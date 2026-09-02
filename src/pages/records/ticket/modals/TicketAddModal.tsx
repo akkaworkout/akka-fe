@@ -3,6 +3,7 @@ import { FaCheck } from 'react-icons/fa6'
 
 import TicketModal from './TicketModal'
 import DateSelect from '@/components/dateSelect/DateSelect'
+import { formatDateForApi } from '@/utils/date'
 
 import styles from '@/pages/records/ticket/Ticket.module.css'
 
@@ -55,8 +56,6 @@ const TicketAddModal = ({
 
   const getOnlyNumber = (value: string) => value.replace(/[^0-9]/g, '')
 
-  const formatDate = (date: Date) => date.toISOString().split('T')[0]
-
   const isDirty =
     !isViewMode &&
     (form.exerciseType.trim() !== '' ||
@@ -97,8 +96,8 @@ const TicketAddModal = ({
       targetCount: Number(form.targetCount),
       totalAmount: Number(form.totalAmount),
 
-      startDate: formatDate(form.startDate),
-      endDate: formatDate(form.endDate),
+      startDate: formatDateForApi(form.startDate),
+      endDate: formatDateForApi(form.endDate),
     })
   }
 

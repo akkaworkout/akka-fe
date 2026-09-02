@@ -39,7 +39,6 @@ export const useGoals = (year: number, month: number) => {
 
   return {
     goals,
-    setGoals,
     handleGoalChange,
     handleupdateGoals,
     isUpdatingGoals: updateGoalsMutation.isPending,

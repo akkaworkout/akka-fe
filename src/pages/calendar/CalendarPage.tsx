@@ -1,12 +1,14 @@
-// React / 외부 라이브러리
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useNavigate } from 'react-router-dom'
 
 // API / hooks / utils
+import type { TodayItem } from '@/api/calendarApi'
+import { getExerciseDetail } from '@/api/workoutApi'
+import { useSummaryQuery, useTodayItemsQuery } from '@/hooks/queries/useCalendarQuery'
+import { formatDateForApi } from '@/utils/date'
 import { useCalendar } from './hooks/useCalendar'
 import { useGoals } from './hooks/useGoals'
-import { useSummary } from './hooks/useSummary'
-import { useTodayItems } from './hooks/useTodayItems'
 
 // 컴포넌트
 import Card from '@/components/card/Card'
@@ -22,26 +24,53 @@ import styles from './Calendar.module.css'
 
 const CalenderPage = () => {
   const navigate = useNavigate()
+  const [selectedDate, setSelectedDate] = useState(new Date().getDate())
+  const [selectedItem, setSelectedItem] = useState<TodayItem | null>(null)
 
   const { year, month, schedules, handlePrevMonth, handleNextMonth, isNextMonthDisabled } =
     useCalendar()
 
   const { goals, handleGoalChange, handleupdateGoals } = useGoals(year, month)
 
-  const { summary } = useSummary(year, month)
-
-  const {
-    selectedDate,
-    selectedItem,
-    isModalOpen,
-    todayItems,
-    isLoading,
-    handleSelectDay,
-    handleItemClick,
-    handleCloseModal,
-  } = useTodayItems(navigate, new Date().getDate(), year, month)
+  const { data: summary } = useSummaryQuery(year, month)
+  const selectedDateKey = formatDateForApi(new Date(year, month - 1, selectedDate))
+  const { data: todayItems = [], isLoading } = useTodayItemsQuery(selectedDateKey)
 
   const isOverBudget = Number(summary?.totalAmount ?? 0) > Number(summary?.targetBudget ?? 0)
+
+  const handleItemClick = async (item: TodayItem) => {
+    if (item.status === '이용권 등록') {
+      navigate('/ticket')
+      return
+    }
+
+    if (item.status === '구매') {
+      setSelectedItem(item)
+      return
+    }
+
+    try {
+      const record = await getExerciseDetail(item.id)
+
+      setSelectedItem({
+        id: record.id,
+        date: record.exercise_date,
+        name: item.name,
+        status: record.is_success === 1 ? '성공' : '실패',
+        color_code: record.color_code,
+        amount: record.exercise_amount,
+        memo: record.memo,
+        image_url: record.image_url,
+      })
+    } catch (error) {
+      console.error(error)
+      alert('운동 기록을 불러오지 못했어요. 다시 시도해주세요.')
+    }
+  }
+
+  const handleCloseModal = () => {
+    setSelectedItem(null)
+  }
 
   return (
     <>
@@ -68,7 +97,7 @@ const CalenderPage = () => {
               onPrevMonth={handlePrevMonth}
               onNextMonth={handleNextMonth}
               isNextMonthDisabled={isNextMonthDisabled}
-              onSelectDay={(day) => handleSelectDay(day)}
+              onSelectDay={setSelectedDate}
             />
 
             <div className={styles.money}>
@@ -159,9 +188,7 @@ const CalenderPage = () => {
         </div>
       </div>
 
-      {isModalOpen && selectedItem && (
-        <TodayItemModal item={selectedItem} onClose={handleCloseModal} />
-      )}
+      {selectedItem && <TodayItemModal item={selectedItem} onClose={handleCloseModal} />}
     </>
   )
 }

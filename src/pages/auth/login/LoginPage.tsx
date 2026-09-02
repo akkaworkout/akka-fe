@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async'
 
 import { useAuthStore } from '@/stores/useAuthStore'
 import { authApi } from '@/api/authApi'
+import { isEmailValid, isPasswordValid } from '@/utils/validation'
 
 import Form from '@/components/form/Form'
 
@@ -14,10 +15,6 @@ type FieldErrors = Partial<{
   email: string
   password: string
 }>
-
-const isEmailValid = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
-const hasSpecialChar = (v: string) => /[^A-Za-z0-9]/.test(v)
-const isPasswordValid = (v: string) => v.length >= 8 && hasSpecialChar(v)
 
 export default function LoginPage() {
   const nav = useNavigate()

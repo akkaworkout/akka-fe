@@ -3,6 +3,7 @@ import type { AxiosError } from 'axios'
 
 import { createExercise, updateExercise, deleteExercise } from '@/api/workoutApi'
 import { reportQueryKeys } from '@/hooks/queries/useReportQuery'
+import { getYearMonth } from '@/utils/date'
 
 import type { WorkoutForm } from '@/pages/records/workout/types/workoutTypes'
 
@@ -21,11 +22,6 @@ type DeleteExercisePayload = {
   date: Date
 }
 
-const getReportMonth = (date: Date) => ({
-  year: date.getFullYear(),
-  month: date.getMonth() + 1,
-})
-
 export const useCreateExerciseMutation = () => {
   const queryClient = useQueryClient()
 
@@ -36,7 +32,7 @@ export const useCreateExerciseMutation = () => {
       alert(error.response?.data?.message ?? '운동 기록에 실패했어요. 잠시 후 다시 시도해주세요.')
     },
     onSuccess: async (_data, form) => {
-      const { year, month } = getReportMonth(form.date)
+      const { year, month } = getYearMonth(form.date)
 
       await queryClient.invalidateQueries({ queryKey: reportQueryKeys.month(year, month) })
     },
@@ -55,11 +51,11 @@ export const useUpdateExerciseMutation = () => {
       )
     },
     onSuccess: async (_data, { form, previousDate }) => {
-      const currentMonth = getReportMonth(form.date)
+      const currentMonth = getYearMonth(form.date)
       const months = new Map([[`${currentMonth.year}-${currentMonth.month}`, currentMonth]])
 
       if (previousDate) {
-        const previousMonth = getReportMonth(previousDate)
+        const previousMonth = getYearMonth(previousDate)
         months.set(`${previousMonth.year}-${previousMonth.month}`, previousMonth)
       }
 
@@ -84,7 +80,7 @@ export const useDeleteExerciseMutation = () => {
       )
     },
     onSuccess: async (_data, { date }) => {
-      const { year, month } = getReportMonth(date)
+      const { year, month } = getYearMonth(date)
 
       await queryClient.invalidateQueries({ queryKey: reportQueryKeys.month(year, month) })
     },

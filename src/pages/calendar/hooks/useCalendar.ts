@@ -1,14 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
-import { type Schedule } from '@/api/calendarApi'
 import { useCalendarQuery } from '@/hooks/queries/useCalendarQuery'
-
-type CalendarDay = {
-  date: string
-  ticket?: Schedule
-  visible: Schedule[]
-  hiddenCount: number
-}
 
 export const useCalendar = () => {
   const now = new Date()
@@ -46,46 +38,10 @@ export const useCalendar = () => {
     }
   }
 
-  // 캘린더 데이터 정리
-  const buildCalendarMap = (list: Schedule[]) => {
-    const map: Record<string, CalendarDay> = {}
-
-    list.forEach((item) => {
-      const key = item.date
-
-      if (!map[key]) {
-        map[key] = {
-          date: key,
-          visible: [],
-          hiddenCount: 0,
-        }
-      }
-
-      if (item.type === 'ticket') {
-        map[key].ticket = item
-      } else {
-        map[key].visible.push(item)
-      }
-    })
-
-    Object.values(map).forEach((day) => {
-      if (day.visible.length > 2) {
-        day.hiddenCount = day.visible.length - 2
-
-        day.visible = day.visible.slice(0, 2)
-      }
-    })
-
-    return map
-  }
-
-  const calendarMap = useMemo(() => buildCalendarMap(schedules), [schedules])
-
   return {
     year,
     month,
     schedules,
-    calendarMap,
     handlePrevMonth,
     handleNextMonth,
     isNextMonthDisabled,

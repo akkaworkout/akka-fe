@@ -92,7 +92,9 @@ const TodayRecordSection = ({
                             : styles.purchase
                       }
                     >
-                      {(item.amount ?? 0).toLocaleString()}원
+                      {item.status === '이용권 등록'
+                        ? '등록 완료'
+                        : `${(item.amount ?? 0).toLocaleString()}원`}
                     </span>
                   </button>
                 </li>

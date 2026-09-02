@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useFormValidation } from './useFormValidation'
+import { type FormEvent, type RefObject, useEffect, useState } from 'react'
+
+import { updateMe, type UpdateMePayload } from '@/api/userApi'
+import { isEmailValid, isNicknameValid, isNumericString, isPasswordValid } from '@/utils/validation'
 
 export type FieldErrors = Partial<{
   email: string
@@ -10,7 +12,7 @@ export type FieldErrors = Partial<{
   exerciseGoal: string
 }>
 
-export type Touched = Partial<Record<keyof FieldErrors, boolean>>
+type Touched = Partial<Record<keyof FieldErrors, boolean>>
 
 export type FormData = {
   email: string
@@ -29,9 +31,17 @@ export type InitialData = {
   premiumPoint: string
 }
 
-export const useMyPageForm = (initialData: InitialData) => {
-  const validation = useFormValidation()
+type FieldName = 'email' | 'nickname' | 'budget' | 'exerciseGoal'
+type PasswordFieldName = 'password' | 'passwordConfirm'
 
+type Params = {
+  initialData: InitialData
+  fileRef: RefObject<HTMLInputElement | null>
+  resetProfile: () => void
+  fetchMe: () => Promise<unknown>
+}
+
+export const useMyPageForm = ({ initialData, fileRef, resetProfile, fetchMe }: Params) => {
   const [formData, setFormData] = useState<FormData>({
     email: initialData.email,
     password: '',
@@ -40,7 +50,6 @@ export const useMyPageForm = (initialData: InitialData) => {
     budget: initialData.budget,
     exerciseGoal: initialData.exerciseGoal,
   })
-
   const [errors, setErrors] = useState<FieldErrors>({})
   const [touched, setTouched] = useState<Touched>({})
   const [submitted, setSubmitted] = useState(false)
@@ -58,7 +67,6 @@ export const useMyPageForm = (initialData: InitialData) => {
     })
   }, [initialData.email, initialData.nickname, initialData.budget, initialData.exerciseGoal])
 
-  // === Dirty 체크 ===
   const emailDirty = formData.email !== initialData.email
   const nicknameDirty = formData.nickname !== initialData.nickname
   const budgetDirty = formData.budget !== initialData.budget
@@ -66,84 +74,65 @@ export const useMyPageForm = (initialData: InitialData) => {
   const passwordDirty =
     formData.password.trim().length > 0 || formData.passwordConfirm.trim().length > 0
 
-  // === 개별 검증 ===
-  const emailOk = !emailDirty || validation.isEmailValid(formData.email)
-  const nicknameOk = !nicknameDirty || validation.isNicknameValid(formData.nickname)
-  const budgetOk = !budgetDirty || validation.isBudgetValid(formData.budget)
-  const exerciseOk = !exerciseDirty || validation.isExerciseValid(formData.exerciseGoal)
+  const emailOk = !emailDirty || isEmailValid(formData.email)
+  const nicknameOk = !nicknameDirty || isNicknameValid(formData.nickname)
+  const budgetOk = !budgetDirty || isNumericString(formData.budget)
+  const exerciseOk = !exerciseDirty || isNumericString(formData.exerciseGoal)
   const passwordOk =
     !passwordDirty ||
-    (validation.isPasswordValid(formData.password) &&
-      formData.passwordConfirm === formData.password)
-
+    (isPasswordValid(formData.password) && formData.passwordConfirm === formData.password)
   const emailCheckOk = !emailDirty || emailChecked
   const nicknameCheckOk = !nicknameDirty || nicknameChecked
-
-  // === 전체 변경 여부 ===
   const hasAnyChange = emailDirty || nicknameDirty || budgetDirty || exerciseDirty || passwordDirty
+  const canSubmit =
+    hasAnyChange &&
+    emailOk &&
+    nicknameOk &&
+    budgetOk &&
+    exerciseOk &&
+    passwordOk &&
+    emailCheckOk &&
+    nicknameCheckOk
 
-  // === Submit 가능 여부 ===
-  const canSubmit = useMemo(() => {
-    return (
-      hasAnyChange &&
-      emailOk &&
-      nicknameOk &&
-      budgetOk &&
-      exerciseOk &&
-      passwordOk &&
-      emailCheckOk &&
-      nicknameCheckOk
-    )
-  }, [
-    hasAnyChange,
-    emailOk,
-    nicknameOk,
-    budgetOk,
-    exerciseOk,
-    passwordOk,
-    emailCheckOk,
-    nicknameCheckOk,
-  ])
-
-  // === Validation ===
   const validate = () => {
     const next: FieldErrors = {}
 
     if (emailDirty) {
-      if (!validation.isEmailValid(formData.email)) next.email = '올바른 이메일 형식이 아닙니다.'
+      if (!isEmailValid(formData.email)) next.email = '올바른 이메일 형식이 아닙니다.'
       else if (!emailChecked) next.email = '이메일 중복 확인을 해주세요.'
     }
 
     if (nicknameDirty) {
-      if (!validation.isNicknameValid(formData.nickname))
-        next.nickname = '5글자 이내로 입력해주세요.'
+      if (!isNicknameValid(formData.nickname)) next.nickname = '5글자 이내로 입력해주세요.'
       else if (!nicknameChecked) next.nickname = '닉네임 중복 확인을 해주세요.'
     }
 
-    if (budgetDirty) {
-      if (!validation.isBudgetValid(formData.budget)) next.budget = '숫자만 입력 가능합니다.'
+    if (budgetDirty && !isNumericString(formData.budget)) {
+      next.budget = '숫자만 입력 가능합니다.'
     }
 
-    if (exerciseDirty) {
-      if (!validation.isExerciseValid(formData.exerciseGoal))
-        next.exerciseGoal = '숫자만 입력 가능합니다.'
+    if (exerciseDirty && !isNumericString(formData.exerciseGoal)) {
+      next.exerciseGoal = '숫자만 입력 가능합니다.'
     }
 
     if (passwordDirty) {
       if (!formData.password.trim()) next.password = '비밀번호를 입력해주세요.'
-      else if (!validation.isPasswordValid(formData.password))
+      else if (!isPasswordValid(formData.password)) {
         next.password = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
+      }
 
-      if (!formData.passwordConfirm.trim()) next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
-      else if (formData.passwordConfirm !== formData.password)
+      if (!formData.passwordConfirm.trim()) {
+        next.passwordConfirm = '비밀번호 확인을 입력해주세요.'
+      } else if (formData.passwordConfirm !== formData.password) {
         next.passwordConfirm = '비밀번호가 일치하지 않습니다.'
+      }
     }
 
     setErrors(next)
+
     return Object.keys(next).length === 0
   }
 
-  // === Reset ===
   const reset = () => {
     setFormData({
       email: initialData.email,
@@ -163,42 +152,146 @@ export const useMyPageForm = (initialData: InitialData) => {
   const showError = (field: keyof FieldErrors) =>
     (submitted || touched[field]) && Boolean(errors[field])
 
+  const handleFieldChange = (fieldName: FieldName, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }))
+
+    if (fieldName === 'email') {
+      setEmailChecked(false)
+    } else if (fieldName === 'nickname') {
+      setNicknameChecked(false)
+    }
+
+    setTouched((prev) => ({ ...prev, [fieldName]: true }))
+
+    if (!value.trim()) {
+      setErrors((prev) => ({ ...prev, [fieldName]: undefined }))
+      return
+    }
+
+    const validators: Record<FieldName, (fieldValue: string) => boolean> = {
+      email: isEmailValid,
+      nickname: isNicknameValid,
+      budget: isNumericString,
+      exerciseGoal: isNumericString,
+    }
+    const messages: Record<FieldName, string> = {
+      email: '올바른 이메일 형식이 아니에요',
+      nickname: '5글자 이내로 입력해주세요',
+      budget: '숫자만 입력 가능해요',
+      exerciseGoal: '숫자만 입력 가능해요',
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      [fieldName]: validators[fieldName](value) ? undefined : messages[fieldName],
+    }))
+  }
+
+  const handlePasswordChange = (fieldName: PasswordFieldName, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }))
+    setTouched((prev) => ({ ...prev, [fieldName]: true }))
+
+    let errorMessage: string | undefined
+
+    if (fieldName === 'password') {
+      if (value.trim() && !isPasswordValid(value)) {
+        errorMessage = '비밀번호는 특수문자 포함 8자 이상이어야 합니다.'
+      }
+
+      if (formData.passwordConfirm.trim() && value !== formData.passwordConfirm) {
+        setErrors((prev) => ({
+          ...prev,
+          password: errorMessage,
+          passwordConfirm: '비밀번호가 일치하지 않습니다.',
+        }))
+        return
+      }
+    } else if (!formData.password.trim() && value.trim()) {
+      errorMessage = '비밀번호를 먼저 입력해주세요.'
+    } else if (formData.password.trim() && !value.trim()) {
+      errorMessage = '비밀번호 확인을 입력해주세요.'
+    } else if (formData.password.trim() && value !== formData.password) {
+      errorMessage = '비밀번호가 일치하지 않습니다.'
+    }
+
+    setErrors((prev) => ({ ...prev, [fieldName]: errorMessage }))
+  }
+
+  const handleCheck = (fieldName: 'email' | 'nickname') => {
+    const value = formData[fieldName]
+    const dirty = fieldName === 'email' ? emailDirty : nicknameDirty
+    const valid = fieldName === 'email' ? isEmailValid(value) : isNicknameValid(value)
+
+    if (!dirty || !valid) {
+      setErrors((prev) => ({
+        ...prev,
+        [fieldName]:
+          fieldName === 'email' ? '올바른 이메일 형식이 아니에요' : '5글자 이내로 입력해주세요',
+      }))
+      setTouched((prev) => ({ ...prev, [fieldName]: true }))
+      return
+    }
+
+    alert(`${fieldName === 'email' ? '이메일' : '닉네임'} 중복 확인이 완료되었어요`)
+
+    if (fieldName === 'email') setEmailChecked(true)
+    else setNicknameChecked(true)
+  }
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault()
+    setSubmitted(true)
+
+    if (!canSubmit) {
+      validate()
+      return
+    }
+
+    if (!validate()) return
+
+    const payload: UpdateMePayload = {}
+
+    if (emailDirty) payload.email = formData.email.trim()
+    if (nicknameDirty) payload.nickname = formData.nickname.trim()
+    if (budgetDirty) payload.target_budget = Number(formData.budget)
+    if (exerciseDirty) payload.target_exercise_count = Number(formData.exerciseGoal)
+    if (formData.password.trim()) payload.password = formData.password
+
+    if (Object.keys(payload).length === 0) {
+      alert('바뀐 내용이 없어요')
+      return
+    }
+
+    try {
+      const file = fileRef.current?.files?.[0]
+
+      await updateMe(payload, file)
+      alert('바뀐 내용을 저장했어요')
+
+      reset()
+      resetProfile()
+      await fetchMe()
+    } catch (error) {
+      alert(error instanceof Error ? error.message : '수정에 실패했어요')
+    }
+  }
+
   return {
-    // 상태
     formData,
-    setFormData,
     errors,
-    setErrors,
-    touched,
-    setTouched,
-    submitted,
-    setSubmitted,
-    emailChecked,
-    setEmailChecked,
-    nicknameChecked,
-    setNicknameChecked,
-
-    // Dirty 상태
-    emailDirty,
-    nicknameDirty,
-    budgetDirty,
-    exerciseDirty,
-    passwordDirty,
-
-    // 검증 상태
-    emailOk,
-    nicknameOk,
-    budgetOk,
-    exerciseOk,
-    passwordOk,
-    emailCheckOk,
-    nicknameCheckOk,
-    hasAnyChange,
+    canCheckEmail: emailDirty && isEmailValid(formData.email),
+    canCheckNickname: nicknameDirty && isNicknameValid(formData.nickname),
     canSubmit,
-
-    // 함수
-    validate,
-    reset,
     showError,
+    handleFieldChange,
+    handlePasswordChange,
+    handleCheck,
+    handleSubmit,
   }
 }

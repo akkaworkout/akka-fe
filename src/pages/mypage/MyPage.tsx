@@ -17,9 +17,7 @@ import {
   ProfileFormContentSkeleton,
 } from './components/MyPageContentSkeleton'
 
-import { useFormValidation } from './hooks/useFormValidation'
 import { useMyPageForm } from './hooks/useMyPageForm'
-import { useMyPageHandlers } from './hooks/useMyPageHandlers'
 import { useProfileImage } from './hooks/useProfileImage'
 import { useUserData } from './hooks/useUserData'
 
@@ -81,17 +79,13 @@ export default function MyPage() {
     handleProfileChange,
     resetProfile,
   } = useProfileImage()
-  const validation = useFormValidation()
-
   // 초기값 계산
   const initialData = getMyPageInitialData(user)
   const profileImageSrc =
     profilePreview ?? (user?.profile_image_url?.trim() ? buildApiUrl(user.profile_image_url) : null)
 
-  const form = useMyPageForm(initialData)
-  const { handleFieldChange, handlePasswordChange, handleCheck, handleSubmit } = useMyPageHandlers({
-    form,
-    validation,
+  const form = useMyPageForm({
+    initialData,
     fileRef,
     resetProfile,
     fetchMe,
@@ -166,14 +160,14 @@ export default function MyPage() {
 
                       <div className={styles.profileToFormGap} />
 
-                      <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
+                      <form className={styles.form} onSubmit={form.handleSubmit} autoComplete="off">
                         {LEFT_FORM_FIELDS.map((field) => (
                           <Input
                             key={field.name}
                             id={`mypage-${field.name}`}
                             label={field.label}
                             value={form.formData[field.name]}
-                            onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                            onChange={(e) => form.handleFieldChange(field.name, e.target.value)}
                             type={field.type}
                             variant="profile"
                             errorText={
@@ -183,13 +177,11 @@ export default function MyPage() {
                               field.hasButton
                                 ? {
                                     label: field.buttonText,
-                                    onClick: () => handleCheck(field.name),
+                                    onClick: () => form.handleCheck(field.name),
                                     disabled:
                                       field.name === 'email'
-                                        ? !form.emailDirty ||
-                                          !validation.isEmailValid(form.formData.email)
-                                        : !form.nicknameDirty ||
-                                          !validation.isNicknameValid(form.formData.nickname),
+                                        ? !form.canCheckEmail
+                                        : !form.canCheckNickname,
                                   }
                                 : undefined
                             }
@@ -200,7 +192,7 @@ export default function MyPage() {
                           id="mypage-password"
                           label="비밀번호"
                           value={form.formData.password}
-                          onChange={(e) => handlePasswordChange('password', e.target.value)}
+                          onChange={(e) => form.handlePasswordChange('password', e.target.value)}
                           type="password"
                           variant="profile"
                           placeholder="비밀번호 (특수문자 포함, 8자 이상)"
@@ -212,7 +204,9 @@ export default function MyPage() {
                           id="mypage-password-confirm"
                           label="비밀번호 확인"
                           value={form.formData.passwordConfirm}
-                          onChange={(e) => handlePasswordChange('passwordConfirm', e.target.value)}
+                          onChange={(e) =>
+                            form.handlePasswordChange('passwordConfirm', e.target.value)
+                          }
                           type="password"
                           variant="profile"
                           placeholder="비밀번호 확인"
@@ -271,7 +265,9 @@ export default function MyPage() {
                                       form.showError(field.name) ? styles.inputError : ''
                                     }`}
                                     value={form.formData[field.name]}
-                                    onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                                    onChange={(e) =>
+                                      form.handleFieldChange(field.name, e.target.value)
+                                    }
                                     type="number"
                                   />
                                 </div>

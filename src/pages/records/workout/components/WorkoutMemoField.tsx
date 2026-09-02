@@ -1,13 +1,11 @@
-import type { WorkoutFormSetter } from '../types/workoutTypes'
-
 import styles from '../Workout.module.css'
 
 type Props = {
   memo: string
-  setForm: WorkoutFormSetter
+  onChange: (memo: string) => void
 }
 
-const WorkoutMemoField = ({ memo, setForm }: Props) => {
+const WorkoutMemoField = ({ memo, onChange }: Props) => {
   return (
     <div className={styles.field}>
       <label htmlFor="memo">메모</label>
@@ -16,12 +14,7 @@ const WorkoutMemoField = ({ memo, setForm }: Props) => {
         id="memo"
         className={styles.input}
         value={memo}
-        onChange={(e) => {
-          setForm((prev) => ({
-            ...prev,
-            memo: e.target.value,
-          }))
-        }}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="메모"
         maxLength={30}
       />

@@ -25,6 +25,7 @@ type Props = {
 const TodayItemModal = ({ item, onClose }: Props) => {
   const [imageError, setImageError] = useState(false)
   const navigate = useNavigate()
+  const hasMemo = Boolean(item.memo?.trim())
 
   const formatDate = (date: string) => {
     const d = new Date(date)
@@ -64,25 +65,29 @@ const TodayItemModal = ({ item, onClose }: Props) => {
         </button>
       }
     >
-      {item.image_url && (
-        <div className={styles.images}>
-          {imageError ? (
-            <div className={styles.noImage}>이미지를 불러오지 못했어요</div>
-          ) : (
-            <img
-              src={buildApiUrl(item.image_url)}
-              alt="exercise"
-              onError={() => setImageError(true)}
-            />
-          )}
-        </div>
-      )}
+      <div className={styles.images}>
+        {item.image_url && !imageError ? (
+          <img
+            src={buildApiUrl(item.image_url)}
+            alt="운동 기록"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className={styles.noImage} role="status">
+            {imageError ? '이미지를 불러오지 못했어요' : '등록된 이미지가 없어요'}
+          </div>
+        )}
+      </div>
 
       <div className={`${styles.alert} ${alertClassMap[item.status]}`}>{alertText}</div>
 
       <div className={styles.section}>
         <div className={styles.label}>{item.name}</div>
-        <div className={styles.memo}>{item.memo ?? ''}</div>
+        {hasMemo ? (
+          <div className={styles.memo}>{item.memo}</div>
+        ) : (
+          <p className={styles.emptyMemo}>작성된 메모가 없어요</p>
+        )}
       </div>
     </Modal>
   )

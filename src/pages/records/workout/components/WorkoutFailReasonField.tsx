@@ -1,13 +1,11 @@
-import type { WorkoutFormSetter } from '../types/workoutTypes'
-
 import styles from '../Workout.module.css'
 
 type Props = {
   failReason: string
-  setForm: WorkoutFormSetter
+  onChange: (failReason: string) => void
 }
 
-const WorkoutFailReasonField = ({ failReason, setForm }: Props) => {
+const WorkoutFailReasonField = ({ failReason, onChange }: Props) => {
   return (
     <div className={styles.field}>
       <label htmlFor="failReason">
@@ -18,12 +16,7 @@ const WorkoutFailReasonField = ({ failReason, setForm }: Props) => {
         id="failReason"
         className={styles.input}
         value={failReason}
-        onChange={(e) => {
-          setForm((prev) => ({
-            ...prev,
-            failReason: e.target.value,
-          }))
-        }}
+        onChange={(e) => onChange(e.target.value)}
         placeholder="실패 이유"
         maxLength={7}
       />
