@@ -21,10 +21,6 @@ export const useWorkoutActions = (form: WorkoutForm, recordId?: number, previous
         alert('운동 기록을 저장했어요')
         navigate('/calendar')
       },
-      onError: (error) => {
-        console.error(error)
-        alert(error.response?.data?.message ?? '운동 기록에 실패했어요. 잠시 후 다시 시도해주세요.')
-      },
     })
   }
 
@@ -42,13 +38,6 @@ export const useWorkoutActions = (form: WorkoutForm, recordId?: number, previous
           alert('운동 기록이 수정되었어요')
           navigate('/calendar')
         },
-        onError: (error) => {
-          console.error(error)
-          alert(
-            error.response?.data?.message ??
-              '운동 기록 수정에 실패했어요. 잠시 후 다시 시도해주세요.',
-          )
-        },
       },
     )
   }
@@ -65,13 +54,6 @@ export const useWorkoutActions = (form: WorkoutForm, recordId?: number, previous
         onSuccess: () => {
           alert('운동 기록이 삭제되었어요')
           navigate('/calendar')
-        },
-        onError: (error) => {
-          console.error(error)
-          alert(
-            error.response?.data?.message ??
-              '운동 기록 삭제에 실패했어요. 잠시 후 다시 시도해주세요.',
-          )
         },
       },
     )

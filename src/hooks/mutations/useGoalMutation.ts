@@ -16,5 +16,9 @@ type UpdateGoalsPayload = {
 export const useUpdateGoalsMutation = () => {
   return useMutation<unknown, AxiosError<ErrorResponse>, UpdateGoalsPayload>({
     mutationFn: ({ year, month, goals }) => updateGoals(year, month, goals),
+    onError: (error) => {
+      console.error('updateGoals failed:', error)
+      alert('목표 저장에 실패했어요. 다시 시도해주세요.')
+    },
   })
 }

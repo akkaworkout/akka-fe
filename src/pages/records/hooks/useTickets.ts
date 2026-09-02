@@ -26,11 +26,6 @@ export const useTickets = () => {
 
         onSuccess?.()
       },
-      onError: (error: unknown) => {
-        console.error('이용권 등록 실패:', error)
-
-        alert('이용권 등록에 실패했어요')
-      },
     })
   }
 
@@ -43,11 +38,6 @@ export const useTickets = () => {
         await refetch()
 
         onSuccess?.()
-      },
-      onError: (error: unknown) => {
-        console.error('DELETE 실패:', error)
-
-        alert('이용권 삭제에 실패했어요. 다시 시도해주세요')
       },
     })
   }
@@ -72,11 +62,6 @@ export const useTickets = () => {
           await refetch()
 
           onSuccess?.()
-        },
-        onError: (error: unknown) => {
-          console.error('PATCH 실패:', error)
-
-          alert('이용권 종료에 실패했어요. 다시 시도해주세요')
         },
       },
     )
