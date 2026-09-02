@@ -72,10 +72,6 @@ export const useExpenseForm = (initialCategory: Expense) => {
           alert('운동지출 기록이 완료되었어요')
           navigate('/calendar')
         },
-        onError: (error: unknown) => {
-          console.error(error)
-          alert('지출 기록 저장에 실패했어요. 잠시 후 다시 시도해주세요.')
-        },
       },
     )
   }

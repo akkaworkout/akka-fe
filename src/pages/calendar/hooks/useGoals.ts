@@ -33,10 +33,6 @@ export const useGoals = (year: number, month: number) => {
         onSuccess: () => {
           alert('저장이 완료되었어요')
         },
-        onError: (error: unknown) => {
-          console.error(error)
-          alert('목표 저장에 실패했어요. 다시 시도해주세요.')
-        },
       },
     )
   }
