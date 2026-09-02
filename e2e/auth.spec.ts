@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { mockCurrentUser, setAccessToken } from './helpers/auth'
+import { mockCurrentUser, setAuthTokens } from './helpers/auth'
 
 test.describe('인증 사용자 흐름', () => {
   test('비로그인 사용자가 보호 페이지를 선택하면 로그인 화면으로 이동한다', async ({ page }) => {
@@ -26,7 +26,12 @@ test.describe('인증 사용자 흐름', () => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ data: { accessToken: 'login-success-token' } }),
+        body: JSON.stringify({
+          data: {
+            accessToken: 'login-success-token',
+            refreshToken: 'login-refresh-token',
+          },
+        }),
       })
     })
     await mockCurrentUser(page, '아까 테스트')
@@ -46,11 +51,39 @@ test.describe('인증 사용자 흐름', () => {
     await expect
       .poll(() => page.evaluate(() => window.localStorage.getItem('accessToken')))
       .toBe('login-success-token')
+    await expect
+      .poll(() => page.evaluate(() => window.localStorage.getItem('refreshToken')))
+      .toBe('login-refresh-token')
   })
 
-  test('만료된 토큰으로 보호 페이지에 접근하면 자동 로그아웃한다', async ({ page }) => {
-    await setAccessToken(page, 'expired-token')
+  test('액세스 토큰이 만료되면 갱신한 뒤 원래 요청을 다시 보낸다', async ({ page }) => {
+    await setAuthTokens(page, 'expired-token', 'valid-refresh-token')
+
+    let refreshRequestCount = 0
+
+    await page.route(/\/auth\/refresh$/, async (route) => {
+      refreshRequestCount += 1
+      expect(route.request().postDataJSON()).toEqual({ refreshToken: 'valid-refresh-token' })
+
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ data: { accessToken: 'renewed-access-token' } }),
+      })
+    })
+
     await page.route(/\/users\/me$/, async (route) => {
+      const authorization = route.request().headers().authorization
+
+      if (authorization === 'Bearer renewed-access-token') {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ data: { nickname: '토큰 갱신 사용자' } }),
+        })
+        return
+      }
+
       await route.fulfill({
         status: 401,
         contentType: 'application/json',
@@ -67,9 +100,47 @@ test.describe('인증 사용자 흐름', () => {
 
     await page.goto('/ticket')
 
+    await expect(page).toHaveURL(/\/ticket$/)
+    await expect(page.getByText('토큰 갱신 사용자', { exact: true })).toBeVisible()
+    await expect
+      .poll(() => page.evaluate(() => window.localStorage.getItem('accessToken')))
+      .toBe('renewed-access-token')
+    expect(refreshRequestCount).toBe(1)
+  })
+
+  test('리프레시 토큰도 만료되면 자동 로그아웃한다', async ({ page }) => {
+    await setAuthTokens(page, 'expired-token', 'expired-refresh-token')
+
+    await page.route(/\/users\/me$/, async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({ message: 'Unauthorized' }),
+      })
+    })
+    await page.route(/\/auth\/refresh$/, async (route) => {
+      await route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({ message: 'Invalid refresh token' }),
+      })
+    })
+    await page.route(/\/tickets$/, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ data: [] }),
+      })
+    })
+
+    await page.goto('/ticket')
+
     await expect(page).toHaveURL(/\/login$/)
     await expect
       .poll(() => page.evaluate(() => window.localStorage.getItem('accessToken')))
+      .toBeNull()
+    await expect
+      .poll(() => page.evaluate(() => window.localStorage.getItem('refreshToken')))
       .toBeNull()
   })
 })

@@ -53,21 +53,17 @@ export default function LoginPage() {
     try {
       const res = await authApi.login(email, password)
 
-      console.log('LOGIN response:', res.data)
+      const { accessToken, refreshToken } = res.data.data
 
-      const token = res.data?.data?.accessToken
-
-      if (!token) {
+      if (!accessToken || !refreshToken) {
         setErrors((prev) => ({
           ...prev,
-          email: '토큰이 없습니다. 서버 응답을 확인해주세요.',
+          email: '인증 토큰이 없습니다. 서버 응답을 확인해주세요.',
         }))
         return
       }
 
-      login(token)
-
-      console.log('Saved token:', token)
+      login(accessToken, refreshToken)
 
       alert('로그인이 완료되었어요')
 

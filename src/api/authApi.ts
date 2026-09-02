@@ -1,8 +1,17 @@
 import api from './api'
 
+type LoginResponse = {
+  success: boolean
+  message: string
+  data: {
+    accessToken: string
+    refreshToken: string
+  }
+}
+
 export const authApi = {
   login: (email: string, password: string) =>
-    api.post('/auth/login', {
+    api.post<LoginResponse>('/auth/login', {
       email: email.trim(),
       password,
     }),
