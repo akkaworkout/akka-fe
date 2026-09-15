@@ -37,8 +37,16 @@ export const useWorkoutActions = (
     return true
   }
 
+  const isFailReasonValid = () => {
+    if (form.workoutResult === '실패' && !form.failReason.trim()) {
+      notify('운동에 실패한 이유를 입력해주세요.')
+      return false
+    }
+    return true
+  }
+
   const handleSubmit = () => {
-    if (!isExerciseDateValid()) return
+    if (!isExerciseDateValid() || !isFailReasonValid()) return
     createExerciseMutation.mutate(form, {
       onSuccess: () => {
         notify('운동 기록을 저장했어요')
@@ -49,7 +57,7 @@ export const useWorkoutActions = (
 
   const handleUpdate = () => {
     if (!recordId) return
-    if (!isExerciseDateValid()) return
+    if (!isExerciseDateValid() || !isFailReasonValid()) return
 
     updateExerciseMutation.mutate(
       {

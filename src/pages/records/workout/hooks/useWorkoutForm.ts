@@ -26,6 +26,13 @@ export const useWorkoutForm = (recordId?: number) => {
 
   const { ticketList, allTickets, mappedTickets, remainingCount, usedCount, pricePerSession } =
     useWorkoutTickets(form.exercise.id)
+  const availableTickets = recordId
+    ? allTickets.map((ticket) => ({
+        id: ticket.id,
+        label: ticket.exercise_type,
+        color: ticket.color_code,
+      }))
+    : mappedTickets
 
   const { data: exerciseDetail } = useExerciseDetailQuery(recordId)
   const previousDate = exerciseDetail?.exercise_date
@@ -40,7 +47,7 @@ export const useWorkoutForm = (recordId?: number) => {
   )
 
   useEffect(() => {
-    if (ticketList.length === 0) return
+    if (recordId || ticketList.length === 0) return
 
     setForm((prev) => {
       if (prev.exercise.id !== 0) return prev
@@ -56,27 +63,27 @@ export const useWorkoutForm = (recordId?: number) => {
         },
       }
     })
-  }, [ticketList])
+  }, [recordId, ticketList])
 
   useEffect(() => {
-    if (!exerciseDetail || ticketList.length === 0) {
+    if (!exerciseDetail || allTickets.length === 0) {
       return
     }
 
-    const isSuccess = exerciseDetail.success === 1 || exerciseDetail.success === true
+    const isSuccess = exerciseDetail.is_success === 1 || exerciseDetail.is_success === true
 
     const exerciseDate = exerciseDetail.exercise_date
       ? new Date(exerciseDetail.exercise_date)
       : new Date()
 
-    const ticket = ticketList.find((t) => t.id === exerciseDetail.ticket_id)
+    const ticket = allTickets.find((t) => t.id === exerciseDetail.ticket_id)
 
     setForm((prev) => ({
       ...prev,
       date: exerciseDate,
       memo: exerciseDetail.memo ?? '',
       workoutResult: isSuccess ? '성공' : '실패',
-      failReason: exerciseDetail.fail_reason ?? '',
+      failReason: exerciseDetail.failure_reason ?? '',
       exercise: ticket
         ? {
             id: ticket.id,
@@ -87,12 +94,12 @@ export const useWorkoutForm = (recordId?: number) => {
     }))
 
     setPreviewUrl(exerciseDetail.image_url ? buildApiUrl(exerciseDetail.image_url) : null)
-  }, [exerciseDetail, ticketList])
+  }, [exerciseDetail, allTickets])
 
   return {
     form,
     setForm,
-    mappedTickets,
+    mappedTickets: availableTickets,
     remainingCount,
     usedCount,
     pricePerSession,

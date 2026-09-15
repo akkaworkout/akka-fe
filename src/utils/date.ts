@@ -15,5 +15,11 @@ export const getYearMonth = (date: Date) => ({
   month: date.getMonth() + 1,
 })
 
+export const clampDayToMonth = (year: number, month: number, day: number) =>
+  Math.min(day, new Date(year, month, 0).getDate())
+
+export const isDateRangeValid = (startDate: Date, endDate: Date) =>
+  formatDateForApi(startDate) <= formatDateForApi(endDate)
+
 export const isBeforeTicketRegistration = (exerciseDate: Date, registrationDate: string) =>
   formatDateForApi(exerciseDate) < registrationDate

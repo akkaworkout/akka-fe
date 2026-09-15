@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import type { TodayItem } from '@/api/calendarApi'
 import { getExerciseDetail } from '@/api/workoutApi'
 import { useSummaryQuery, useTodayItemsQuery } from '@/hooks/queries/useCalendarQuery'
-import { formatDateForApi } from '@/utils/date'
+import { clampDayToMonth, formatDateForApi } from '@/utils/date'
 import { useCalendar } from './hooks/useCalendar'
 import { useGoals } from './hooks/useGoals'
 
@@ -30,11 +30,12 @@ const CalenderPage = () => {
 
   const { year, month, schedules, handlePrevMonth, handleNextMonth, isNextMonthDisabled } =
     useCalendar()
+  const displayedDate = clampDayToMonth(year, month, selectedDate)
 
   const { goals, handleGoalChange, handleupdateGoals } = useGoals(year, month)
 
   const { data: summary } = useSummaryQuery(year, month)
-  const selectedDateKey = formatDateForApi(new Date(year, month - 1, selectedDate))
+  const selectedDateKey = formatDateForApi(new Date(year, month - 1, displayedDate))
   const { data: todayItems = [], isLoading } = useTodayItemsQuery(selectedDateKey)
 
   const isOverBudget = Number(summary?.totalAmount ?? 0) > Number(summary?.targetBudget ?? 0)
@@ -93,7 +94,7 @@ const CalenderPage = () => {
               month={month}
               selectedYear={year}
               selectedMonth={month}
-              selectedDate={selectedDate}
+              selectedDate={displayedDate}
               schedules={schedules}
               onPrevMonth={handlePrevMonth}
               onNextMonth={handleNextMonth}
@@ -180,7 +181,7 @@ const CalenderPage = () => {
             <TodayRecordSection
               year={year}
               month={month}
-              selectedDate={selectedDate}
+              selectedDate={displayedDate}
               todayItems={todayItems}
               isLoading={isLoading}
               onItemClick={handleItemClick}

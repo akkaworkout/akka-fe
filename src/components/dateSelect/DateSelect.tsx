@@ -11,6 +11,7 @@ type DateSelectProps = {
   value: Date
   onChange: (date: Date) => void
   disabled?: boolean
+  allowFutureMonths?: boolean
 }
 
 const isSameDate = (a: Date, b: Date) =>
@@ -18,7 +19,7 @@ const isSameDate = (a: Date, b: Date) =>
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate()
 
-const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
+const DateSelect = ({ value, onChange, disabled, allowFutureMonths = false }: DateSelectProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const wrapperRef = useRef<HTMLDivElement | null>(null)
@@ -31,7 +32,8 @@ const DateSelect = ({ value, onChange, disabled }: DateSelectProps) => {
   const month = currentMonth.getMonth()
   const today = new Date()
   const isNextMonthDisabled =
-    year > today.getFullYear() || (year === today.getFullYear() && month >= today.getMonth())
+    !allowFutureMonths &&
+    (year > today.getFullYear() || (year === today.getFullYear() && month >= today.getMonth()))
 
   const firstDay = new Date(year, month, 1).getDay()
   const lastDate = new Date(year, month + 1, 0).getDate()
