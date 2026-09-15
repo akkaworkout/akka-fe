@@ -26,7 +26,8 @@
   position: relative; /* 추가 */
   width: 100%;
   max-width: 1008px;
-  margin: 0 auto; /* 94px 제거 */
+  margin: 0 auto 32px;
+  padding-top: 98px;
 }
 
 .headerArea {
@@ -45,8 +46,6 @@
 
 /* 레이아웃 고정 */
 .grid {
-  position: absolute;
-  top: 98px; /* 캘린더 calendar top이 98px */
   display: grid;
   grid-template-columns: 665px 325px;
   column-gap: 18px;

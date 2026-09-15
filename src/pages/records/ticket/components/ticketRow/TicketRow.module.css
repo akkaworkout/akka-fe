@@ -1,6 +1,6 @@
 .ticketRow {
   display: grid;
-  grid-template-columns: minmax(150px, 1.2fr) minmax(240px, 2fr) auto 36px;
+  grid-template-columns: minmax(130px, 1.2fr) minmax(200px, 2fr) auto 36px;
   align-items: center;
   gap: 16px;
   min-height: 86px;

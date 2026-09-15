@@ -36,9 +36,8 @@
 }
 
 .write {
-  position: absolute;
-  top: 98px;
   width: 100%;
+  min-width: 604px;
   border-radius: 10px;
   background: var(--white);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
