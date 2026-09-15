@@ -1,20 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { getTickets, getActiveTickets, getTicketSummary } from '@/api/ticketApi'
+import { getTickets, getTicketSummary } from '@/api/ticketApi'
 
 // 전체 이용권 조회
 export const useTicketsQuery = () => {
   return useQuery({
     queryKey: ['tickets'],
     queryFn: getTickets,
-  })
-}
-
-// 진행 중인 이용권 조회
-export const useActiveTicketsQuery = () => {
-  return useQuery({
-    queryKey: ['activeTickets'],
-    queryFn: getActiveTickets,
   })
 }
 
