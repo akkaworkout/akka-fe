@@ -10,12 +10,12 @@ describe('TodayRecordSection', () => {
       <MemoryRouter>
         <TodayRecordSection
           year={2026}
-          month={8}
-          selectedDate={3}
+          month={9}
+          selectedDate={14}
           todayItems={[
             {
               id: 1,
-              date: '2026-09-03',
+              date: '2026-09-14',
               name: '발레',
               status: '이용권 등록',
               color_code: '#D7D5FF',
@@ -29,6 +29,7 @@ describe('TodayRecordSection', () => {
     )
 
     expect(screen.getByText('등록 완료')).toBeInTheDocument()
+    expect(screen.getByText('2026년 9월 14일')).toBeInTheDocument()
     expect(screen.queryByText('0원')).not.toBeInTheDocument()
   })
 })

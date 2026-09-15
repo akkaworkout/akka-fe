@@ -29,7 +29,7 @@ const TodayRecordSection = ({
   return (
     <div className={styles.today}>
       <Card
-        title={`${year}년 ${month + 1}월 ${selectedDate}일`}
+        title={`${year}년 ${month}월 ${selectedDate}일`}
         width={445}
         height={307}
         backgroundColor="#ffffff"

@@ -1,6 +1,4 @@
 .write {
-  position: absolute;
-  top: 98px;
   width: 604px;
   border-radius: 20px;
   background: var(--white);
@@ -108,6 +106,11 @@
   margin-top: 28px;
 }
 
+.editButtons {
+  display: flex;
+  gap: 12px;
+}
+
 .required {
   color: var(--error);
   font-size: 14px;
@@ -166,7 +169,7 @@
 
 @media (max-width: 1440px) {
   .write {
-    top: 360px;
+    margin-top: 262px;
   }
 
   .currentRecord {

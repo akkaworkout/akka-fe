@@ -40,22 +40,15 @@ const Calendar = ({
   const totalDays = new Date(year, month, 0).getDate()
   const displayMonth = String(month).padStart(2, '0')
 
-  const getScheduleDay = (date: string) => {
-    const parsedDate = new Date(date)
-
-    if (!Number.isNaN(parsedDate.getTime())) {
-      return parsedDate.getDate()
-    }
-
-    const parts = date.split(/[-.]/)
-    return Number(parts[2])
-  }
-
   const schedulesByDay = useMemo(() => {
-    return schedules.reduce<Record<number, Schedule[]>>((acc, schedule) => {
-      const day = getScheduleDay(schedule.date)
+    const displayedMonth = `${year}-${displayMonth}-`
 
-      if (!day) {
+    return schedules.reduce<Record<number, Schedule[]>>((acc, schedule) => {
+      if (!schedule.date.startsWith(displayedMonth)) return acc
+
+      const day = Number(schedule.date.slice(8, 10))
+
+      if (!Number.isInteger(day) || day < 1 || day > totalDays) {
         return acc
       }
 
@@ -67,7 +60,7 @@ const Calendar = ({
 
       return acc
     }, {})
-  }, [schedules])
+  }, [schedules, year, displayMonth, totalDays])
 
   const days: (number | null)[] = [
     ...Array(firstDay).fill(null),
