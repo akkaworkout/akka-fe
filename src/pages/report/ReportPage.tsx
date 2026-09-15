@@ -158,7 +158,8 @@ export default function ReportPage() {
                   radius={20}
                   backgroundColor="#ffffff"
                 >
-                  {isReportLoading || (goalLoading && !currentExerciseData && !isInitialExercise) ? (
+                  {isReportLoading ||
+                  (goalLoading && !currentExerciseData && !isInitialExercise) ? (
                     <GoalContentSkeleton />
                   ) : currentExercise ? (
                     <>
