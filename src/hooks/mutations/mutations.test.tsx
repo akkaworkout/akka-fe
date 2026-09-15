@@ -65,7 +65,9 @@ describe('Mutation 콜백', () => {
     })
     const error = new Error('network error')
     apiMocks.updateGoals.mockRejectedValue(error)
-    const alert = vi.spyOn(window, 'alert').mockImplementation(() => undefined)
+    const notices: CustomEvent[] = []
+    const onNotice = (event: Event) => notices.push(event as CustomEvent)
+    window.addEventListener('akka:notice', onNotice)
     vi.spyOn(console, 'error').mockImplementation(() => undefined)
 
     const { result } = renderHook(() => useUpdateGoalsMutation(), {
@@ -78,6 +80,10 @@ describe('Mutation 콜백', () => {
       ).rejects.toThrow('network error')
     })
 
-    expect(alert).toHaveBeenCalledWith('목표 저장에 실패했어요. 다시 시도해주세요.')
+    expect(notices.at(-1)?.detail).toMatchObject({
+      message: '목표 저장에 실패했어요. 다시 시도해주세요.',
+      tone: 'error',
+    })
+    window.removeEventListener('akka:notice', onNotice)
   })
 })

@@ -27,7 +27,7 @@ import styles from '@/pages/report/Report.module.css'
 import MemoDetailModal from '@/pages/report/modals/MemoDetailModal'
 
 import { useTickets } from '@/pages/records/hooks/useTickets'
-import { useReportQuery } from '@/hooks/queries/useReportQuery'
+import { useReportQuery, useReportExerciseQuery } from '@/hooks/queries/useReportQuery'
 import { useExerciseOptions } from './hooks/useExerciseOptions'
 import { useInsightCalculations } from './hooks/useInsightCalculations'
 import { useReportMetrics } from './hooks/useReportMetrics'
@@ -53,10 +53,32 @@ export default function ReportPage() {
     null
 
   const {
-    data: reportData = null,
+    data: monthData = null,
     isLoading: reportLoading,
     error: reportQueryError,
   } = useReportQuery(year, month, currentExercise?.label)
+
+  const {
+    data: exerciseData = null,
+    isFetching: goalLoading,
+    error: exerciseQueryError,
+  } = useReportExerciseQuery(year, month, currentExercise?.label, Boolean(monthData))
+
+  const currentExerciseData =
+    exerciseData?.goal?.exerciseType === currentExercise?.label ? exerciseData : null
+  const isInitialExercise = monthData?.goal?.exerciseType === currentExercise?.label
+  const reportData = monthData
+    ? {
+        ...monthData,
+        goal: currentExerciseData?.goal ?? (isInitialExercise ? monthData.goal : undefined),
+        breakdown: {
+          ...monthData.breakdown,
+          failMemo:
+            currentExerciseData?.breakdown?.failMemo ??
+            (isInitialExercise ? monthData.breakdown?.failMemo : []),
+        },
+      }
+    : null
 
   const insights = useInsightCalculations(reportData)
   const metrics = useReportMetrics(reportData, currentExercise?.label)
@@ -123,6 +145,9 @@ export default function ReportPage() {
             )}
 
             {reportError && <div className={styles.errorMessage}>{reportError}</div>}
+            {exerciseQueryError && (
+              <div className={styles.errorMessage}>선택한 운동의 목표를 불러오지 못했습니다.</div>
+            )}
 
             <div className={styles.reportGrid} aria-busy={isReportLoading}>
               <div className={styles.summarySection}>
@@ -133,7 +158,7 @@ export default function ReportPage() {
                   radius={20}
                   backgroundColor="#ffffff"
                 >
-                  {isReportLoading ? (
+                  {isReportLoading || (goalLoading && !currentExerciseData && !isInitialExercise) ? (
                     <GoalContentSkeleton />
                   ) : currentExercise ? (
                     <>

@@ -6,6 +6,7 @@ import { useSidebarStore } from '@/stores/useSidebarStore'
 
 import SideNav from '@/components/sideNav/SideNav'
 import PageErrorBoundary from '@/components/errorBoundary/PageErrorBoundary'
+import NoticeCenter from '@/components/notice/NoticeCenter'
 
 import Main from '@/pages/main/MainPage'
 
@@ -29,6 +30,7 @@ function App() {
 
   return (
     <div className={styles.layout}>
+      <NoticeCenter />
       <SideNav />
 
       <main className={`${styles.main} ${folded ? styles.mainFolded : ''}`}>

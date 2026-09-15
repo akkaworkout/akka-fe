@@ -9,6 +9,7 @@
   justify-content: center;
   background-color: var(--background);
   min-height: 900px;
+  padding-inline: 24px;
 }
 
 .writeInner {
@@ -16,6 +17,7 @@
   width: 100%;
   max-width: 1008px;
   margin-bottom: 32px;
+  flex: 0 1 1008px;
 }
 
 .title {
@@ -36,6 +38,6 @@
 
 @media (max-width: 1440px) {
   .writeInner {
-    width: 604px;
+    max-width: 604px;
   }
 }

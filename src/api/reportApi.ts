@@ -23,6 +23,7 @@ export type ReportData = {
   period?: { year: number; month: number }
   kpi?: ReportKPI
   goal?: {
+    exerciseType?: string
     exerciseAchievementRate?: number
   }
   charts?: ReportCharts
@@ -30,7 +31,7 @@ export type ReportData = {
   summary?: unknown
 }
 
-export const getReport = async (year: number, month: number, exerciseType: string) => {
+export const getReport = async (year: number, month: number, exerciseType?: string) => {
   const { data } = await api.get('/reports', {
     params: {
       year,

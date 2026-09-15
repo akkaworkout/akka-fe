@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -68,7 +69,7 @@ export const useExpenseForm = (initialCategory: Expense) => {
       },
       {
         onSuccess: () => {
-          alert('운동지출 기록이 완료되었어요')
+          notify('운동지출 기록이 완료되었어요')
           navigate('/calendar')
         },
       },

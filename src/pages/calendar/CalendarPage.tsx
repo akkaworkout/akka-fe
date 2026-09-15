@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
@@ -64,7 +65,7 @@ const CalenderPage = () => {
       })
     } catch (error) {
       console.error(error)
-      alert('운동 기록을 불러오지 못했어요. 다시 시도해주세요.')
+      notify('운동 기록을 불러오지 못했어요. 다시 시도해주세요.')
     }
   }
 

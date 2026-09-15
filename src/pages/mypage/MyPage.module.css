@@ -10,7 +10,16 @@
   justify-content: center;
   background-color: var(--background);
   min-height: 900px;
-  padding: 0;
+  padding: 0 24px;
+}
+.inputRight[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.inputRight[type='number']::-webkit-inner-spin-button,
+.inputRight[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .mainInner {

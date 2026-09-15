@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 
@@ -29,7 +30,7 @@ export const useCreateExerciseMutation = () => {
     mutationFn: createExercise,
     onError: (error) => {
       console.error('createExercise failed:', error)
-      alert(error.response?.data?.message ?? '운동 기록에 실패했어요. 잠시 후 다시 시도해주세요.')
+      notify(error.response?.data?.message ?? '운동 기록에 실패했어요. 잠시 후 다시 시도해주세요.')
     },
     onSuccess: async (_data, form) => {
       const { year, month } = getYearMonth(form.date)
@@ -46,7 +47,7 @@ export const useUpdateExerciseMutation = () => {
     mutationFn: ({ recordId, form }) => updateExercise(recordId, form),
     onError: (error) => {
       console.error('updateExercise failed:', error)
-      alert(
+      notify(
         error.response?.data?.message ?? '운동 기록 수정에 실패했어요. 잠시 후 다시 시도해주세요.',
       )
     },
@@ -75,7 +76,7 @@ export const useDeleteExerciseMutation = () => {
     mutationFn: ({ recordId }) => deleteExercise(recordId),
     onError: (error) => {
       console.error('deleteExercise failed:', error)
-      alert(
+      notify(
         error.response?.data?.message ?? '운동 기록 삭제에 실패했어요. 잠시 후 다시 시도해주세요.',
       )
     },
