@@ -12,6 +12,7 @@ type TicketResponse = {
   total_amount: number
   start_date: string
   end_date: string
+  created_at: string
   status: 'ACTIVE'
   remaining_count: number
 }
@@ -37,6 +38,7 @@ test('이용권을 등록한 뒤 해당 이용권으로 운동 기록을 작성�
         total_amount: Number(createdTicketPayload?.total_amount),
         start_date: String(createdTicketPayload?.start_date),
         end_date: String(createdTicketPayload?.end_date),
+        created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
         status: 'ACTIVE',
         remaining_count: Number(createdTicketPayload?.target_count),
       }

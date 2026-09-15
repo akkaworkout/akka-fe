@@ -114,13 +114,6 @@ export const getTickets = async (): Promise<Ticket[]> => {
   return data.data.map(mapTicket)
 }
 
-// 진행 중인 이용권 조회
-export const getActiveTickets = async (): Promise<Ticket[]> => {
-  const { data } = await api.get('/tickets/active')
-
-  return data.data
-}
-
 // 이용권 요약 정보 조회
 export const getTicketSummary = async (ticketId: number) => {
   const { data } = await api.get(`/tickets/${ticketId}/summary`)
