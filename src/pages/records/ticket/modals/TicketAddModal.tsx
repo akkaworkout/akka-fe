@@ -3,7 +3,7 @@ import { FaCheck } from 'react-icons/fa6'
 
 import TicketModal from './TicketModal'
 import DateSelect from '@/components/dateSelect/DateSelect'
-import { formatDateForApi } from '@/utils/date'
+import { formatDateForApi, isDateRangeValid } from '@/utils/date'
 
 import styles from '@/pages/records/ticket/Ticket.module.css'
 
@@ -69,7 +69,7 @@ const TicketAddModal = ({
     form.totalAmount.trim() !== '' &&
     Number(form.targetCount) > 0 &&
     Number(form.totalAmount) > 0 &&
-    form.startDate <= form.endDate
+    isDateRangeValid(form.startDate, form.endDate)
 
   const nextDisabled = isViewMode ? false : step === 1 ? !isStep1Valid : !isStep2Valid
 
@@ -203,6 +203,7 @@ const TicketAddModal = ({
               <div className={styles.periodRow}>
                 <DateSelect
                   value={form.startDate}
+                  allowFutureMonths
                   onChange={(date) =>
                     setForm((prev) => ({
                       ...prev,
@@ -216,6 +217,7 @@ const TicketAddModal = ({
 
                 <DateSelect
                   value={form.endDate}
+                  allowFutureMonths
                   onChange={(date) =>
                     setForm((prev) => ({
                       ...prev,
