@@ -27,6 +27,7 @@ import { getMyPageInitialData } from './utils/getMyPageInitialData'
 type FormFieldConfig = {
   name: 'email' | 'nickname'
   label: string
+  placeholder: string
   type: 'email' | 'text'
   hasButton: boolean
   buttonText: string
@@ -36,6 +37,7 @@ const LEFT_FORM_FIELDS: FormFieldConfig[] = [
   {
     name: 'email',
     label: '이메일',
+    placeholder: '이메일을 입력해주세요',
     type: 'email',
     hasButton: true,
     buttonText: '중복 확인',
@@ -43,6 +45,7 @@ const LEFT_FORM_FIELDS: FormFieldConfig[] = [
   {
     name: 'nickname',
     label: '닉네임',
+    placeholder: '닉네임을 입력해주세요',
     type: 'text',
     hasButton: true,
     buttonText: '중복 확인',
@@ -52,6 +55,7 @@ const LEFT_FORM_FIELDS: FormFieldConfig[] = [
 type RightFieldConfig = {
   name: 'budget' | 'exerciseGoal'
   label: string
+  placeholder: string
   unit: string
 }
 
@@ -59,11 +63,13 @@ const RIGHT_FORM_FIELDS: RightFieldConfig[] = [
   {
     name: 'budget',
     label: '목표 예산(월 기준)',
+    placeholder: '120000',
     unit: '원',
   },
   {
     name: 'exerciseGoal',
     label: '목표 운동 횟수(월 기준)',
+    placeholder: '12',
     unit: '회',
   },
 ]
@@ -166,6 +172,7 @@ export default function MyPage() {
                             key={field.name}
                             id={`mypage-${field.name}`}
                             label={field.label}
+                            placeholder={field.placeholder}
                             value={form.formData[field.name]}
                             onChange={(e) => form.handleFieldChange(field.name, e.target.value)}
                             type={field.type}
@@ -269,6 +276,7 @@ export default function MyPage() {
                                       form.handleFieldChange(field.name, e.target.value)
                                     }
                                     type="number"
+                                    placeholder={field.placeholder}
                                   />
                                 </div>
 

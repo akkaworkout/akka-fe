@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { BsGridFill } from 'react-icons/bs'
@@ -87,7 +88,7 @@ const SideNav = () => {
     const publicPaths = ['/main']
 
     if (!isLoggedIn && !publicPaths.includes(path)) {
-      alert('로그인하고 이용할 수 있어요')
+      notify('로그인하고 이용할 수 있어요')
       navigate('/login')
       return
     }
@@ -144,7 +145,7 @@ const SideNav = () => {
 
     setUser(null)
 
-    alert('안전하게 로그아웃했어요')
+    notify('안전하게 로그아웃했어요')
 
     navigate('/main')
   }

@@ -14,3 +14,6 @@ export const getYearMonth = (date: Date) => ({
   year: date.getFullYear(),
   month: date.getMonth() + 1,
 })
+
+export const isBeforeTicketRegistration = (exerciseDate: Date, registrationDate: string) =>
+  formatDateForApi(exerciseDate) < registrationDate

@@ -24,7 +24,7 @@ export const useWorkoutForm = (recordId?: number) => {
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-  const { ticketList, mappedTickets, remainingCount, usedCount, pricePerSession } =
+  const { ticketList, allTickets, mappedTickets, remainingCount, usedCount, pricePerSession } =
     useWorkoutTickets(form.exercise.id)
 
   const { data: exerciseDetail } = useExerciseDetailQuery(recordId)
@@ -36,6 +36,7 @@ export const useWorkoutForm = (recordId?: number) => {
     form,
     recordId,
     previousDate,
+    allTickets,
   )
 
   useEffect(() => {

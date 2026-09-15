@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import { useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { authApi } from '@/api/authApi'
@@ -98,7 +99,7 @@ export const useSignUpForm = () => {
       }))
 
       if (data.available) {
-        alert('사용 가능한 이메일이에요')
+        notify('사용 가능한 이메일이에요')
       }
     } catch (err) {
       console.error(err)
@@ -145,7 +146,7 @@ export const useSignUpForm = () => {
       }))
 
       if (data.available) {
-        alert('사용 가능한 닉네임이에요')
+        notify('사용 가능한 닉네임이에요')
       }
     } catch (err) {
       console.error(err)

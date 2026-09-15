@@ -45,6 +45,19 @@ type TicketResponse = {
   forfeited_amount?: number
 }
 
+export const getTicketRegistrationDate = (createdAt?: string) => {
+  if (!createdAt) return undefined
+  if (/^\d{4}-\d{2}-\d{2}$/.test(createdAt)) return createdAt
+
+  // The calendar API interprets ticket.created_at as UTC before displaying it in KST.
+  const timestamp = createdAt.includes('T') ? createdAt : createdAt.replace(' ', 'T')
+  const hasTimezone = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(timestamp)
+  const date = new Date(hasTimezone ? timestamp : `${timestamp}Z`)
+
+  if (Number.isNaN(date.getTime())) return undefined
+  return new Date(date.getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10)
+}
+
 export type TicketCreatePayload = {
   exerciseType: string
   colorCode: string
@@ -83,7 +96,7 @@ const mapTicket = (item: TicketResponse): Ticket => {
 
     start_date: item.start_date?.split('T')[0],
     end_date: item.end_date?.split('T')[0],
-    created_at: item.created_at?.split('T')[0],
+    created_at: getTicketRegistrationDate(item.created_at),
 
     status: formattedStatus,
     end_reason: item.end_reason,

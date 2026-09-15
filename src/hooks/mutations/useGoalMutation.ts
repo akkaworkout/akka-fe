@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import { useMutation } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 
@@ -18,7 +19,7 @@ export const useUpdateGoalsMutation = () => {
     mutationFn: ({ year, month, goals }) => updateGoals(year, month, goals),
     onError: (error) => {
       console.error('updateGoals failed:', error)
-      alert('목표 저장에 실패했어요. 다시 시도해주세요.')
+      notify('목표 저장에 실패했어요. 다시 시도해주세요.')
     },
   })
 }

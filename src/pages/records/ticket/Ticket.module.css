@@ -38,7 +38,7 @@
 .write {
   position: absolute;
   top: 98px;
-  width: 1010px;
+  width: 100%;
   border-radius: 10px;
   background: var(--white);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
@@ -53,9 +53,10 @@
   border-radius: 24.5px;
   background: #f2f2f4;
   cursor: pointer;
-  font-size: 40px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
   text-align: center;
-  line-height: 49px;
   color: #919191;
   margin-top: 12px;
 }

@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import type { TicketCreatePayload } from '@/api/ticketApi'
 
 import { useTicketsQuery } from '@/hooks/queries/useTicketQuery'
@@ -20,7 +21,7 @@ export const useTickets = () => {
   const handleCreateTicket = (data: TicketCreatePayload, onSuccess?: () => void) => {
     createTicketMutation.mutate(data, {
       onSuccess: async () => {
-        alert('이용권 등록이 완료되었어요')
+        notify('이용권 등록이 완료되었어요')
 
         await refetch()
 
@@ -33,7 +34,7 @@ export const useTickets = () => {
   const handleDeleteTicket = (ticketId: number, onSuccess?: () => void) => {
     deleteTicketMutation.mutate(ticketId, {
       onSuccess: async () => {
-        alert('이용권이 성공적으로 삭제되었어요')
+        notify('이용권이 성공적으로 삭제되었어요')
 
         await refetch()
 
@@ -57,7 +58,7 @@ export const useTickets = () => {
       },
       {
         onSuccess: async () => {
-          alert('이용권이 성공적으로 종료되었어요')
+          notify('이용권이 성공적으로 종료되었어요')
 
           await refetch()
 

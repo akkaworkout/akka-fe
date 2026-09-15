@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import { useEffect, useState } from 'react'
 
 import { useGoalsQuery } from '@/hooks/queries/useCalendarQuery'
@@ -31,7 +32,7 @@ export const useGoals = (year: number, month: number) => {
       },
       {
         onSuccess: () => {
-          alert('저장이 완료되었어요')
+          notify('저장이 완료되었어요')
         },
       },
     )

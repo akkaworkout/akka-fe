@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import { type FormEvent, type RefObject, useEffect, useState } from 'react'
 
 import { updateMe, type UpdateMePayload } from '@/api/userApi'
@@ -238,7 +239,7 @@ export const useMyPageForm = ({ initialData, fileRef, resetProfile, fetchMe }: P
       return
     }
 
-    alert(`${fieldName === 'email' ? '이메일' : '닉네임'} 중복 확인이 완료되었어요`)
+    notify(`${fieldName === 'email' ? '이메일' : '닉네임'} 중복 확인이 완료되었어요`)
 
     if (fieldName === 'email') setEmailChecked(true)
     else setNicknameChecked(true)
@@ -264,7 +265,7 @@ export const useMyPageForm = ({ initialData, fileRef, resetProfile, fetchMe }: P
     if (formData.password.trim()) payload.password = formData.password
 
     if (Object.keys(payload).length === 0) {
-      alert('바뀐 내용이 없어요')
+      notify('바뀐 내용이 없어요')
       return
     }
 
@@ -272,13 +273,13 @@ export const useMyPageForm = ({ initialData, fileRef, resetProfile, fetchMe }: P
       const file = fileRef.current?.files?.[0]
 
       await updateMe(payload, file)
-      alert('바뀐 내용을 저장했어요')
+      notify('바뀐 내용을 저장했어요')
 
       reset()
       resetProfile()
       await fetchMe()
     } catch (error) {
-      alert(error instanceof Error ? error.message : '수정에 실패했어요')
+      notify(error instanceof Error ? error.message : '수정에 실패했어요')
     }
   }
 

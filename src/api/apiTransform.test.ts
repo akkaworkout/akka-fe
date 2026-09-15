@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { getTickets } from './ticketApi'
+import { getTickets, getTicketRegistrationDate } from './ticketApi'
 import { createExercise } from './workoutApi'
 
 const apiMocks = vi.hoisted(() => ({
@@ -78,5 +78,10 @@ describe('API 데이터 변환', () => {
     expect(body.get('ticket_id')).toBe('7')
     expect(body.get('fail_reason')).toBe('시간 부족')
     expect(config.headers['Content-Type']).toBe('multipart/form-data')
+  })
+
+  it('UTC 저녁에 등록한 이용권은 한국 날짜의 다음 날로 처리한다', () => {
+    expect(getTicketRegistrationDate('2026-09-14T18:30:00.000Z')).toBe('2026-09-15')
+    expect(getTicketRegistrationDate('2026-09-14 18:30:00')).toBe('2026-09-15')
   })
 })

@@ -7,8 +7,9 @@ import { formatDateForApi } from '@/utils/date'
 export const reportQueryKeys = {
   all: ['reports'] as const,
   month: (year: number, month: number) => ['reports', year, month] as const,
+  monthlyData: (year: number, month: number) => ['reports', year, month, 'month'] as const,
   detail: (year: number, month: number, exerciseType: string) =>
-    ['reports', year, month, exerciseType] as const,
+    ['reports', year, month, 'exercise', exerciseType] as const,
 }
 
 const getDateKey = () => formatDateForApi(new Date())
@@ -63,10 +64,30 @@ export const useReportQuery = (year: number, month: number, exerciseType?: strin
   }, [queryClient])
 
   return useQuery({
-    queryKey: reportQueryKeys.detail(year, month, exerciseType ?? ''),
-    queryFn: () => getReport(year, month, exerciseType!),
+    queryKey: reportQueryKeys.monthlyData(year, month),
+    queryFn: async () => {
+      const data = await getReport(year, month, exerciseType)
+      if (data && exerciseType) {
+        queryClient.setQueryData(reportQueryKeys.detail(year, month, exerciseType), data)
+      }
+      return data
+    },
     enabled: Boolean(exerciseType),
     staleTime: Infinity,
     gcTime: 1000 * 60 * 60 * 24,
   })
 }
+
+export const useReportExerciseQuery = (
+  year: number,
+  month: number,
+  exerciseType?: string,
+  monthReady = false,
+) =>
+  useQuery({
+    queryKey: reportQueryKeys.detail(year, month, exerciseType ?? ''),
+    queryFn: () => getReport(year, month, exerciseType),
+    enabled: Boolean(exerciseType) && monthReady,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 60 * 24,
+  })

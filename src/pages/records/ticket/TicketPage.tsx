@@ -156,13 +156,14 @@ const TicketPage = () => {
             })
           )}
 
-          <div
+          <button
+            type="button"
             className={styles.addBtn}
             onClick={() => setIsAddModalOpen(true)}
             aria-label="이용권 추가"
           >
-            +
-          </div>
+            + 이용권 추가
+          </button>
         </div>
 
         {deleteTargetIndex !== null && (
@@ -235,7 +236,7 @@ const TicketPage = () => {
               setViewTargetIndex(null)
             }}
             onConfirm={() => {}}
-            isRefunded={ticketList[viewTargetIndex].status === 'ENDED'}
+            isRefunded={ticketList[viewTargetIndex].end_reason === 'REFUNDED'}
           />
         )}
       </RecordLayout>

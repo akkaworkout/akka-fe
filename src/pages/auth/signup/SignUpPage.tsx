@@ -1,3 +1,4 @@
+﻿import { notify } from '@/utils/notify'
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
@@ -58,14 +59,14 @@ export default function SignUpPage() {
 
       await authApi.register(formData)
 
-      alert('가입이 완료됐어요')
+      notify('가입이 완료됐어요')
 
       nav('/signup/success', {
         state: { nickname: form.nickname },
       })
     } catch (err) {
       console.error(err)
-      alert('가입에 실패했어요. 다시 시도해 주세요')
+      notify('가입에 실패했어요. 다시 시도해 주세요')
     } finally {
       form.setIsLoading(false)
     }

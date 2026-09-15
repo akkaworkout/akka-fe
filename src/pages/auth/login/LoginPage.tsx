@@ -62,8 +62,6 @@ export default function LoginPage() {
 
       login(accessToken, refreshToken)
 
-      alert('로그인이 완료되었어요')
-
       nav('/main')
     } catch (err: unknown) {
       console.error('LOGIN error:', err)
